@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual env
+venv/
+env/
+
+# VSCode settings
+.vscode/
+
+# OS
+.DS_Store
+
+# Models / large files（必要に応じて調整）
+*.h5
+*.pt
+*.wav
+*.mp3
