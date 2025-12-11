@@ -1,29 +1,28 @@
-import pyaudio
+import sounddevice as sd
+import soundfile as sf
 import numpy as np
-import wave
-import time
-from datetime import datetime
-from faster_whisper import WhisperModel
 import threading
 import keyboard
+import time
+from faster_whisper import WhisperModel
+from datetime import datetime
 
 recording = False
 audio_buffer = []
-lock = threading.Lock()
 stop_flag = False
-final_text = None  # ← ここに最終テキストを保存する
+final_text = None
+lock = threading.Lock()
 
 # -----------------------------
 # 設定
 # -----------------------------
 SAMPLE_RATE = 16000
 CHANNELS = 1
-FORMAT = pyaudio.paInt16
-CHUNK = 1024
 TEMP_WAV = "temp.wav"
 
 # Whisperモデル
 model = WhisperModel("small", device="cpu", compute_type="int8")
+
 
 # -----------------------------
 # 音声認識
@@ -32,8 +31,9 @@ def transcribe_audio(path):
     segments, info = model.transcribe(path, beam_size=3, language="ja")
     return "".join([seg.text for seg in segments])
 
+
 # -----------------------------
-# バッファ処理 → WAV保存 → Whisper
+# バッファ → WAV → Whisper
 # -----------------------------
 def process_buffer():
     global audio_buffer, final_text, stop_flag
@@ -41,56 +41,54 @@ def process_buffer():
     if not audio_buffer:
         return
 
-    # WAV保存
-    with wave.open(TEMP_WAV, "wb") as wf:
-        wf.setnchannels(CHANNELS)
-        wf.setsampwidth(2)
-        wf.setframerate(SAMPLE_RATE)
-        wf.writeframes(b"".join(audio_buffer))
+    print("🛠 WAV生成中...")
 
-    # Whisper変換
+    # numpy 配列にまとめる
+    data = np.concatenate(audio_buffer, axis=0)
+
+    # WAV保存
+    sf.write(TEMP_WAV, data, SAMPLE_RATE)
+
+    print("⏳ Whisper変換中...")
     text = transcribe_audio(TEMP_WAV)
+
     print(">> 認識結果:", text)
 
     final_text = text
-    stop_flag = True  # ← これで main ループを終了させる
-    audio_buffer = []
+    stop_flag = True
+
 
 # -----------------------------
-# マイクループ
+# 録音コールバック
+# -----------------------------
+def callback(indata, frames, time_info, status):
+    global audio_buffer, recording
+    if recording:
+        with lock:
+            audio_buffer.append(indata.copy())  # numpy形式で保存
+
+
+# -----------------------------
+# 録音スレッド
 # -----------------------------
 def audio_loop():
-    global recording, audio_buffer, stop_flag
-
-    pa = pyaudio.PyAudio()
-    stream = pa.open(
-        format=FORMAT,
-        channels=CHANNELS,
-        rate=SAMPLE_RATE,
-        input=True,
-        frames_per_buffer=CHUNK
-    )
-
-    print("🎤 Rキー長押しで録音開始 → 離すと停止＆文字起こし")
-
-    try:
+    with sd.InputStream(
+            channels=CHANNELS,
+            samplerate=SAMPLE_RATE,
+            callback=callback):
+        print("🎤 Rキー長押しで録音 → 離すと停止＆変換")
         while not stop_flag:
-            if recording:
-                data = stream.read(CHUNK)
-                with lock:
-                    audio_buffer.append(data)
-    finally:
-        stream.stop_stream()
-        stream.close()
-        pa.terminate()
+            time.sleep(0.05)
+
 
 # -----------------------------
-# Rキーで録音ON/OFF
+# Rキー ON/OFF
 # -----------------------------
 def toggle_record(event):
     global recording, audio_buffer
 
     recording = not recording
+
     if recording:
         print("🎙️ 録音開始")
         audio_buffer = []
@@ -98,17 +96,18 @@ def toggle_record(event):
         print("🛑 録音停止 → 変換中...")
         process_buffer()
 
+
 # -----------------------------
 # 外部呼び出し用
 # -----------------------------
 def start_voice_read():
     global final_text
 
-    # 音声ループを別スレッドで開始
+    # 録音スレッド開始
     t = threading.Thread(target=audio_loop, daemon=True)
     t.start()
 
-    # Rキーを登録
+    # Rキー動作登録
     keyboard.on_press_key("r", toggle_record)
 
     # テキストが取れるまで待つ
