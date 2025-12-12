@@ -5,27 +5,31 @@
 import time
 from datetime import datetime
 import threading
-
+print("標準ライブラリimport完了")
 # ---------------------------
 # 2. 外部ライブラリ
 # ---------------------------
-import pyaudio
-import keyboard
-from faster_whisper import WhisperModel
 
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import pickle
 from tensorflow.keras.losses import MeanSquaredError
-
+print("外部ライブラリimport完了")
 
 
 # Tokenizer 読み込み
-with open("tokenizer.pkl", "rb") as f:
-    tokenizer = pickle.load(f)
+try:
+    with open("tokenizer.pkl", "rb") as f:
+        tokenizer = pickle.load(f)
+        print("トークナイザー読み込み開始")
+except Exception as e:
+    print("❌ 読み込み 失敗")
+    print(type(e), e)
+
 
 # モデル読み込み
 model = load_model("emotion_model_regression.h5",compile=False)
+print("モデル読み込み完了")
 
 model.compile(
     optimizer="adam",
@@ -42,14 +46,11 @@ def predict_emotion(text):
     return valence, arousal
 
 # テスト実行
-def suiron_test():
-    with open("C:/Users/232144/Desktop/HaLu/src/Audio/for_HaLu.txt", "rb") as f:
-        text = pickle.load(f)
+def suiron_test(text):
     val, aro = predict_emotion(text)
 
-    print("入力文：", text)
-    print("予測 Valence:", val)
-    print("予測 Arousal:", aro)
-    return val,aro
+    return val, aro
+
+
 
 

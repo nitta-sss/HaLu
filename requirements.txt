@@ -20,6 +20,7 @@ keyboard==0.13.5
 # --- Web ---
 Django==4.2.20
 
-# --- Whisper ---
-#faster-whisper==0.6.0
+# --- Whisper (必須) ---
+#av==15.1.0
 #ctranslate2==3.17.0
+#faster-whisper==0.6.0
