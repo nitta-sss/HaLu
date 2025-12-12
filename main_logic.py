@@ -12,6 +12,7 @@ sys.path.append("C:/Users/snitt/Desktop/HaLu_venv/HALU/Audio/")
 #sys.path.append("C:/Users/232116/Desktop/New_HaLu/HALU/Audio/")#たけとPCpath
 #sys.path.append("C:/Users/232116/Desktop/New_HaLu/HALU/")
 
+
 import Voice_Read
 print("Voice_Read import OK")
 
