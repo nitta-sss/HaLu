@@ -76,8 +76,6 @@ def process_buffer():
     print("⏳ Whisper変換中...")
     text = transcribe_audio(TEMP_WAV)
 
-    print(">> 認識結果:", text)
-
     final_text = text
     stop_flag = True
 
