@@ -7,21 +7,28 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 
 import pickle
 import numpy as np
-
+print("AIライブラリOK")
 # ===============================
 # 2. 定数
 # ===============================
 VOCAB_SIZE = 5000
 MAX_LEN = 30
-
+print("AI定数OK")
 # ===============================
 # 3. モデル & Tokenizer 読み込み
 # ===============================
 model = load_model("emotion_model_regression.h5")
-
-with open("tokenizer.pkl", "rb") as f:
-    tokenizer = pickle.load(f)
-
+print("モデルロードOK")
+try:
+    with open("tokenizer.pkl", "rb") as f:
+        print("トークナイザー開始")
+        tokenizer = pickle.load(f)
+    print("トークナイザーOK")
+except Exception as e:
+    print("❌ tokenizer 読み込み失敗")
+    print(type(e))
+    print(e)
+    raise
 print("✅ モデル & tokenizer 読み込み完了")
 
 # ===============================
@@ -52,11 +59,14 @@ def apply_personality_bias(valence, arousal, text):
 # 5. 推論処理
 # ===============================
 def predict_emotion(text):
+    #文字データ→数値データ
     seq = tokenizer.texts_to_sequences([text])
     x = pad_sequences(seq, maxlen=MAX_LEN)
 
+    #推論
     val, aro = model.predict(x, verbose=0)[0]
 
+    #補正
     val, aro = apply_personality_bias(float(val), float(aro), text)
     return float(val), float(aro)
 
@@ -64,9 +74,6 @@ def predict_emotion(text):
 # 6. 外部から呼ぶ関数（入口）
 # ===============================
 def suiron_test_kari(text):
-    """
-    感情推論（Valence, Arousal）を返す
-    """
     val, aro = predict_emotion(text)
     return val, aro
 
