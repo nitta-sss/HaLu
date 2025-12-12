@@ -41,4 +41,8 @@ while True:
     if text == "exit":
         break
     val, aro = predict_emotion(text)
-    print(f"Valence: {val:.3f}, Arousal: {aro:.3f}")
+    print("---------------")
+    print(f"入力文    : {text}")
+    print(f"Valence  : {val:.3f}")
+    print(f"Arousal  : {aro:.3f}")
+
