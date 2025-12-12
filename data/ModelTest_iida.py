@@ -44,5 +44,5 @@ while True:
     print("---------------")
     print(f"入力文    : {text}")
     print(f"Valence  : {val:.3f}")
-    print(f"Arousal  : {aro:.3f}")
+   
 
