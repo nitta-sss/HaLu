@@ -8,7 +8,7 @@ def read_text(text):
     engine.setProperty('rate', 200)  
 
     # 音量設定　0.0(無音)～1.0(最大音量)
-    engine.setProperty('volume', 0.5) 
+    engine.setProperty('volume', 0.8) 
 
     # テキストを読み上げる
     engine.say(text)
