@@ -1,5 +1,4 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -13,41 +12,42 @@
     <div class="user-box">
     <div class="icon"><img src="{% static 'img/face.png' %}" class="face-img"></div>
     <span class="username">Halu</span>
+    <button id="toggle-btn">ゲージ非表示</button>  
 </div>
 
   </div>
 
-  <div class="container">
+        <div class="container">
 
-    <!-- ★★★ 左エリア ★★★ -->
-    <div class="left-area">
-        <div class="chat-box">
-        {% for msg in messages %}
-            <div class="balloon {{ msg.sender }}">
-                {{ msg.text }}
+            <!-- ★★★ 左エリア ★★★ -->
+            <div class="left-area">
+                <div class="chat-box">
+                    {% for msg in messages %}
+                        <div class="balloon {{ msg.sender }}">
+                            {{ msg.text }}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="speak-icon">
+                    🗣
+                </div>
             </div>
-        {% endfor %}
-        </div>
 
-        <div class="speak-icon">
-            🗣
-        </div>
-    </div>
-
-
-    <!-- ★★★ 右エリア ★★★ -->
-    <div class="right-area">
-        <!-- 背景画像＋ライトはCSSで設定 -->
-        <img src="{% static 'img/windows.jpg' %}" class="right-back">
+            <!-- ★★★ 右エリア ★★★ -->
+            <div class="right-area">
+                <!-- 背景画像＋ライトはCSSで設定 -->
+                <img src="{% static 'img/windows.jpg' %}" class="right-back">
 
         <div class="face-area">
             <img src="{% static 'img/HaLu_Face.png' %}" class="face-img">
         </div>
+      
+        
 
         <!-- 感情ゲージ -->
-        <div class="emotion-area">
+        <div class="emotion-area fade" id="emotionArea">
 
-            <div class="bar-item">
+            <div class="bar-item" class="fade show">
                 <div class="bar-label">覚醒度</div>
                 <div class="bar-base">
                     <div class="bar-fill fill1" id="awakeBar"></div>
@@ -56,50 +56,75 @@
             
             <div class="bar-item">
                 <div class="bar-label">快楽度</div>
-                <div class="bar-base">
+                <div class="bar-base" class="fade show">
                     <div class="bar-fill fill2" id="pleasureBar"></div>
                 </div>
             </div>
-
         </div>
 
     </div>
 
 </div>
-    <script>
-    document.addEventListener("DOMContentLoaded", function () {
-    
-        const awakeBar = document.getElementById("awakeBar");
-        const pleasureBar = document.getElementById("pleasureBar");
-    
-        // ★ 感情の「座標」（例）
-        let emotion = {
-            x: 20,   // 覚醒度（0〜100）
-            y: 80    // 快楽度（0〜100）
-        };
-    
-        // ★ ゲージを更新する関数
-        function updateGauge() {
-            awakeBar.style.width = emotion.x + "%";
-            pleasureBar.style.width = emotion.y + "%";
-        }
-    
-        // 最初の表示
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const awakeBar = document.getElementById("awakeBar");
+    const pleasureBar = document.getElementById("pleasureBar");
+
+    let emotion = {
+        x: 20,
+        y: 80
+    };
+
+    function updateGauge() {
+        awakeBar.style.width = emotion.x + "%";
+        pleasureBar.style.width = emotion.y + "%";
+        updateGaugeColors(emotion.x, emotion.y);
+    }
+
+    updateGauge();
+
+    setInterval(function () {
+        emotion.x = Math.floor(Math.random() * 101);
+        emotion.y = Math.floor(Math.random() * 101);
         updateGauge();
-    
-        // ★ テスト用：3秒ごとに座標が変わる
-        setInterval(function () {
-            emotion.x = Math.floor(Math.random() * 101); // 0〜100
-            emotion.y = Math.floor(Math.random() * 101);
-    
-            console.log("emotion:", emotion);
-            updateGauge();
-        }, 3000);
-    
+    }, 3000);
+
+    /* ★ 色変化の関数 ★ */
+    function updateGaugeColors(x, y) {
+
+        /* --- 覚醒度：赤→オレンジ→黄 --- */
+        let v1 = x / 100;
+    let r1 = Math.round(255 * v1);
+    let b1 = Math.round(255 * (1 - v1));
+    let color1 = `rgb(${r1}, 0, ${b1})`;
+
+    awakeBar.style.background = `linear-gradient(to right, ${color1}, #ffffff60)`;
+
+
+    /* --- 快楽度（★赤→オレンジ→黄） --- */
+    if (y < 30) {
+        pleasureBar.style.background = "linear-gradient(to right, red, orange)";
+    } else if (y < 70) {
+        pleasureBar.style.background = "linear-gradient(to right, orange, yellow)";
+    } else {
+        pleasureBar.style.background = "linear-gradient(to right, yellow, lightyellow)";
+    }
+}
+
+    /* ▼▼ ゲージ表示/非表示ボタン ▼▼ */
+    const btn = document.getElementById("toggle-btn");
+    const gauge = document.getElementById("emotionArea");
+
+    btn.addEventListener("click", function () {
+        gauge.classList.toggle("hide");
+        btn.textContent = gauge.classList.contains("hide") ? "ゲージ表示" : "ゲージ非表示";
     });
-    </script>
-    
-    
+
+});  
+</script>
+
+
     
 
 </body>

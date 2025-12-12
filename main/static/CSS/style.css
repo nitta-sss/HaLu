@@ -1,3 +1,5 @@
+css
+
 
 /* ===========================
    全体レイアウト
@@ -20,7 +22,12 @@ header {
     text-align: center;
 }
 
-footer {
+icon{
+    text-align: center;
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+/* footer {
     background-color: #eee;
     color: #333;
     padding: 1rem;
@@ -29,8 +36,8 @@ footer {
 
 main {
     min-height: 70vh; /* フッターが画面下に来るようにする */
-    padding: 2rem;
-}
+    /* padding: 2rem;
+} */
 .user-box {
     display: flex;
     align-items: center;
@@ -64,9 +71,6 @@ main {
     color: #fff;
     overflow: hidden;   /* ★はみ出し防止 */
     padding: 0;         /* ★余白を消す */
-
-    /* 背景画像（電球の部屋）を固定 */
-    /*background-image: url("main/picture/windows.jpg");*/
     background-size: cover;
     background-position: center;
 }
@@ -80,7 +84,10 @@ main {
     z-index: 0;
 }
 
-.face-area,
+.face-area {
+    position: absolute;
+    z-index: 2;
+}
 .emotion-area {
     position: absolute;
     z-index: 2;
@@ -215,4 +222,23 @@ main {
     width: 0%;             /* ★ 初期値がないとアニメーションされない */
     background: red;
     transition: width 2.5s ease;
+}
+
+#toggle-btn {
+    position: absolute;
+    right: 40px;
+    padding: 10px 20px;
+    background: white;
+    color: black;
+    border: 2px solid #000;
+    border-radius: 10px;
+}
+
+.fade {
+    opacity: 1;
+    transition: opacity 0.4s ease; /* ← フェード時間ここで調整可能 */
+}
+
+.fade.hide {
+    opacity: 0;
 }
