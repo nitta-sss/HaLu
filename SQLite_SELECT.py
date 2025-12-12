@@ -9,6 +9,7 @@ df = pd.read_sql_query(
     """
     SELECT テキストデータ, valence, arousal
     FROM TestData
+
     """
     , conn)
 
