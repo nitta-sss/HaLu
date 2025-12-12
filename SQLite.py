@@ -6,6 +6,8 @@ cursor = conn.cursor()
 
 
 cursor.execute("""
+INSERT INTO TestData (発言者ID, テキストデータ, 感情ID, valence, arousal)
+               
 
 """)
 
