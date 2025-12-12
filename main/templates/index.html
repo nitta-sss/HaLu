@@ -1,106 +1,101 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>Halu UI</title>
-    <link rel="stylesheet" href="{% static 'CSS/style.css' %}">
-</head>
-<body>
 
-  <div class="header">
-    <div class="user-box">
-    <div class="icon"><img src="{% static 'img/face.png' %}" class="face-img"></div>
-    <span class="username">Halu</span>
-</div>
+    <head>
+        <meta charset="UTF-8">
+        <title>Halu UI</title>
+        <link rel="stylesheet" href="{% static 'CSS/style.css' %}">
+    </head>
 
-  </div>
-
-  <div class="container">
-
-    <!-- ★★★ 左エリア ★★★ -->
-    <div class="left-area">
-        <div class="chat-box">
-        {% for msg in messages %}
-            <div class="balloon {{ msg.sender }}">
-                {{ msg.text }}
+    <body>
+        <div class="header">
+            <div class="user-box">
+                <img src="{% static 'img/face.png' %}" class="icon">
+                <span class="username">Halu</span>
             </div>
-        {% endfor %}
         </div>
 
-        <div class="speak-icon">
-            🗣
-        </div>
-    </div>
+        <div class="container">
 
-
-    <!-- ★★★ 右エリア ★★★ -->
-    <div class="right-area">
-        <!-- 背景画像＋ライトはCSSで設定 -->
-        <img src="{% static 'img/windows.jpg' %}" class="right-back">
-
-        <div class="face-area">
-            <img src="{% static 'img/HaLu_Face.png' %}" class="face-img">
-        </div>
-
-        <!-- 感情ゲージ -->
-        <div class="emotion-area">
-
-            <div class="bar-item">
-                <div class="bar-label">覚醒度</div>
-                <div class="bar-base">
-                    <div class="bar-fill fill1" id="awakeBar"></div>
+            <!-- ★★★ 左エリア ★★★ -->
+            <div class="left-area">
+                <div class="chat-box">
+                    {% for msg in messages %}
+                        <div class="balloon {{ msg.sender }}">
+                            {{ msg.text }}
+                        </div>
+                    {% endfor %}
                 </div>
-            </div>
-            
-            <div class="bar-item">
-                <div class="bar-label">快楽度</div>
-                <div class="bar-base">
-                    <div class="bar-fill fill2" id="pleasureBar"></div>
+                <div class="speak-icon">
+                    🗣
                 </div>
             </div>
 
+            <!-- ★★★ 右エリア ★★★ -->
+            <div class="right-area">
+                <!-- 背景画像＋ライトはCSSで設定 -->
+                <img src="{% static 'img/windows.jpg' %}" class="right-back">
+
+                <div class="face-area">
+                    <img src="{% static 'img/HaLu_Face.png' %}" class="face-img">
+                </div>
+
+                <!-- 感情ゲージ -->
+                <div class="emotion-area">
+
+                    <div class="bar-item">
+                        <div class="bar-label">
+                            覚醒度
+                        </div>
+                        <div class="bar-base">
+                            <div class="bar-fill fill1" id="awakeBar"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="bar-item">
+                        <div class="bar-label">
+                            快楽度
+                        </div>
+                        <div class="bar-base">
+                            <div class="bar-fill fill2" id="pleasureBar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-    </div>
-
-</div>
-    <script>
-    document.addEventListener("DOMContentLoaded", function () {
-    
-        const awakeBar = document.getElementById("awakeBar");
-        const pleasureBar = document.getElementById("pleasureBar");
-    
-        // ★ 感情の「座標」（例）
-        let emotion = {
-            x: 20,   // 覚醒度（0〜100）
-            y: 80    // 快楽度（0〜100）
-        };
-    
-        // ★ ゲージを更新する関数
-        function updateGauge() {
-            awakeBar.style.width = emotion.x + "%";
-            pleasureBar.style.width = emotion.y + "%";
-        }
-    
-        // 最初の表示
-        updateGauge();
-    
-        // ★ テスト用：3秒ごとに座標が変わる
-        setInterval(function () {
-            emotion.x = Math.floor(Math.random() * 101); // 0〜100
-            emotion.y = Math.floor(Math.random() * 101);
-    
-            console.log("emotion:", emotion);
+        <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        
+            const awakeBar = document.getElementById("awakeBar");
+            const pleasureBar = document.getElementById("pleasureBar");
+        
+            // ★ 感情の「座標」（例）
+            let emotion = {
+                x: 20,   // 覚醒度（0〜100）
+                y: 80    // 快楽度（0〜100）
+            };
+        
+            // ★ ゲージを更新する関数
+            function updateGauge() {
+                awakeBar.style.width = emotion.x + "%";
+                pleasureBar.style.width = emotion.y + "%";
+            }
+        
+            // 最初の表示
             updateGauge();
-        }, 3000);
-    
-    });
-    </script>
-    
-    
-    
-
-</body>
+        
+            // ★ テスト用：3秒ごとに座標が変わる
+            setInterval(function () {
+                emotion.x = Math.floor(Math.random() * 101); // 0〜100
+                emotion.y = Math.floor(Math.random() * 101);
+        
+                console.log("emotion:", emotion);
+                updateGauge();
+            }, 3000);
+        
+        });
+        </script>
+    </body>
 </html>
