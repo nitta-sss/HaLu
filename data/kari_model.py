@@ -123,15 +123,45 @@ model.save("emotion_model_regression.h5")
 print("✅ モデル保存完了")
 
 # ===============================
-# 9. テスト推論
+# 9. 性格補正つける
+# ===============================
+
+def apply_personality_bias(valence, arousal, text):
+    """
+    親しみやすい対話型AI用の性格補正
+    """
+
+    # 基本の明るさ（常に少しだけ前向き）
+    valence += 0.05
+
+    # 前向きワードがあれば、さらに少しだけ加点
+    positive_hints = [
+        "ラッキー", "よかった", "助かった", "安心",
+        "余裕", "楽", "嬉しい", "いい"
+    ]
+
+    if any(word in text for word in positive_hints):
+        valence += 0.05
+
+    # 盛りすぎ防止
+    valence = max(min(valence, 0.6), -0.6)
+
+    return valence, arousal
+
+
+# ===============================
+# 10. テスト推論
 # ===============================
 def predict_emotion(text):
     seq = tokenizer.texts_to_sequences([text])
     x = pad_sequences(seq, maxlen=MAX_LEN)
+    # モデルの素の予測
     val, aro = model.predict(x)[0]
+    # 性格補正をかける
+    val, aro = apply_personality_bias(float(val), float(aro), text)
     return float(val), float(aro)
 
-test_text = "今日は天気がいいので景色がよさそうだ"
+test_text = "朝電車遅延してラッキーだったからゆっくり準備する"
 val, aro = predict_emotion(test_text)
 
 print("テキスト:", test_text)
