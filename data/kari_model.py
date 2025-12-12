@@ -49,7 +49,7 @@ MAX_LEN = 30
 tokenizer = Tokenizer(num_words=VOCAB_SIZE, oov_token="<OOV>")
 tokenizer.fit_on_texts(texts)
 
-with open("tokenizer.pkl", "wb") as f:
+with open("tokenizer_sora.pkl", "wb") as f:
     pickle.dump(tokenizer, f)
 
 sequences = tokenizer.texts_to_sequences(texts)
@@ -119,7 +119,7 @@ plt.show()
 # ===============================
 # 8. モデル保存
 # ===============================
-model.save("emotion_model_regression.h5")
+model.save("emotion_model_regression_sora.h5")
 print("✅ モデル保存完了")
 
 # ===============================
