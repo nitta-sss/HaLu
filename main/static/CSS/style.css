@@ -9,12 +9,14 @@ body {
     font-family: sans-serif;
 }
 
+/* 画面の大きさとブロック要素 */
 .container {
     display: flex;
     width: 100%;
     height: 100vh;
 }
 
+/* ヘッダー */
 header {
     background-color: #333;
     color: white;
@@ -22,11 +24,13 @@ header {
     text-align: center;
 }
 
+/* 左上アイコン画像 */
 icon{
     text-align: center;
     font-size: 40px;
     margin-bottom: 20px;
 }
+
 /* footer {
     background-color: #eee;
     color: #333;
@@ -38,6 +42,8 @@ main {
     min-height: 70vh; /* フッターが画面下に来るようにする */
     /* padding: 2rem;
 } */
+
+/* 左上アイコン */
 .user-box {
     display: flex;
     align-items: center;
@@ -55,6 +61,8 @@ main {
 /* ===========================
    左2 / 右3 レイアウト
 =========================== */
+
+/* 左分割レイアウト */
 .left-area {
     flex: 2;
     background-color: #f3e8dd;
@@ -64,6 +72,7 @@ main {
     justify-content: space-between;
 }
 
+/* 右分割レイアウト */
 .right-area {
     flex: 3;
     padding: 20px;
@@ -74,6 +83,8 @@ main {
     background-size: cover;
     background-position: center;
 }
+
+/* 右画面背景画像 */
 .right-back{
     position: absolute;
     top: 0;
@@ -84,10 +95,13 @@ main {
     z-index: 0;
 }
 
+/* HaLu顔 */
 .face-area {
     position: absolute;
     z-index: 2;
 }
+
+/* 感情バー */
 .emotion-area {
     position: absolute;
     z-index: 2;
@@ -96,6 +110,8 @@ main {
 /* ===========================
    左：チャットUI
 =========================== */
+
+/* 左レイアウト */
 .chat-box {
     height: 85%;
     overflow-y: auto;
@@ -103,6 +119,7 @@ main {
     flex-direction: column;
 }
 
+/* 吹き出し */
 .balloon {
     max-width: 70%;
     padding: 10px 15px;
@@ -111,12 +128,14 @@ main {
     display: inline-block;
 }
 
-
+/* ユーザー吹き出し */
 .balloon.user {
     background: #fff;
     align-self: flex-start;
     position: relative;
 }
+
+/* ユーザー吹き出ししっぽ */
 .balloon.user::after {
     content: "";
     position: absolute;
@@ -129,12 +148,13 @@ main {
     border-left: 10px solid #fff;
 }
 
-
+/* ボット吹き出し */
 .balloon.bot {
     background: #ffffff;
     align-self: flex-end;
     position: relative;
 }
+/* ボット吹き出ししっぽ */
 .balloon.bot::after {
     content: "";
     position: absolute;
@@ -147,6 +167,8 @@ main {
     border-right: 10px solid #fff;
 }
 
+
+/* 音声入力ボタン */
 .speak-icon {
     text-align: center;
     font-size: 40px;
@@ -157,6 +179,8 @@ main {
 /* ===========================
    右：顔エリア
 =========================== */
+
+/* 顔エリア */
 .face-area {
     /* margin: 30px 200px;
     margin-bottom: 20px;
@@ -172,6 +196,7 @@ main {
     position: relative;
 }
 
+/* 顔画像 */
 .face-img {
     /* margin-top:10px ;
     margin-bottom: 10px;
@@ -189,6 +214,8 @@ main {
 /* ===========================
    右：感情ゲージ
 =========================== */
+
+/* 感情バーエリア */
 .emotion-area {
     position: absolute;
     top: 40px;
