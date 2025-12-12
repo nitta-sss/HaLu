@@ -161,7 +161,7 @@ def predict_emotion(text):
     val, aro = apply_personality_bias(float(val), float(aro), text)
     return float(val), float(aro)
 
-test_text = "タバコがなくてイライラする"
+test_text = "イライラする"
 val, aro = predict_emotion(test_text)
 
 print("テキスト:", test_text)
