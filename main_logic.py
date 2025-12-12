@@ -1,8 +1,13 @@
 
 import sys
+"""
 sys.path.append("C:/Users/232144/Desktop/HaLu_venv/HALU/Audio/")#ここはファイルパス。自分のに変換して
 sys.path.append("C:/Users/232144/Desktop/HaLu_venv/HALU/data/")
 sys.path.append("C:/Users/232144/Desktop/HaLu_venv/HALU/Audio/")
+"""
+sys.path.append("C:/Users/snitt/Desktop/HALU_venv/HaLu/Audio/")#ここはファイルパス。自分のに変換して
+sys.path.append("C:/Users/snitt/Desktop/HaLu_venv/HALU/data/")
+sys.path.append("C:/Users/snitt/Desktop/HaLu_venv/HALU/Audio/")
 
 #sys.path.append("C:/Users/232116/Desktop/New_HaLu/HALU/Audio/")#たけとPCpath
 #sys.path.append("C:/Users/232116/Desktop/New_HaLu/HALU/")
