@@ -7,7 +7,7 @@ VOCAB_SIZE = 5000
 MAX_LEN = 30
 
 # ===== 学習済み成果物をロード =====
-model = load_model("emotion_model_regression.h5")
+model = load_model("emotion_model_regression.h5", compile=False)
 
 with open("tokenizer.pkl", "rb") as f:
     tokenizer = pickle.load(f)
@@ -41,4 +41,8 @@ while True:
     if text == "exit":
         break
     val, aro = predict_emotion(text)
-    print(f"Valence: {val:.3f}, Arousal: {aro:.3f}")
+    print("---------------")
+    print(f"入力文    : {text}")
+    print(f"Valence  : {val:.3f}")
+   
+
