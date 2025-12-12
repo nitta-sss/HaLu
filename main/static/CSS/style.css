@@ -1,3 +1,5 @@
+css
+
 
 /* ===========================
    全体レイアウト
@@ -215,4 +217,23 @@ main {
     width: 0%;             /* ★ 初期値がないとアニメーションされない */
     background: red;
     transition: width 2.5s ease;
+}
+
+#toggle-btn {
+    position: absolute;
+    right: 40px;
+    padding: 10px 20px;
+    background: white;
+    color: black;
+    border: 2px solid #000;
+    border-radius: 10px;
+}
+
+.fade {
+    opacity: 1;
+    transition: opacity 0.4s ease; /* ← フェード時間ここで調整可能 */
+}
+
+.fade.hide {
+    opacity: 0;
 }
