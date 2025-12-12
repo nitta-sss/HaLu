@@ -51,6 +51,7 @@ tokenizer.fit_on_texts(texts)
 
 with open("tokenizer.pkl", "wb") as f:
     pickle.dump(tokenizer, f)
+    print("トークナイザー保存")
 
 sequences = tokenizer.texts_to_sequences(texts)
 X = pad_sequences(sequences, maxlen=MAX_LEN)
@@ -167,3 +168,5 @@ val, aro = predict_emotion(test_text)
 print("テキスト:", test_text)
 print("予測 Valence:", val)
 print("予測 Arousal:", aro)
+
+print(tokenizer)
