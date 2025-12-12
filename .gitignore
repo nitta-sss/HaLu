@@ -17,3 +17,7 @@ env/
 *.pt
 *.wav
 *.mp3
+
+# allow trained model and tokenizer
+!emotion_model_regression.h5
+!tokenizer.pkl
