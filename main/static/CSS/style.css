@@ -169,10 +169,19 @@ main {
 
 
 /* 音声入力ボタン */
-.speak-icon {
+.voice-icon {
     text-align: center;
-    font-size: 40px;
-    margin-bottom: 20px;
+    margin: auto;
+    width: 80px;
+    height: 80px;
+    border: none;
+    border-bottom: solid 2px #c0c0c0;
+    border-radius: 50%;
+    box-shadow: inset 15px 30px 40px rgba(255, 255, 255, 0.5), 0 3px 7px rgba(0, 0, 0, .2);
+    background-image: linear-gradient(#1579c0 0%, #0569b0 100%);
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 1em;
 }
 
 
@@ -268,4 +277,49 @@ main {
 
 .fade.hide {
     opacity: 0;
+}
+
+
+/* 
+音声入力中のアニメーションと音声入力の有効化
+ */
+ .recording {
+    animation: recordPulse 0.6s infinite alternate ease-in-out;
+}
+
+@keyframes recordPulse {
+    from {
+        transform: scale(1);
+        box-shadow: 0 0 10px rgba(50, 150, 255, 0.7),
+                    0 0 20px rgba(50, 150, 255, 0.4);
+    }
+    to {
+        transform: scale(1.15);
+        box-shadow: 0 0 20px rgba(0, 120, 255, 1),
+                    0 0 40px rgba(0, 120, 255, 0.7);
+    }
+}
+
+/* 顔アイコンに波紋アニメーション */
+/* .face-anim {
+    animation: ripple 0.8s infinite;
+} */
+
+/* 音声入力ボタンアイコン画像 */
+#voiceBtn {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+
+    /* マイクアイコン画像 */
+    background-image: url("/static/img/voiceMic.png"); 
+    background-size: 60%;     /* 画像サイズ調整 */
+    background-repeat: no-repeat;
+    background-position: center;
+
+    /* グラデ背景 */
+    background-color: #3088e0;
+    box-shadow: 0 4px 10px #0003;
 }
