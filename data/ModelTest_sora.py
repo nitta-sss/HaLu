@@ -1,35 +1,33 @@
 # ===============================
 # 1. ライブラリ
 # ===============================
+import os
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.preprocessing.text import Tokenizer
 
 import pickle
 import numpy as np
-print("AIライブラリOK")
+
 # ===============================
 # 2. 定数
 # ===============================
 VOCAB_SIZE = 5000
 MAX_LEN = 30
-print("AI定数OK")
 # ===============================
 # 3. モデル & Tokenizer 読み込み
 # ===============================
-model = load_model("emotion_model_regression.h5")
-print("モデルロードOK")
+model = load_model("emotion_model_regression_sora.h5")
 try:
-    with open("tokenizer.pkl", "rb") as f:
-        print("トークナイザー開始")
+    with open("tokenizer_sora.pkl", "rb") as f:
         tokenizer = pickle.load(f)
-    print("トークナイザーOK")
 except Exception as e:
     print("❌ tokenizer 読み込み失敗")
     print(type(e))
     print(e)
     raise
-print("✅ モデル & tokenizer 読み込み完了")
+
 
 # ===============================
 # 4. 性格補正

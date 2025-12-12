@@ -4,7 +4,7 @@ import numpy as np
 import threading
 import time
 from datetime import datetime
-print("Voiceライブラリimport完了")
+
 
 recording = False
 audio_buffer = []
