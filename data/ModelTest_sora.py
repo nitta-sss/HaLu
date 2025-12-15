@@ -9,7 +9,7 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 
 import pickle
 import numpy as np
-
+print("AIインポート完了")
 # ===============================
 # 2. 定数
 # ===============================
@@ -18,9 +18,17 @@ MAX_LEN = 30
 # ===============================
 # 3. モデル & Tokenizer 読み込み
 # ===============================
-model = load_model("emotion_model_regression_sora.h5")
 try:
-    with open("tokenizer_sora.pkl", "rb") as f:
+    model = load_model("emotion_model_regression.h5")
+    print("モデルOK")
+except Exception as e:
+    print("❌ モデル 読み込み失敗")
+    print(type(e))
+    print(e)
+    raise
+
+try:
+    with open("tokenizer.pkl", "rb") as f:
         tokenizer = pickle.load(f)
 except Exception as e:
     print("❌ tokenizer 読み込み失敗")

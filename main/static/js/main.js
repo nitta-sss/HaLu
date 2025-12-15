@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
 }
 
     /* ▼▼ ゲージ表示/非表示ボタン ▼▼ */
-    const btn = document.getElementById("toggle-btn");
+    const btn = document.getElementById("showbtn");
     const gauge = document.getElementById("emotionArea");
 
     btn.addEventListener("click", function () {

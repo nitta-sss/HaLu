@@ -22,6 +22,7 @@ header {
     color: white;
     padding: 1rem;
     text-align: center;
+    z-index: 10
 }
 
 /* 左上アイコン画像 */
@@ -92,7 +93,7 @@ main {
     width: 100%;
     height: 100%;
     object-fit: cover;   /* ★ 画面いっぱいに拡大 */
-    z-index: 0;
+    z-index: 1;
 }
 
 /* HaLu顔 */
@@ -250,25 +251,26 @@ main {
     height: 25px;
     background: #fff;
     border: 2px solid #000;
-    overflow: hidden;      /* ★ これが最重要 */
+    overflow: hidden;    
 }
 
 .bar-fill {
     height: 100%;
-    width: 0%;             /* ★ 初期値がないとアニメーションされない */
+    width: 0%;             /*初期値がないとアニメーションされない*/
     background: red;
     transition: width 2.5s ease;
 }
 
-#toggle-btn {
+/* #toggle-btn {
     position: absolute;
     right: 40px;
+    top: 20px;
     padding: 10px 20px;
     background: white;
     color: black;
     border: 2px solid #000;
     border-radius: 10px;
-}
+} */
 
 .fade {
     opacity: 1;
@@ -280,9 +282,9 @@ main {
 }
 
 
-/* 
+/* ===========================
 音声入力中のアニメーションと音声入力の有効化
- */
+ ===========================*/
  .recording {
     animation: recordPulse 0.6s infinite alternate ease-in-out;
 }
@@ -322,4 +324,83 @@ main {
     /* グラデ背景 */
     background-color: #3088e0;
     box-shadow: 0 4px 10px #0003;
+}
+/* ===========================
+背景画像変更
+=========================== */
+#bgChangeBtn {
+    position: relative;
+    z-index: 20;   /* ボタンをさらに前面に */
+}
+
+/* #backimg {
+    position: absolute;
+    right: 40px;
+    top:20px;
+    padding: 10px 20px;
+    background: white;
+    color: black;
+    border: 2px solid #000;
+    border-radius: 10px;
+} */
+
+/* .backimg{
+    width: 100%;
+    text-align: right;
+}
+
+.backimgbtn{
+    position: absolute;
+    top:10px;
+    width: 125px;
+    margin-top: 10px;
+    margin-right: 250px;
+
+    padding: 10px 20px;
+    background: white;
+    color: black;
+    border: 2px solid #000;
+    border-radius: 10px;
+} */
+
+.headerButton {
+    display: flex;
+    gap: 10px; 
+    justify-content: flex-end;
+}
+.button-32 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 175px;
+    margin: 0 0 10px 0;
+    padding: .7em 2em;
+    overflow: hidden;
+    border: 1px solid #2589d0;
+    border-radius: 25px;
+    background-color: #fff;
+    color: #2589d0;
+    font-size: 1em;
+}
+
+.button-32:hover {
+    background-color: transparent;
+    color: #fff;
+}
+
+.button-32::before {
+    position: absolute;
+    z-index: -1;
+    transform: rotate(-30deg);
+    width: 100%;
+    height: 0;
+    border-radius: 25px;
+    background-color: #2589d0;
+    content: '';
+    transition: height .3s ease;
+}
+
+.button-32:hover::before {
+    height: 350%;
 }
