@@ -7,9 +7,10 @@ conn = sqlite3.connect("AI.db")
 # データ取得
 df = pd.read_sql_query(
     """
-    SELECT テキストデータ, valence, arousal
+    SELECT 感情ID, ROUND(AVG(valence),2), ROUND(AVG(arousal),2), COUNT(*)
     FROM TestData
-
+    GROUP BY 感情ID
+    ORDER BY 感情ID;
     """
     , conn)
 
