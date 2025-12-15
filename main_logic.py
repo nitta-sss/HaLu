@@ -1,14 +1,15 @@
 
 import sys
-"""
+
 sys.path.append("C:/Users/232144/Desktop/HaLu_venv/HALU/Audio/")#ここはファイルパス。自分のに変換して
 sys.path.append("C:/Users/232144/Desktop/HaLu_venv/HALU/data/")
 sys.path.append("C:/Users/232144/Desktop/HaLu_venv/HALU/Audio/")
+
 """
 sys.path.append("C:/Users/snitt/Desktop/HALU_venv/HaLu/Audio/")#ここはファイルパス。自分のに変換して
 sys.path.append("C:/Users/snitt/Desktop/HaLu_venv/HALU/data/")
 sys.path.append("C:/Users/snitt/Desktop/HaLu_venv/HALU/Audio/")
-
+"""
 #sys.path.append("C:/Users/232116/Desktop/New_HaLu/HALU/Audio/")#たけとPCpath
 #sys.path.append("C:/Users/232116/Desktop/New_HaLu/HALU/")
 
@@ -32,7 +33,14 @@ Text_Read.read_text("テキストを受信")
 Text_Read.read_text("感情予測を開始します")
 val, aro=ModelTest_sora.suiron_test_kari(text)#感情予測機能起動
 
+
+
 print("音声認識：",text)
 print(f"快ー不快: {val}\n覚醒ー静寂: {aro}")
+
+return render(request, "index.html", {
+    "val":val,
+    "aro":aro
+})
 
 
