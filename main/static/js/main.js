@@ -3,24 +3,39 @@ document.addEventListener("DOMContentLoaded", function () {
     const awakeBar = document.getElementById("awakeBar");
     const pleasureBar = document.getElementById("pleasureBar");
 
-    let emotion = {
-        x: 20,
-        y: 80
+    const emotion = {
+        x: Number("{{ awakening }}"),
+        y: Number("{{ pleasure }}")
     };
 
-    function updateGauge() {
-        awakeBar.style.width = emotion.x + "%";
-        pleasureBar.style.width = emotion.y + "%";
-        updateGaugeColors(emotion.x, emotion.y);
+    function normalize(v) {
+        return Math.max(0, Math.min(100, (v + 1) * 50));
     }
 
-    updateGauge();
+    function updateGauge() {
+        awakeBar.style.width = normalize(emotion.x) + "%";
+        pleasureBar.style.width = normalize(emotion.y) + "%";
+    }
 
-    setInterval(function () {
-        emotion.x = Math.floor(Math.random() * 101);
-        emotion.y = Math.floor(Math.random() * 101);
-        updateGauge();
-    }, 3000);
+    //テスト用
+
+    // let emotion = {
+    //     x: 0.2,    // 覚醒度：-1 ～ +1
+    //     y: -0.5    // 快楽度：-1 ～ +1
+    // };
+    // function updateGauge() {
+    //     awakeBar.style.width = emotion.x + "%";
+    //     pleasureBar.style.width = emotion.y + "%";
+    //     updateGaugeColors(emotion.x, emotion.y);
+    // }
+
+    // updateGauge();
+
+    // setInterval(function () {
+    //     emotion.x = Math.floor(Math.random() * 101);
+    //     emotion.y = Math.floor(Math.random() * 101);
+    //     updateGauge();
+    // }, 3000);
 
     /* ★ 色変化の関数 ★ */
     function updateGaugeColors(x, y) {
