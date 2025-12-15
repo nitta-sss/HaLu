@@ -20,6 +20,9 @@
             </div>
         
             <div class="headerButton">
+                <!-- 音声切替ボタン -->
+                <button id="soundbtn" class="button-32">音声有効化</button>
+                <audio id="gaugeSound" src="{% static 'sound/gauge.mp3' %}"></audio>
                 <!-- ゲージ表示切替ボタン -->
                 <button id="showbtn" class="button-32">ゲージ非表示</button>
                 <!-- 背景画像変更 -->
@@ -92,7 +95,7 @@
                 </div>
             </div>
         </div>
-
+        <audio id="gaugeSound" src="{% static 'sound/gauge.mp3' %}"></audio>
         <script src="{% static 'js/main.js' %}"></script>
         <script src="{% static 'js/voice_animation.js' %}"></script>
         <script src="{% static 'js/updateBackimg.js' %}"></script>

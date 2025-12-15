@@ -3,39 +3,65 @@ document.addEventListener("DOMContentLoaded", function () {
     const awakeBar = document.getElementById("awakeBar");
     const pleasureBar = document.getElementById("pleasureBar");
 
-    const emotion = {
-        x: Number("{{ awakening }}"),
-        y: Number("{{ pleasure }}")
-    };
+    //値を受け取るやつ
+    // const emotion = {
+    //     x: Number("{{ awakening }}"),
+    //     y: Number("{{ pleasure }}")
+    // };
+
+    let prevAwake = null;
+    let prevPleasure = null;
 
     function normalize(v) {
-        return Math.max(0, Math.min(100, (v + 1) * 50));
+        const percent = (v + 1) * 50;   // -1→0, 0→50, +1→100
+        return Math.max(0, Math.min(100, percent)); // 念のため制限
     }
 
-    function updateGauge() {
-        awakeBar.style.width = normalize(emotion.x) + "%";
-        pleasureBar.style.width = normalize(emotion.y) + "%";
-    }
+    // function updateGauge() {
+    //     awakeBar.style.width = normalize(emotion.x) + "%";
+    //     pleasureBar.style.width = normalize(emotion.y) + "%";
+    // }
 
     //テスト用
 
-    // let emotion = {
-    //     x: 0.2,    // 覚醒度：-1 ～ +1
-    //     y: -0.5    // 快楽度：-1 ～ +1
-    // };
-    // function updateGauge() {
-    //     awakeBar.style.width = emotion.x + "%";
-    //     pleasureBar.style.width = emotion.y + "%";
-    //     updateGaugeColors(emotion.x, emotion.y);
-    // }
+    let emotion = {
+        x: 0.2,    // 覚醒度：-1 ～ +1
+        y: -0.5    // 快楽度：-1 ～ +1
+    };
 
-    // updateGauge();
+    function updateGauge() {
+        const awakePercent = normalize(emotion.x);
+        const pleasurePercent = normalize(emotion.y);
+    
+        awakeBar.style.width = awakePercent + "%";
+        pleasureBar.style.width = pleasurePercent + "%";
+    
+        // ★ 色を反映させる
+        updateGaugeColors(awakePercent, pleasurePercent);
+    
+        if (prevAwake !== null && prevAwake !== awakePercent) {
+            playSound();
+        }
+        if (prevPleasure !== null && prevPleasure !== pleasurePercent) {
+            playSound();
+        }
+    
+        prevAwake = awakePercent;
+        prevPleasure = pleasurePercent;
+    }
 
-    // setInterval(function () {
-    //     emotion.x = Math.floor(Math.random() * 101);
-    //     emotion.y = Math.floor(Math.random() * 101);
-    //     updateGauge();
-    // }, 3000);
+    updateGauge();
+
+    setInterval(function () {
+        emotion.x = Math.random() * 2 - 1;  // -1 ～ +1
+        emotion.y = Math.random() * 2 - 1;  // -1 ～ +1
+
+        console.log("emotion raw:", emotion);
+        console.log("awake %:", normalize(emotion.x));
+        console.log("pleasure %:", normalize(emotion.y));
+
+        updateGauge();
+    }, 3000);
 
     /* ★ 色変化の関数 ★ */
     function updateGaugeColors(x, y) {
@@ -63,9 +89,48 @@ document.addEventListener("DOMContentLoaded", function () {
     const btn = document.getElementById("showbtn");
     const gauge = document.getElementById("emotionArea");
 
+
     btn.addEventListener("click", function () {
         gauge.classList.toggle("hide");
         btn.textContent = gauge.classList.contains("hide") ? "ゲージ表示" : "ゲージ非表示";
     });
+
+    function playSound() {
+        if (!soundEnabled) return;   // ← ★ 無効なら即終了
+    
+        sound.currentTime = 0;
+        sound.play().catch(err => {
+            console.log("再生エラー:", err);
+        });
+    }
+
+    let soundEnabled = false;
+    const sound = document.getElementById("gaugeSound");
+    const soundBtn = document.getElementById("soundbtn");
+
+    soundBtn.addEventListener("click", function () {
+
+        // ▶ 音声が「無効」→「有効」にする
+        if (!soundEnabled) {
+            sound.play().then(() => {
+                sound.pause();
+                sound.currentTime = 0;
+
+                soundEnabled = true;
+                soundBtn.textContent = "🔇 音声を無効化";
+                alert("音声を有効化しました");
+            }).catch(err => {
+                console.log("音声の有効化に失敗", err);
+            });
+
+        // ▶ 音声が「有効」→「無効」にする
+        } else {
+            soundEnabled = false;
+            soundBtn.textContent = "🔊 音声を有効化";
+            alert("音声を無効化しました");
+        }
+    });
+
+
 
 });  
