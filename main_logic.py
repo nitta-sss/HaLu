@@ -39,14 +39,13 @@ valaro = {
         "val": val,
         "aro": aro
     }
-
+print(valaro)
 print("音声認識：",text)
 print(f"快ー不快: {val}\n覚醒ー静寂: {aro}")
 
+index()
 def index(request):
-    return valaro(request, "index.html", {
-        "val":val,
-        "aro":aro
-    })
+    print("indexの中", valaro)
+    return render(request, "index.html", valaro)
 
 

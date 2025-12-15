@@ -20,6 +20,11 @@
             </div>
         
             <div class="headerButton">
+                <!-- 起動ボタンボタン（本実装の時は消す） -->
+                <button id="startbtn" class="button-32">起動</button>
+                <!-- 音声切替ボタン -->
+                <button id="soundbtn" class="button-32">音声有効化</button>
+                <audio id="gaugeSound" src="{% static 'sound/gauge.mp3' %}"></audio>
                 <!-- ゲージ表示切替ボタン -->
                 <button id="showbtn" class="button-32">ゲージ非表示</button>
                 <!-- 背景画像変更 -->
@@ -59,9 +64,16 @@
                 <!-- 右画面背景画像 -->
                 <img src="{% static 'img/windows.jpg' %}" class="right-back">
 
+                <!-- 起動ボタン押下時のアニメーション -->
+                <div class="start-area">
+                    <!-- playsinlineを入れないとスマホとかで強制的に全画面表示になる -->
+                    <video id="startvideo" width="400" muted playsinline style="display:none;"> 
+                        <source src="{% static 'video/startvideo.mp4' %}" type="video/mp4">
+                    </video>
+                </div>
                 <!-- HaLuの顔画像 -->
                 <div class="face-area">
-                    <img src="{% static 'img/HaLu_Face.png' %}" class="face-img">
+                    <img id = "icon" src="{% static 'img/HaLu_Face.png' %}" class="face-img" style="display:none;">
                 </div>
             
                 <!-- 感情ゲージ -->
@@ -92,7 +104,6 @@
                 </div>
             </div>
         </div>
-
         <script src="{% static 'js/main.js' %}"></script>
         <script src="{% static 'js/voice_animation.js' %}"></script>
         <script src="{% static 'js/updateBackimg.js' %}"></script>

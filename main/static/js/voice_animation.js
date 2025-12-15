@@ -12,8 +12,8 @@ document.addEventListener("DOMContentLoaded", () => {
         let pressingSpace = false;
 
     // 音声読み込み
-    const startSound = new Audio("/static/sound/start.wav"); 
-    const stopSound  = new Audio("/static/sound/stop.wav");
+    // const startSound = new Audio("/static/sound/start.wav"); #一旦コメントアウト
+    // const stopSound  = new Audio("/static/sound/stop.wav");#一旦コメントアウト
 
     /* ------------------------
        録音開始
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // 音を鳴らす
         startSound.currentTime = 0;
-        startSound.play();
+        // startSound.play();#一旦コメントアウト
 
         // アニメーション ON
             // ボタン光るアニメーション
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // 音を鳴らす
         stopSound.currentTime = 0;
-        stopSound.play();
+        // stopSound.play();#一旦コメントアウト
         
         // アニメーション OFF
         btn.classList.remove("recording");
