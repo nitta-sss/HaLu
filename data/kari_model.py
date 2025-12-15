@@ -24,6 +24,7 @@ def load_data_db():
         FROM TestData
         WHERE valence IS NOT NULL
           AND arousal IS NOT NULL
+          AND 感情ID != 0 
     """, conn)
     conn.close()
     return df
@@ -105,6 +106,7 @@ history = model.fit(
 # ===============================
 # 7. 学習曲線
 # ===============================
+
 plt.plot(history.history["loss"], label="loss")
 plt.plot(history.history["val_loss"], label="val_loss")
 plt.legend()
@@ -162,7 +164,7 @@ def predict_emotion(text):
     val, aro = apply_personality_bias(float(val), float(aro), text)
     return float(val), float(aro)
 
-test_text = "嬉しい"
+test_text = "今日は天気がいいので気分がいいです"
 val, aro = predict_emotion(test_text)
 
 print("テキスト:", test_text)
