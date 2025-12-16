@@ -1,4 +1,4 @@
-from emotion_inference import suiron_test
+from data.emotion_inference import suiron_test
 
 text = "今日は天気がいいので気分がいいです"
 
