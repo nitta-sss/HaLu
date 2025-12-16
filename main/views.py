@@ -1,14 +1,21 @@
 #from data.Emotional.Delivary import get_emotion_values
 from django.shortcuts import render
+from data.emotion_inference import suiron_test
+
+
+text = "今日は天気がいいので気分がいいです"
+
+result = suiron_test(text)
 
 def index(request):
 
     # text = "怒りで震えてる！許せない！！"
     # a, b = get_emotion_values(text)
     # print(a,b)
-    pleasure = 100
-    awakening = 100
+    pleasure = result["valence"]
+    awakening = result["arousal"]
 
+    
     messages = [
         {"sender": "user", "text": "こんにちは！"},
         {"sender": "bot",  "text": "リラックスしてるよ"},
@@ -24,6 +31,7 @@ def index(request):
         {"sender": "bot",  "text": "だまれ"},
         {"sender": "bot",  "text": "だまれだまれだまれだまれだまれだまれ"},
         {"sender": "bot",  "text": "だまれ"},
+
     ]
 
 
