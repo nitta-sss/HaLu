@@ -299,33 +299,7 @@ main {
     opacity: 0;
 }
 
-
-/* ===========================
-音声入力中のアニメーションと音声入力の有効化
- ===========================*/
- .recording {
-    animation: recordPulse 0.6s infinite alternate ease-in-out;
-}
-
-@keyframes recordPulse {
-    from {
-        transform: scale(1);
-        box-shadow: 0 0 10px rgba(50, 150, 255, 0.7),
-                    0 0 20px rgba(50, 150, 255, 0.4);
-    }
-    to {
-        transform: scale(1.15);
-        box-shadow: 0 0 20px rgba(0, 120, 255, 1),
-                    0 0 40px rgba(0, 120, 255, 0.7);
-    }
-}
-
-/* 顔アイコンに波紋アニメーション */
-/* .face-anim {
-    animation: ripple 0.8s infinite;
-} */
-
-/* 音声入力ボタンアイコン画像 */
+/* 通常時（録音していない） */
 #voiceBtn {
     width: 80px;
     height: 80px;
@@ -333,16 +307,66 @@ main {
     border: none;
     cursor: pointer;
 
-    /* マイクアイコン画像 */
-    background-image: url("/static/img/voiceMic.png"); 
-    background-size: 60%;     /* 画像サイズ調整 */
+    background-image: url("/static/img/voiceMic.png");
+    background-size: 60%;
     background-repeat: no-repeat;
     background-position: center;
 
-    /* グラデ背景 */
-    background-color: #3088e0;
+    background-color: #ff4b4b; /* ← 通常時は赤 */
     box-shadow: 0 4px 10px #0003;
 }
+
+/* 録音中 */
+#voiceBtn.recording {
+    background-color: #3088e0; /* ← 録音中は青 */
+    animation: recordPulse 0.6s infinite alternate ease-in-out;
+}
+
+
+@keyframes recordPulse {
+    from {
+        transform: scale(1);
+        box-shadow:
+            0 0 10px rgba(50, 150, 255, 0.7),
+            0 0 20px rgba(50, 150, 255, 0.4);
+    }
+    to {
+        transform: scale(1.15);
+        box-shadow:
+            0 0 20px rgba(0, 120, 255, 1),
+            0 0 40px rgba(0, 120, 255, 0.7);
+    }
+}
+
+/* ===========================
+録音終了エフェクト（赤くホワン）
+ =========================== */
+.recording-end {
+    animation: endFlash 1.75s ease-out;
+}
+
+@keyframes endFlash {
+    0% {
+        box-shadow: 0 0 0 rgba(255,0,0,0);
+        background-color: #3088e0;
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(255, 0, 0, 0.952);
+        background-color: #ff4b4b;
+    }
+    100% {
+        box-shadow: 0 0 0 rgba(255,0,0,0.9);
+        background-color: #ff4b4b;
+    }
+}
+
+
+/* 顔アイコンに波紋アニメーション */
+/* .face-anim {
+    animation: ripple 0.8s infinite;
+} */
+
+
 /* ===========================
 背景画像変更
 =========================== */
@@ -441,10 +465,6 @@ main {
 
 /* 動画自体 */
 #startvideo {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    width: 400px;         /* ← サイズを明示 */
+    height: auto;
 }

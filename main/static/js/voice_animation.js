@@ -1,94 +1,44 @@
-// エラー対策のテンプレ
+//エラー対策のテンプレ
 document.addEventListener("DOMContentLoaded", () => {
 
     // HTMLからID取得変数にIN
     const btn = document.getElementById("voiceBtn");
-    const face = document.getElementById("icon");
 
-    // 初期状態はfalse
-        // 録音中かどうか
-        let isRecording = false;
-        // スペースキー押されているかどうか
-        let pressingSpace = false;
+    // 録音ON/OFFの状態を持つ
+    let isRecording = false;
 
-    // 音声読み込み
-    const startSound = new Audio("/static/sound/start.wav"); 
-    const stopSound  = new Audio("/static/sound/stop.wav");
-
-    /* ------------------------
-       録音開始
-    ------------------------ */
+    // 録音ONにする
     function startRecording() {
+        isRecording = true;     //trueとfalseの反転の代わり
+        console.log("録音ON");
 
-        // isRecordingがtrue（録音中）ならすぐに処理を中止
-        // 二重で録音開始されるのを防ぐ
-        if (isRecording) return;
+        btn.classList.remove("stop-effect"); // 念のため消す
+        btn.classList.add("recording");
 
-        // 録音中というフラグを立て他の処理が「今録音中かどうか」を判定できるようになる
-        isRecording = true;
-
-        console.log("録音開始");
-
-        // 音を鳴らす
-        startSound.currentTime = 0;
-        // startSound.play();#一旦コメントアウト
-
-        // アニメーション ON
-            // ボタン光るアニメーション
-            btn.classList.add("recording");
-            // 波紋アニメーション
-            face.classList.add("face-anim");
+        // ここに実際の音声入力開始処理を後で入れる
     }
 
-    /* ------------------------
-       録音停止
-    ------------------------ */
+    // 録音OFFにする
     function stopRecording() {
-        if (!isRecording) return;
-        isRecording = false;
+        isRecording = false;    //trueとfalseの反転の代わり
+        console.log("録音OFF");
 
-        console.log("録音停止");
-
-        // 音を鳴らす
-        stopSound.currentTime = 0;
-        // stopSound.play();#一旦コメントアウト
-        
-        // アニメーション OFF
         btn.classList.remove("recording");
-        face.classList.remove("face-anim");
+
+        // OFF時のホワン演出
+        btn.classList.add("recording-end");
+        setTimeout(() => {
+            btn.classList.remove("recording-end");
+        }, 500);
+
+        // ここに音声入力停止処理を後で入れる
     }
 
-    /* ------------------------
-       ① マウス長押し判定
-    ------------------------ */
-    // ボタン押したら録音開始
-    btn.addEventListener("mousedown", () => {
-        startRecording();
-    });
-
-    // ボタン話したら録音中止
-    btn.addEventListener("mouseup", () => {
-        stopRecording();
-    });
-
-    /* ------------------------
-       ② スペースキー長押し判定
-    ------------------------ */
-
-    // 発生イベント→keydown,呼ぶ関数→startRecording()
-    document.addEventListener("keydown", (e) => {
-        if (e.code === "Space") {
-            if (!pressingSpace) {
-                pressingSpace = true;
-                startRecording();
-            }
-        }
-    });
-
-    // 発生イベント→keyup,呼ぶ関数→stopRecording()
-    document.addEventListener("keyup", (e) => {
-        if (e.code === "Space") {
-            pressingSpace = false;
+    // ボタンを押すたびにON/OFF切り替え
+    btn.addEventListener("click", () => {
+        if (!isRecording) {
+            startRecording();
+        } else {
             stopRecording();
         }
     });
