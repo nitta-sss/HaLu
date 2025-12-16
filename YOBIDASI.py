@@ -16,7 +16,5 @@ print("Text:", text)
 print("快楽度:", result["valence"])
 print("覚醒度:", result["arousal"])
 print("感情カテゴリ:", result["category"])
-print("セリフ:", result["message"])
-
-print("-----")
+print("--------------------rr-")
 print("AIの返答:", ai_reply)
