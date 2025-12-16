@@ -5,6 +5,7 @@ text = start_voice_read()
 
 result = suiron_test(text)
 
+print("Text:",text)
 print("快楽度:", result["valence"])
 print("覚醒度:", result["arousal"])
 print("感情カテゴリ:", result["category"])

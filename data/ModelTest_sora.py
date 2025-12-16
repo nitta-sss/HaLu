@@ -79,7 +79,7 @@ def predict_emotion(text):
 # ===============================
 # 6. 外部から呼ぶ関数（入口）
 # ===============================
-def suiron_test_kari(text):
+def suiron_test(text):
     val, aro = predict_emotion(text)
     return val, aro
 
