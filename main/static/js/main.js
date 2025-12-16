@@ -131,50 +131,42 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    //動画再生部分
-    // ==== 起動ボタン・動画制御 ====
+        // ==== 起動ボタン・動画制御 ====
 
     const startbtn = document.getElementById("startbtn");
     const startvideo = document.getElementById("startvideo");
     const icon = document.getElementById("icon");
+    const startArea = document.querySelector(".start-area"); // ← ★先に取る
 
     /* 🔄 ページ起動時の初期状態 */
-    startbtn.textContent = "起動";
-    startbtn.disabled = false;
-
+    startArea.style.display = "none";
     startvideo.pause();
     startvideo.currentTime = 0;
-    startvideo.style.display = "none";
     icon.style.display = "none";
+
+    startbtn.textContent = "起動";
+    startbtn.disabled = false;
 
     /* ▶ 起動ボタン */
     startbtn.addEventListener("click", () => {
         console.log("起動ボタンが押されました");
-    
+
         startbtn.textContent = "起動中";
         startbtn.disabled = true;
-    
-        startvideo.style.display = "block";
-    
+
+        startArea.style.display = "flex";
+        startvideo.currentTime = 0;
         startvideo.play().catch(err => {
             console.error("動画再生エラー:", err);
         });
-    
-        icon.style.display = "block";
     });
-    // startbtn.addEventListener("click", () => {
-    //     // ボタンをロック
-    //     startbtn.textContent = "起動中";
-    //     startbtn.disabled = true;
 
-    //     // 動画＆アイコン表示
-    //     startvideo.style.display = "block";
-    //     startvideo.play();
+    /* ▶ 動画終了 */
+    startvideo.addEventListener("ended", () => {
+        console.log("動画再生終了");
 
-    //     icon.style.display = "block";
-    // });
+        startArea.style.display = "none"; // ← 動画ごと消える
+        icon.style.display = "block";     // ← 顔だけ出る
+    });
 
-    /* ⚠️ 動画終了しても何もしない（起動中のまま） */
-
-   
 });  
