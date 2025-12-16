@@ -21,7 +21,7 @@
         
             <div class="headerButton">
                 <!-- 起動ボタンボタン（本実装の時は消す） -->
-                <!-- <button id="startbtn" class="button-32">起動</button> -->
+                <button id="startbtn" class="button-32">起動</button>
                 <!-- 音声切替ボタン -->
                 <button id="soundbtn" class="button-32">音声有効化</button>
                 <audio id="gaugeSound" src="{% static 'sound/gauge.mp3' %}"></audio>
@@ -106,12 +106,20 @@
         </div>
         <!-- pythonから値を受け取る場所 -->
         <script>
-        window.emotion = { x: 0, y: 0 };
+            window.emotion = { x: 0, y: 0 };
         </script>
+        
+        {% if awakening is not None %}
         <script>
             window.emotion.x = {{ awakening }};
+        </script>
+        {% endif %}
+        
+        {% if pleasure is not None %}
+        <script>
             window.emotion.y = {{ pleasure }};
         </script>
+        {% endif %}
         <script src="{% static 'js/main.js' %}"></script>
         <script src="{% static 'js/voice_animation.js' %}"></script>
         <script src="{% static 'js/updateBackimg.js' %}"></script>

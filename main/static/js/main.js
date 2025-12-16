@@ -1,10 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
-
-    const emotion = JSON.parse(document.getElementById("emotion-data").textContent);
-
+    const emotion = window.emotion;
     const awakeBar = document.getElementById("awakeBar");
     const pleasureBar = document.getElementById("pleasureBar");
-
     let prevAwake = null;
     let prevPleasure = null;
 
