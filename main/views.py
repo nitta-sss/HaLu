@@ -3,7 +3,7 @@ from django.shortcuts import render
 from data.emotion_inference import suiron_test
 
 
-text = "今日は天気がいいので気分がいいです"
+text = "雨降って萎えた"
 
 result = suiron_test(text)
 
@@ -14,8 +14,12 @@ def index(request):
     # print(a,b)
     pleasure = result["valence"]
     awakening = result["arousal"]
-    # pleasure = 10
-    # awakening = 50
+
+    # # 念のため float にする
+    # pleasure = float(valence)
+    # awakening = float(arousal)
+    # pleasure = 1
+    # awakening = -0.5
     
     messages = [
         {"sender": "user", "text": "こんにちは！"},
