@@ -17,12 +17,12 @@ body {
 }
 
 /* ヘッダー */
-header {
+.header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #333;
-    color: white;
+    background-color: white;
+    color: #333;
     padding: 12px 20px;
     text-align: center;
     z-index: 10
@@ -52,11 +52,14 @@ main {
     display: flex;
     align-items: center;
     gap: 10px;
-    border: 2px solid #333;
+    border: 3px solid #333;
     padding: 8px 16px;
     border-radius: 10px;
     width: fit-content;
     font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #FFE0F2;
+    color: #333;
 }
 
 
@@ -221,8 +224,20 @@ main {
     height: 100%;
     object-fit: contain; /* 画像の縦横比を保つなら */
     display: block;
+    animation: fadeIn 0.5s ease-in;
 }
 
+/* アイコンフェードイン */
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
 
 /* ===========================
    右：感情ゲージ
@@ -407,4 +422,29 @@ main {
 
 .button-32:hover::before {
     height: 350%;
+}
+
+.start-area {
+    position: absolute;   /* ← 必須 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    z-index: 9999;         /* ← 強制最前面 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    pointer-events: none; /* UI邪魔しない（任意） */
+}
+
+/* 動画自体 */
+#startvideo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }

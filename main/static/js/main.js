@@ -131,6 +131,42 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+        // ==== 起動ボタン・動画制御 ====
 
+    const startbtn = document.getElementById("startbtn");
+    const startvideo = document.getElementById("startvideo");
+    const icon = document.getElementById("icon");
+    const startArea = document.querySelector(".start-area"); // ← ★先に取る
+
+    /* 🔄 ページ起動時の初期状態 */
+    startArea.style.display = "none";
+    startvideo.pause();
+    startvideo.currentTime = 0;
+    icon.style.display = "none";
+
+    startbtn.textContent = "起動";
+    startbtn.disabled = false;
+
+    /* ▶ 起動ボタン */
+    startbtn.addEventListener("click", () => {
+        console.log("起動ボタンが押されました");
+
+        startbtn.textContent = "起動中";
+        startbtn.disabled = true;
+
+        startArea.style.display = "flex";
+        startvideo.currentTime = 0;
+        startvideo.play().catch(err => {
+            console.error("動画再生エラー:", err);
+        });
+    });
+
+    /* ▶ 動画終了 */
+    startvideo.addEventListener("ended", () => {
+        console.log("動画再生終了");
+
+        startArea.style.display = "none"; // ← 動画ごと消える
+        icon.style.display = "block";     // ← 顔だけ出る
+    });
 
 });  
