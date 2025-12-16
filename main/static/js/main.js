@@ -154,20 +154,19 @@ document.addEventListener("DOMContentLoaded", function () {
         startbtn.textContent = "起動中";
         startbtn.disabled = true;
 
-        startArea.style.display = "flex";
+        startvideo.style.display = "block"; // ← 明示的に表示
         startvideo.currentTime = 0;
-        startvideo.play().catch(err => {
-            console.error("動画再生エラー:", err);
-        });
+        startvideo.play();
     });
 
-    /* ▶ 動画終了 */
+    /* ▶ 動画の進行監視（これが一番安定） */
     startvideo.addEventListener("timeupdate", () => {
-        if (startvideo.currentTime >= startvideo.duration - 0.5) {
-            console.log("動画終了（timeupdate）");
-    
-            startArea.style.display = "none";
+        if (startvideo.currentTime >= startvideo.duration - 0.1) {
+            console.log("動画を非表示にします");
+
+            startvideo.style.display = "none"; // ← ここが超重要
             icon.style.display = "block";
         }
     });
 
+})
