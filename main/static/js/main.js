@@ -162,11 +162,12 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     /* ▶ 動画終了 */
-    startvideo.addEventListener("ended", () => {
-        console.log("動画再生終了");
-
-        startArea.style.display = "none"; // ← 動画ごと消える
-        icon.style.display = "block";     // ← 顔だけ出る
+    startvideo.addEventListener("timeupdate", () => {
+        if (startvideo.currentTime >= startvideo.duration - 0.5) {
+            console.log("動画終了（timeupdate）");
+    
+            startArea.style.display = "none";
+            icon.style.display = "block";
+        }
     });
 
-});  
