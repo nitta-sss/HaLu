@@ -104,15 +104,24 @@
                 </div>
             </div>
         </div>
+        <!-- pythonから値を受け取る場所 -->
         <script>
-            window.emotion = {
-                x: {{ awakening }},
-                y: {{ pleasure }}
-            };
+            window.emotion = { x: 0, y: 0 };
         </script>
+        
+        {% if awakening is not None %}
+        <script>
+            window.emotion.x = {{ awakening }};
+        </script>
+        {% endif %}
+        
+        {% if pleasure is not None %}
+        <script>
+            window.emotion.y = {{ pleasure }};
+        </script>
+        {% endif %}
         <script src="{% static 'js/main.js' %}"></script>
         <script src="{% static 'js/voice_animation.js' %}"></script>
         <script src="{% static 'js/updateBackimg.js' %}"></script>
-
     </body>
 </html>
