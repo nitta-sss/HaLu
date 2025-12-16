@@ -14,7 +14,8 @@ def index(request):
     # print(a,b)
     pleasure = result["valence"]
     awakening = result["arousal"]
-
+    # pleasure = 10
+    # awakening = 50
     
     messages = [
         {"sender": "user", "text": "こんにちは！"},

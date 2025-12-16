@@ -65,12 +65,12 @@
                 <img src="{% static 'img/windows.jpg' %}" class="right-back">
 
                 <!-- 起動ボタン押下時のアニメーション -->
-                <div class="start-area">
-                    <!-- playsinlineを入れないとスマホとかで強制的に全画面表示になる -->
-                    <video id="startvideo" width="400" muted playsinline preload="auto"> 
+                <!-- <div class="start-area">
+                    playsinlineを入れないとスマホとかで強制的に全画面表示になる
+                    <video id="startvideo" width="400" muted playsinline preload="auto" style="display:block;"> 
                         <source src="{% static 'video/startvideo.mp4' %}" type="video/mp4">
                     </video>
-                </div>
+                </div> -->
                 <!-- HaLuの顔画像 -->
                 <div class="face-area">
                     <img id = "icon" src="{% static 'img/HaLu_Face.png' %}" class="face-img" style="display:none;">
@@ -104,6 +104,12 @@
                 </div>
             </div>
         </div>
+        <script>
+            window.emotion = {
+                x: {{ awakening }},
+                y: {{ pleasure }}
+            };
+        </script>
         <script src="{% static 'js/main.js' %}"></script>
         <script src="{% static 'js/voice_animation.js' %}"></script>
         <script src="{% static 'js/updateBackimg.js' %}"></script>

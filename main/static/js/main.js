@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const awakeBar = document.getElementById("awakeBar");
     const pleasureBar = document.getElementById("pleasureBar");
 
-    値を受け取るやつ
+    // 値を受け取るやつ
     const emotion = {
         x: Number("{{ awakening }}"),
         y: Number("{{ pleasure }}")
@@ -25,8 +25,8 @@ document.addEventListener("DOMContentLoaded", function () {
     //テスト用
 
     // let emotion = {
-    //     x: 0.2,    // 覚醒度：-1 ～ +1
-    //     y: -0.5    // 快楽度：-1 ～ +1
+    //     x: 0,    // 覚醒度：-1 ～ +1
+    //     y: 0    // 快楽度：-1 ～ +1
     // };
 
     // function updateGauge() {
@@ -37,17 +37,17 @@ document.addEventListener("DOMContentLoaded", function () {
     //     pleasureBar.style.width = pleasurePercent + "%";
     
     //     // ★ 色を反映させる
-    //     updateGaugeColors(awakePercent, pleasurePercent);
+        // updateGaugeColors(awakePercent, pleasurePercent);
     
-    //     if (prevAwake !== null && prevAwake !== awakePercent) {
-    //         playSound();
-    //     }
-    //     if (prevPleasure !== null && prevPleasure !== pleasurePercent) {
-    //         playSound();
-    //     }
+        // if (prevAwake !== null && prevAwake !== awakePercent) {
+        //     playSound();
+        // }
+        // if (prevPleasure !== null && prevPleasure !== pleasurePercent) {
+        //     playSound();
+        // }
     
-    //     prevAwake = awakePercent;
-    //     prevPleasure = pleasurePercent;
+        // prevAwake = awakePercent;
+        // prevPleasure = pleasurePercent;
     // }
 
     updateGauge();
