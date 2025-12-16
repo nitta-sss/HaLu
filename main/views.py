@@ -12,8 +12,12 @@ def index(request):
     # text = "怒りで震えてる！許せない！！"
     # a, b = get_emotion_values(text)
     # print(a,b)
-    pleasure = result["valence"]
-    awakening = result["arousal"]
+    valence = result.get("valence", 0)
+    arousal = result.get("arousal", 0)
+
+    # 念のため float にする
+    pleasure = float(valence)
+    awakening = float(arousal)
     # pleasure = 10
     # awakening = 50
     

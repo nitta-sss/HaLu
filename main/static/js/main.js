@@ -1,7 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const emotion = window.emotion;
+
     const awakeBar = document.getElementById("awakeBar");
     const pleasureBar = document.getElementById("pleasureBar");
+
+    const emotion = window.emotion;
+
     let prevAwake = null;
     let prevPleasure = null;
 
