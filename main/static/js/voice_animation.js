@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // HTMLからID取得変数にIN
     const btn = document.getElementById("voiceBtn");
-    const face = document.getElementById("faceImg");
+    const face = document.getElementById("icon");
 
     // 初期状態はfalse
         // 録音中かどうか
@@ -12,8 +12,8 @@ document.addEventListener("DOMContentLoaded", () => {
         let pressingSpace = false;
 
     // 音声読み込み
-    // const startSound = new Audio("/static/sound/start.wav"); #一旦コメントアウト
-    // const stopSound  = new Audio("/static/sound/stop.wav");#一旦コメントアウト
+    const startSound = new Audio("/static/sound/start.wav"); 
+    const stopSound  = new Audio("/static/sound/stop.wav");
 
     /* ------------------------
        録音開始
