@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // 録音中かどうか
         let isRecording = false;
         // スペースキー押されているかどうか
-        let pressingSpace = false;
+        let pressingKeyR = false;
 
     // 音声読み込み
     // const startSound = new Audio("/static/sound/start.wav"); #一旦コメントアウト
@@ -77,9 +77,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 発生イベント→keydown,呼ぶ関数→startRecording()
     document.addEventListener("keydown", (e) => {
-        if (e.code === "Space") {
-            if (!pressingSpace) {
-                pressingSpace = true;
+        if (e.code === "KeyR") {
+            if (!pressingKeyR) {
+                pressingKeyR = true;
                 startRecording();
             }
         }
@@ -87,8 +87,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 発生イベント→keyup,呼ぶ関数→stopRecording()
     document.addEventListener("keyup", (e) => {
-        if (e.code === "Space") {
-            pressingSpace = false;
+        if (e.code === "KeyR") {
+            pressingKeyR = false;
             stopRecording();
         }
     });
