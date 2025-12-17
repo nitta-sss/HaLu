@@ -15,7 +15,7 @@
                 sound.currentTime = 0;
 
                 soundEnabled = true;
-                soundBtn.textContent = "🔇 音声を無効化";
+                soundBtn.textContent = "音声を無効化";
                 alert("音声を有効化しました");
             }).catch(err => {
                 console.log("音声の有効化に失敗", err);
@@ -24,7 +24,7 @@
         // ▶ 音声が「有効」→「無効」にする
         } else {
             soundEnabled = false;
-            soundBtn.textContent = "🔊 音声を有効化";
+            soundBtn.textContent = "音声を有効化";
             alert("音声を無効化しました");
         }
     });
