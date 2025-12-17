@@ -3,7 +3,7 @@ from django.shortcuts import render
 from data.emotion_inference import suiron_test
 
 
-text = "雨降って萎えた"
+text = "おこっています"
 
 result = suiron_test(text)
 
