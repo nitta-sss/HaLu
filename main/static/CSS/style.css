@@ -487,3 +487,7 @@ main {
     position: relative;  /* すでに absolute でも良いですが relative のままでもOK */
     z-index: 9999;       /* 他の絶対配置要素より前面 */
 }
+
+.hide {
+    display: none;
+}

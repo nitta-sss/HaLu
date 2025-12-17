@@ -78,6 +78,9 @@ document.addEventListener("DOMContentLoaded", function () {
 const btn = document.getElementById("showbtn");
 const gauge = document.getElementById("emotionArea");
 
+// 初期状態で非表示
+gauge.classList.add("hide");
+btn.textContent = "ゲージ表示";
 
 btn.addEventListener("click", function () {
     gauge.classList.toggle("hide");
