@@ -37,7 +37,7 @@ def llm_generate(user_text, timeout_sec=30):
 
 # ===== テスト =====
 if __name__ == "__main__":
-    text = "今日は天気がいいので気分がいいです"
+    text = "開発成功してめっちゃうれしい！"
     reply = llm_generate(text)
 
     print("入力:", text)

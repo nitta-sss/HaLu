@@ -134,7 +134,7 @@ def derive_ui_arousal(text, raw_aro, category):
     return clamp(a, 0.05, 1.0)
 
 # ===============================
-# 6. セリフ
+# 6. セリフ (今はLLMで返答してるから使ってない)
 # ===============================
 def decide_message(category):
     return {
