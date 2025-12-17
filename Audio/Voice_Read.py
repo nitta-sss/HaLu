@@ -102,42 +102,35 @@ def audio_loop():
             time.sleep(0.05)
 
 
-# -----------------------------
-# Rキー ON/OFF
-# -----------------------------
-def toggle_record(event):
-    global recording, audio_buffer
-
-    recording = not recording
-
-    if recording:
-        print("🎙️ 録音開始")
-        audio_buffer = []
-    else:
-        print("🛑 録音停止 → 変換中...")
-        process_buffer()
 
 
 # -----------------------------
 # 外部呼び出し用
 # -----------------------------
-def start_voice_read():
-    global final_text
-    import keyboard
+def start_recording():
+    global recording, audio_buffer, stop_flag, final_text
 
-    # 録音スレッド開始
+    print("🎙️ 録音開始（外部制御）")
+    audio_buffer = []
+    final_text = None
+    stop_flag = False
+    recording = True
+
+    # 録音スレッド起動
     t = threading.Thread(target=audio_loop, daemon=True)
     t.start()
 
-    # Rキー動作登録
-    keyboard.on_press_key("r", toggle_record)
 
-    # テキストが取れるまで待つ
-    while final_text is None:
-        time.sleep(0.1)
+def stop_recording():
+    global recording
 
+    print("🛑 録音停止（外部制御）")
+    recording = False
+    process_buffer()
+
+
+def get_result():
     return final_text
-
 
 # -----------------------------
 # デバッグ用

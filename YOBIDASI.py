@@ -1,11 +1,11 @@
 from data.emotion_inference import suiron_test
-from Audio.Voice_Read import start_voice_read
+from Audio.Voice_Read import start_recording
 from Ollama_Response import llm_generate
 from Audio.zunda import speak_now
 
 def run_ai():
     # 音声からテキスト
-    text = start_voice_read()
+    text = start_recording()
 
     # 感情推論
     result = suiron_test(text)
