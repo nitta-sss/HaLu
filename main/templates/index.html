@@ -23,8 +23,8 @@
                 <!-- 起動ボタンボタン（本実装の時は消す） -->
                 <button id="startbtn" class="button-32">起動</button>
                 <!-- 音声切替ボタン -->
-                <button id="soundbtn" class="button-32">音声有効化</button>
-                <audio id="gaugeSound" src="{% static 'sound/gauge.mp3' %}"></audio>
+                <button id="soundbtn" class="button-32">BGMを無効化</button>
+                <audio id="BGMsound" src="{% static 'sound/gauge.mp3' %}" loop></audio>
                 <!-- ゲージ表示切替ボタン -->
                 <button id="showbtn" class="button-32">ゲージ非表示</button>
                 <!-- 背景画像変更 -->
@@ -124,7 +124,7 @@
         <audio id="seOn" src="{% static 'sound/seOn.mp3' %}"></audio>
         <audio id="seOff" src="{% static 'sound/seOff.mp3' %}"></audio>
 
-
+        <script src="{% static 'js/BGM.js' %}"></script>
         <script src="{% static 'js/gauge.js' %}"></script>
         <script src="{% static 'js/main.js' %}"></script>
         <script src="{% static 'js/voice_animation.js' %}"></script>
