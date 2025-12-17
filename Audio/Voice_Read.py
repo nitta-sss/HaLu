@@ -62,7 +62,6 @@ def process_buffer():
     # numpy 配列にまとめる
     data = np.concatenate(audio_buffer, axis=0)
 
-    data = np.concatenate(audio_buffer, axis=0)
 
     # ★ 音量正規化（重要）
     max_val = np.max(np.abs(data))
