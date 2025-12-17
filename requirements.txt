@@ -19,6 +19,7 @@ keyboard==0.13.5
 
 # --- Web ---
 Django==4.2.20
+Flask==2.3.3
 
 # --- Whisper (必須) ---
 #faster-whisper==0.6.0 --no-deps

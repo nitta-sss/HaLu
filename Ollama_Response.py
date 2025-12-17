@@ -8,6 +8,7 @@ def llm_generate(user_text, timeout_sec=30):
 
     prompt = (
         "あなたは聞き役のAIです。"
+        ""
         "次の発言に対して、自然な返答を1文だけ出してください。"
         f"発言: {user_text}"
     )

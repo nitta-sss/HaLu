@@ -3,16 +3,29 @@ from Audio.Voice_Read import start_voice_read
 from Ollama_Response import llm_generate
 from Audio.zunda import speak_now
 
-text = start_voice_read()
+def run_ai():
+    # 音声からテキスト
+    text = start_voice_read()
 
-result = suiron_test(text)
+    # 感情推論
+    result = suiron_test(text)
 
-ai_reply = llm_generate(text)
+    # AI返答生成
+    ai_reply = llm_generate(text)
 
-print("Text:",text)
-print("快楽度:", result["valence"])
-print("覚醒度:", result["arousal"])
-print("感情カテゴリ:", result["category"])
-print("------------------------")
-speak_now(ai_reply)
-print("AIの返答:", ai_reply)
+    print("Text:",text)
+    print("快楽度:", result["valence"])
+    print("覚醒度:", result["arousal"])
+    print("感情カテゴリ:", result["category"])
+    print("------------------------")
+    speak_now(ai_reply)
+    print("AIの返答:", ai_reply)
+
+    # UIにかえすよう
+    return {
+        "text": text,
+        "valence": result["valence"],
+        "arousal": result["arousal"],
+        "category": result["category"],
+        "reply": ai_reply
+    }

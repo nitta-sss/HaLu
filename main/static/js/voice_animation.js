@@ -51,9 +51,23 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.addEventListener("click", () => {
         if (!isRecording) {
             startRecording();
+    
+            fetch("http://localhost:5000/ai/run", {
+                method: "POST"
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log("AI結果:", data);
+    
+                // UIに反映
+                document.getElementById("userText").innerText = data.text;
+                document.getElementById("aiText").innerText = data.reply;
+            });
+    
         } else {
             stopRecording();
         }
     });
+    
 
 });
