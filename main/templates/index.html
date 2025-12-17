@@ -120,6 +120,11 @@
             window.emotion.y = {{ pleasure }};
         </script>
         {% endif %}
+
+        <audio id="seOn" src="{% static 'sound/seOn.mp3' %}"></audio>
+        <audio id="seOff" src="{% static 'sound/seOff.mp3' %}"></audio>
+
+
         <script src="{% static 'js/gauge.js' %}"></script>
         <script src="{% static 'js/main.js' %}"></script>
         <script src="{% static 'js/voice_animation.js' %}"></script>

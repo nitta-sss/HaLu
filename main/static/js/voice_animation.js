@@ -4,12 +4,20 @@ document.addEventListener("DOMContentLoaded", () => {
     // HTMLからID取得変数にIN
     const btn = document.getElementById("voiceBtn");
 
+    const seOn = document.getElementById("seOn");
+    const seOff = document.getElementById("seOff");
+
     // 録音ON/OFFの状態を持つ
     let isRecording = false;
 
     // 録音ONにする
     function startRecording() {
         isRecording = true;     //trueとfalseの反転の代わり
+
+        // SEON
+        seOn.currentTime = 0;
+        seOn.play();
+
         console.log("録音ON");
 
         btn.classList.remove("stop-effect"); // 念のため消す
@@ -21,6 +29,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // 録音OFFにする
     function stopRecording() {
         isRecording = false;    //trueとfalseの反転の代わり
+
+        //SEOFF
+        seOff.currentTime = 0;
+        seOff.play();
+
         console.log("録音OFF");
 
         btn.classList.remove("recording");
