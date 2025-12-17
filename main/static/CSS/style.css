@@ -488,6 +488,6 @@ main {
     z-index: 9999;       /* 他の絶対配置要素より前面 */
 }
 
-.hide {
-    display: none;
+.no-transition {
+    transition: none !important;
 }
