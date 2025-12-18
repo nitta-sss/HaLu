@@ -1,493 +1,204 @@
-css
-
-
-/* ===========================
-   全体レイアウト
-=========================== */
-body {
+/* =========================
+   RESET
+========================= */
+* {
+    box-sizing: border-box;
     margin: 0;
-    font-family: sans-serif;
+    padding: 0;
 }
 
-/* 画面の大きさとブロック要素 */
-.container {
-    display: flex;
-    width: 100%;
-    height: 100vh;
+html, body {
+    height: 100%;
+    font-family: "Segoe UI", "Meiryo", sans-serif;
+    background: #f5f5f5;
 }
 
-/* ヘッダー */
+/* =========================
+   HEADER
+========================= */
 .header {
+    height: 80px;
+    padding: 10px 20px;
+    background: #ffffff;
+    border-bottom: 1px solid #ddd;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: white;
-    color: #333;
-    padding: 12px 20px;
-    text-align: center;
-    z-index: 10
 }
 
-/* 擬似要素やアニメーションが隠れないように親の overflow を可視化 */
-.headerButton {
-    overflow: visible;
-}
-
-/* 左上アイコン画像 */
-.icon{
-    text-align: center;
-    font-size: 40px;
-    margin-bottom: 20px;
-}
-
-/* footer {
-    background-color: #eee;
-    color: #333;
-    padding: 1rem;
-    text-align: center;
-}
-
-main {
-    min-height: 70vh; /* フッターが画面下に来るようにする */
-    /* padding: 2rem;
-} */
-
-/* 左上アイコン */
 .user-box {
     display: flex;
     align-items: center;
     gap: 10px;
-    border: 3px solid #333;
-    padding: 8px 16px;
-    border-radius: 10px;
-    width: fit-content;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    background-color: #FFE0F2;
-    color: #333;
 }
 
+.user-box .icon {
+    width: 40px;
+    height: 40px;
+}
 
+.username {
+    font-weight: bold;
+}
 
+.headerButton .button-32 {
+    margin-right: 6px;
+}
 
-/* ===========================
-   左2 / 右3 レイアウト
-=========================== */
+/* =========================
+   MAIN LAYOUT
+========================= */
+.container {
+    display: flex;
+    height: calc(100vh - 80px);
+}
 
-/* 左分割レイアウト */
+/* LEFT */
 .left-area {
-    flex: 2;
-    background-color: #f3e8dd;
-    padding: 20px;
+    width: 35%;
+    padding: 10px;
+    background: #faf3e8;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
 }
 
-/* 右分割レイアウト */
-.right-area {
-    flex: 3;
-    padding: 20px;
-    position: relative;
-    color: #fff;
-    overflow: hidden;   /* ★はみ出し防止 */
-    padding: 0;         /* ★余白を消す */
-    background-size: cover;
-    background-position: center;
-}
-
-/* 右画面背景画像 */
-.right-back{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;   /* ★ 画面いっぱいに拡大 */
-    z-index: 1;
-}
-
-/* HaLu顔 */
-.face-area {
-    position: absolute;
-    z-index: 2;
-}
-
-/* 感情バー */
-.emotion-area {
-    position: absolute;
-    z-index: 2;
-}
-
-/* ===========================
-   左：チャットUI
-=========================== */
-
-/* 左レイアウト */
+/* CHAT */
 .chat-box {
-    height: 85%;
+    flex: 1;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
+    gap: 8px;
 }
 
-/* 吹き出し */
+/* =========================
+   BALLOON（元の見た目）
+========================= */
 .balloon {
     max-width: 70%;
-    padding: 10px 15px;
-    margin: 8px 0;
-    border-radius: 12px;
-    display: inline-block;
-}
-
-/* ユーザー吹き出し */
-.balloon.user {
-    background: #fff;
-    align-self: flex-start;
-    position: relative;
-}
-
-/* ユーザー吹き出ししっぽ */
-.balloon.user::after {
-    content: "";
-    position: absolute;
-    left: 10px;
-    top: 34px;
-    width: 0;
-    height: 0;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-left: 10px solid #fff;
-}
-
-/* ボット吹き出し */
-.balloon.bot {
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 14px;
+    line-height: 1.4;
     background: #ffffff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.balloon.user {
+    align-self: flex-start;
+    border-top-left-radius: 4px;
+}
+
+.balloon.bot {
     align-self: flex-end;
-    position: relative;
-}
-/* ボット吹き出ししっぽ */
-.balloon.bot::after {
-    content: "";
-    position: absolute;
-    right: 10px; 
-    top: 34px;   
-    width: 0;
-    height: 0;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-right: 10px solid #fff;
+    border-top-right-radius: 4px;
 }
 
-
-/* 音声入力ボタン */
+/* =========================
+   MIC BUTTON（安定版）
+========================= */
 .voice-icon {
-    text-align: center;
-    margin: auto;
     width: 80px;
     height: 80px;
-    border: none;
-    border-bottom: solid 2px #c0c0c0;
-    border-radius: 50%;
-    box-shadow: inset 15px 30px 40px rgba(255, 255, 255, 0.5), 0 3px 7px rgba(0, 0, 0, .2);
-    background-image: linear-gradient(#1579c0 0%, #0569b0 100%);
-    color: #ffffff;
-    font-weight: 600;
-    font-size: 1em;
-}
-
-
-/* ===========================
-   右：顔エリア
-=========================== */
-
-/* 顔エリア */
-.face-area {
-    /* margin: 30px 200px;
-    margin-bottom: 20px;
-
-    bottom: 40px;
-    width: 100%;
-    height: 500px; */
-    margin: 400px 200px;
-    margin-bottom: 20px;
-    bottom: 40px;
-    width: calc(100% - 400px); /* marginの分だけ左右から引く */
-    height: 500px;
+    margin: 12px auto;
     position: relative;
 }
 
-/* 顔画像 */
-.face-img {
-    /* margin-top:10px ;
-    margin-bottom: 10px;
-    margin-left: 50px;
-    margin-right: 50px;
-    width: 100%;
-    background-attachment: scroll; */
-    width: 100%;
-    height: 100%;
-    object-fit: contain; /* 画像の縦横比を保つなら */
-    display: block;
-    animation: fadeIn 0.5s ease-in;
-}
-
-/* アイコンフェードイン */
-@keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: scale(0.8);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-/* ===========================
-   右：感情ゲージ
-=========================== */
-
-/* 感情バーエリア */
-.emotion-area {
-    position: absolute;
-    top: 40px;
-    left: 40px;
-    width: 60%;
-}
-
-.bar-item {
-    margin-bottom: 30px;
-}
-
-.bar-label {
-    font-size: 28px;
-    margin-bottom: 5px;
-    background: rgba(255,255,255,0.85);
-    color: #000;
-    display: inline-block;
-    padding: 4px 10px;
-}
-
-.bar-base {
-    width: 100%;
-    height: 25px;
-    background: #fff;
-    border: 2px solid #000;
-    overflow: hidden;    
-}
-
-.bar-fill {
-    height: 100%;
-    width: 0%;             /*初期値がないとアニメーションされない*/
-    background: red;
-    transition: width 2.5s ease;
-}
-
-/* #toggle-btn {
-    position: absolute;
-    right: 40px;
-    top: 20px;
-    padding: 10px 20px;
-    background: white;
-    color: black;
-    border: 2px solid #000;
-    border-radius: 10px;
-} */
-
-.fade {
-    opacity: 1;
-    transition: opacity 0.4s ease; /* ← フェード時間ここで調整可能 */
-}
-
-.fade.hide {
-    opacity: 0;
-}
-
-/* 通常時（録音していない） */
 #voiceBtn {
     width: 80px;
     height: 80px;
     border-radius: 50%;
     border: none;
+    background: url("/static/img/voiceMic.png") center / cover no-repeat;
     cursor: pointer;
-
-    background-image: url("/static/img/voiceMic.png");
-    background-size: 60%;
-    background-repeat: no-repeat;
-    background-position: center;
-
-    background-color: #ff4b4b; /* ← 通常時は赤 */
-    box-shadow: 0 4px 10px #0003;
 }
 
 /* 録音中 */
 #voiceBtn.recording {
-    background-color: #3088e0; /* ← 録音中は青 */
-    animation: recordPulse 0.6s infinite alternate ease-in-out;
+    background-color: #ff4d4d;
+    box-shadow: 0 0 15px rgba(255, 77, 77, 0.7);
 }
 
-
-@keyframes recordPulse {
-    from {
-        transform: scale(1);
-        box-shadow:
-            0 0 10px rgba(50, 150, 255, 0.7),
-            0 0 20px rgba(50, 150, 255, 0.4);
-    }
-    to {
-        transform: scale(1.15);
-        box-shadow:
-            0 0 20px rgba(0, 120, 255, 1),
-            0 0 40px rgba(0, 120, 255, 0.7);
-    }
-}
-
-/* ===========================
-録音終了エフェクト（赤くホワン）
- =========================== */
-.recording-end {
-    animation: endFlash 1.75s ease-out;
-}
-
-@keyframes endFlash {
-    0% {
-        box-shadow: 0 0 0 rgba(255,0,0,0);
-        background-color: #3088e0;
-    }
-    50% {
-        box-shadow: 0 0 25px rgba(255, 0, 0, 0.952);
-        background-color: #ff4b4b;
-    }
-    100% {
-        box-shadow: 0 0 0 rgba(255,0,0,0.9);
-        background-color: #ff4b4b;
-    }
-}
-
-
-/* 顔アイコンに波紋アニメーション */
-/* .face-anim {
-    animation: ripple 0.8s infinite;
-} */
-
-
-/* ===========================
-背景画像変更
-=========================== */
-#bgChangeBtn {
+/* =========================
+   RIGHT
+========================= */
+.right-area {
+    width: 65%;
     position: relative;
-    z-index: 20;   /* ボタンをさらに前面に */
-}
-
-/* #backimg {
-    position: absolute;
-    right: 40px;
-    top:20px;
-    padding: 10px 20px;
-    background: white;
-    color: black;
-    border: 2px solid #000;
-    border-radius: 10px;
-} */
-
-/* .backimg{
-    width: 100%;
-    text-align: right;
-}
-
-.backimgbtn{
-    position: absolute;
-    top:10px;
-    width: 125px;
-    margin-top: 10px;
-    margin-right: 250px;
-
-    padding: 10px 20px;
-    background: white;
-    color: black;
-    border: 2px solid #000;
-    border-radius: 10px;
-} */
-
-.headerButton {
-    display: flex;
-    gap: 10px; 
-    align-items: center;
-    justify-content: flex-end;
-}
-.button-32 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    width: 175px;
-    margin: 0 ;
-    padding: .7em 2em;
     overflow: hidden;
-    border: 1px solid #2589d0;
-    border-radius: 25px;
-    background-color: #fff;
-    color: #2589d0;
-    font-size: 1em;
 }
 
-.button-32:hover {
-    background-color: transparent;
-    color: #fff;
-}
-
-.button-32::before {
-    position: absolute;
-    z-index: -1;
-    transform: rotate(-30deg);
-    width: 100%;
-    height: 0;
-    border-radius: 25px;
-    background-color: #2589d0;
-    content: '';
-    transition: height .3s ease;
-}
-
-.button-32:hover::before {
-    height: 350%;
-}
-
-/* .start-area {
-    position: absolute;   ← 必須
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-
-    z-index: 999;         ← 強制最前面
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    pointer-events: none; UI邪魔しない（任意）
-}
-
-動画自体
-#startvideo {
-    position: absolute;
-    top: 0;
-    left: 0;
+.right-back {
     width: 100%;
     height: 100%;
     object-fit: cover;
-} */
-
-#soundbtn {
-    position: relative;  /* すでに absolute でも良いですが relative のままでもOK */
-    z-index: 9999;       /* 他の絶対配置要素より前面 */
 }
 
-#showbtn {
-    position: relative;  /* すでに absolute でも良いですが relative のままでもOK */
-    z-index: 9999;       /* 他の絶対配置要素より前面 */
+/* FACE */
+.face-area {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
-.no-transition {
-    transition: none !important;
+.face-img {
+    max-height: 80%;
+}
+
+/* EMOTION */
+.emotion-area {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 200px;
+}
+.emotion-area.hide {
+    display: none;
+}
+/* =========================
+   感情ゲージ（必須）
+========================= */
+
+/* ゲージ全体の箱 */
+.bar-item {
+    margin-bottom: 10px;
+}
+
+/* ラベル */
+.bar-label {
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+/* ゲージの土台 */
+.bar-base {
+    width: 100%;
+    height: 14px;              /* ★ 高さが超重要 */
+    background: #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* 実際に伸びるバー */
+.bar-fill {
+    height: 100%;
+    width: 0%;                 /* JSがここを書き換える */
+    border-radius: 8px;
+    transition: width 0.4s ease;
+}
+
+/* 覚醒度 */
+.fill1 {
+    background: linear-gradient(to right, #3b82f6, #ef4444);
+}
+
+/* 快楽度 */
+.fill2 {
+    background: linear-gradient(to right, #f97316, #fde047);
+}
+
+/* 非表示制御 */
+.emotion-area.hide {
+    display: none;
 }
