@@ -43,6 +43,7 @@ def get_model():
 def transcribe_audio(path):
     
     model = get_model()
+    print("モデル代入")
     segments, info = model.transcribe(path, beam_size=3, language="ja")
     return "".join([seg.text for seg in segments])
 
@@ -74,7 +75,7 @@ def process_buffer():
 
     print("⏳ Whisper変換中...")
     text = transcribe_audio(TEMP_WAV)
-
+    print("text:",text)
     final_text = text
     stop_flag = True
 
