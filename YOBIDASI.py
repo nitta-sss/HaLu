@@ -1,27 +1,21 @@
 from data.emotion_inference import suiron_test
 from Audio.Voice_Read import start_recording
 from Ollama_Response import llm_generate
-from Audio.zunda import speak_now
+from Audio.Voice_Read import get_result
+
+from Audio.Voice_Read import get_result
 
 def run_ai():
-    # 音声からテキスト
-    text = start_recording()
+    #voice_readの結果(テキスト)を返す
+    text = get_result()
+    if not text:
+        return {"error": "音声テキストがありません"}
 
-    # 感情推論
+    #AIによる感情推論
     result = suiron_test(text)
-
-    # AI返答生成
+    #返答
     ai_reply = llm_generate(text)
 
-    print("Text:",text)
-    print("快楽度:", result["valence"])
-    print("覚醒度:", result["arousal"])
-    print("感情カテゴリ:", result["category"])
-    print("------------------------")
-    speak_now(ai_reply)
-    print("AIの返答:", ai_reply)
-
-    # UIにかえすよう
     return {
         "text": text,
         "valence": result["valence"],

@@ -86,18 +86,21 @@ def callback(indata, frames, time_info, status):
     global audio_buffer, recording
     if recording:
         with lock:
-            audio_buffer.append(indata.copy())  # numpy形式で保存
+             # audio_bufferにnumpy形式で保存
+            audio_buffer.append(indata.copy()) 
 
 
 # -----------------------------
 # 録音スレッド
 # -----------------------------
+#マイク入力用別スレッド
 def audio_loop():
     with sd.InputStream(
             channels=CHANNELS,
             samplerate=SAMPLE_RATE,
             callback=callback):
         print("🎤 Rキーで録音 → 停止＆変換")
+        #Trueになったら終了
         while not stop_flag:
             time.sleep(0.05)
 
@@ -126,6 +129,7 @@ def stop_recording():
 
     print("🛑 録音停止（外部制御）")
     recording = False
+    #音声解析
     process_buffer()
 
 

@@ -49,25 +49,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ボタンを押すたびにON/OFF切り替え
     btn.addEventListener("click", () => {
-        if (!isRecording) {
-            startRecording();
-    
-            fetch("http://localhost:5000/ai/run", {
+    if (!isRecording) {
+        // ===== 録音開始 =====　　※録音開始と停止はjsで呼び出す
+        isRecording = true;
+        startRecording();
+
+        fetch("http://localhost:5000/mic/start", {
+            method: "POST"
+        });
+
+    } else {
+        // ===== 録音終了 =====
+        isRecording = false;
+        stopRecording();
+
+        fetch("http://localhost:5000/mic/stop", {
+            method: "POST"
+        })
+        .then(() => {
+            // 録音が完全に終わってからAI実行
+            return fetch("http://localhost:5000/ai/run", {
                 method: "POST"
-            })
-            .then(res => res.json())
-            .then(data => {
-                console.log("AI結果:", data);
-    
-                // UIに反映
-                document.getElementById("userText").innerText = data.text;
-                document.getElementById("aiText").innerText = data.reply;
             });
-    
-        } else {
-            stopRecording();
-        }
-    });
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log("AI結果:", data);
+            document.getElementById("userText").innerText = data.text;
+            document.getElementById("aiText").innerText = data.reply;
+        });
+    }
+});
+
     
 
 });
