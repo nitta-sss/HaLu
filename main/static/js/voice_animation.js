@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then(() => {
             // 録音が完全に終わってからAI実行
-            return fetch("http://localhost:5000/ai/run", {
+            fetch("http://localhost:5000/ai/run", {
                 method: "POST"
             });
         })
