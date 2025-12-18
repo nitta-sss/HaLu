@@ -1,63 +1,148 @@
 import requests
-import sounddevice as sd
-import soundfile as sf
+import winsound
+import tempfile
+import os
 import io
+import numpy as np
+import soundfile as sf
 
-# ===== プロキシ回避（超重要）=====
-SESSION = requests.Session()
-SESSION.trust_env = False
+# =========================
+# VOICEVOX 設定
+# =========================
+VOICEVOX_URL = "http://127.0.0.1:50021"
 
-BASE = "http://127.0.0.1:50021"
+# =========================
+# 森の妖精 音声パラメータ
+# ※ speaker ID は変更しない
+# =========================
+FAIRY_SPEAKER = 29
+FAIRY_SPEED = 0.90          # ゆったり
+FAIRY_PITCH = -0.11          # ほんのり高め
+FAIRY_INTONATION = 0.65     # なだらか
+FAIRY_VOLUME = 1.0
 
-# -----------------------------
-# ずんだもん speaker_id 取得
-# -----------------------------
-def get_zundamon_id(style_name="ノーマル"):
-    speakers = SESSION.get(f"{BASE}/speakers").json()
-    for sp in speakers:
-        if sp["name"] == "ずんだもん":
-            for st in sp["styles"]:
-                if st["name"] == style_name:
-                    return st["id"]
-            return sp["styles"][0]["id"]
-    raise RuntimeError("ずんだもんが見つからない")
+# -------------------------
+# 安全な pau モーラ
+# -------------------------
+def make_pau(vowel_length: float):
+    return {
+        "text": "pau",
+        "consonant": None,
+        "consonant_length": None,
+        "vowel": "pau",
+        "vowel_length": float(vowel_length),
+        "pitch": 0.0
+    }
 
-# -----------------------------
-# その場で喋らせる関数
-# -----------------------------
-def speak_now(text, style="ノーマル"):
-    speaker_id = get_zundamon_id(style)
+PAUSE_SHORT = make_pau(0.14)
+PAUSE_LONG  = make_pau(0.26)
+
+def safe_add_pauses(query: dict) -> dict:
+    aps = query.get("accent_phrases")
+    if not isinstance(aps, list) or not aps:
+        return query
+
+    for i, ap in enumerate(aps):
+        if ap.get("pause_mora") is not None:
+            continue
+
+        moras = ap.get("moras") or []
+        if not moras:
+            continue
+
+        # 妖精はよく一息つく
+        if len(moras) >= 7:
+            ap["pause_mora"] = PAUSE_SHORT
+
+        # 文末は深呼吸
+        if i == len(aps) - 1:
+            ap["pause_mora"] = PAUSE_LONG
+
+    query["accent_phrases"] = aps
+
+    # 全体の間も少し長めに
+    query["pauseLengthScale"] = 1.25
+    query["prePhonemeLength"] = 0.10
+    query["postPhonemeLength"] = 0.15
+    return query
+
+# -------------------------
+# 森の残響エフェクト
+# -------------------------
+"""
+def fairy_effect(audio, sr):
+    delay = 0.045     # 少し遠くで反響
+    decay = 0.22      # 優しい残り方
+    delay_samples = int(sr * delay)
+
+    effected = np.zeros(len(audio) + delay_samples, dtype=np.float32)
+    effected[:len(audio)] += audio
+    effected[delay_samples:] += audio * decay
+    return effected
+"""
+def _synthesis(session, query, speaker: int):
+    return session.post(
+        f"{VOICEVOX_URL}/synthesis",
+        params={"speaker": speaker},
+        json=query,
+        timeout=10
+    )
+
+def speak(text: str):
+    if not text or not str(text).strip():
+        return
+
+    print("🌿 妖精がそっと語りかけています…")
+
+    session = requests.Session()
+    session.trust_env = False
 
     # ① audio_query
-    q = SESSION.post(
-        f"{BASE}/audio_query",
-        params={"text": text, "speaker": speaker_id},
-        timeout=30
-    ).json()
+    res = session.post(
+        f"{VOICEVOX_URL}/audio_query",
+        params={"text": text, "speaker": FAIRY_SPEAKER},
+        timeout=5
+    )
+    res.raise_for_status()
+    query = res.json()
 
-    # 🍯 ずんだもん温かみ設定（ぷーさん寄せ）
-    q["speedScale"] = 0.9  # 話す速さ
-    q["pitchScale"] = -0.1 # 声の高さ
-    q["intonationScale"] = 0.3 # 抑揚（感情の起伏）
-    q["prePhonemeLength"] = 0.10    # 音の前の間
-    q["postPhonemeLength"] = 0.22   # 音の後の間
+    # ② pause 調整
+    query_pause = safe_add_pauses(dict(query))
 
-    # ② synthesis
-    wav_bytes = SESSION.post(
-        f"{BASE}/synthesis",
-        params={"speaker": speaker_id},
-        json=q,
-        timeout=60
-    ).content
+    # ③ 音声パラメータ
+    for q in (query_pause, query):
+        q["speedScale"] = float(FAIRY_SPEED)
+        q["pitchScale"] = float(FAIRY_PITCH)
+        q["intonationScale"] = float(FAIRY_INTONATION)
+        q["volumeScale"] = float(FAIRY_VOLUME)
 
-    # ③ wavをメモリ上で再生（ファイル保存なし）
-    with sf.SoundFile(io.BytesIO(wav_bytes)) as f:
-        data = f.read(dtype="float32")
-        sd.play(data, f.samplerate)
-        sd.wait()  # 再生終了まで待つ
+    # ④ synthesis（pause入り優先）
+    audio = _synthesis(session, query_pause, FAIRY_SPEAKER)
+    if audio.status_code >= 500:
+        audio = _synthesis(session, query, FAIRY_SPEAKER)
 
-# -----------------------------
-# 実行
-# -----------------------------
+    audio.raise_for_status()
+
+    # ⑤ numpy化
+    with io.BytesIO(audio.content) as f:
+        audio_np, sr = sf.read(f, dtype="float32")
+
+    # ⑥ 妖精エフェクト
+    #audio_np = fairy_effect(audio_np, sr)
+
+    # ⑦ 正規化
+    peak = float(np.max(np.abs(audio_np))) if len(audio_np) else 0.0
+    if peak > 0:
+        audio_np = audio_np / peak
+    audio_np = (audio_np * 32767).astype(np.int16)
+
+    # ⑧ 再生
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
+        sf.write(tmp.name, audio_np, sr, subtype="PCM_16")
+        tmp_path = tmp.name
+
+    winsound.PlaySound(tmp_path, winsound.SND_FILENAME)
+    os.remove(tmp_path)
+
 if __name__ == "__main__":
-    speak_now("ぼくはねぇきみとお話しできて、うれしいのー")
+    speak("おはよう……森は今日も、しずかでやさしいよ。")
