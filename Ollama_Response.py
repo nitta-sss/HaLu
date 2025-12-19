@@ -2,6 +2,8 @@ import subprocess
 import shutil
 
 OLLAMA_PATH = shutil.which("ollama")    
+if OLLAMA_PATH is None:
+    raise RuntimeError("Ollamaが見つからないヨ")
 
 def llm_generate(user_text, timeout_sec=30):
     if not user_text or user_text.strip() == "":
