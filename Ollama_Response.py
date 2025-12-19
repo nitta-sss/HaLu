@@ -1,6 +1,7 @@
 import subprocess
+import shutil
 
-OLLAMA_PATH = r"C:\Users\232116\AppData\Local\Programs\Ollama\ollama.exe"
+OLLAMA_PATH = shutil.which("ollama")    
 
 def llm_generate(user_text, timeout_sec=30):
     if not user_text or user_text.strip() == "":
