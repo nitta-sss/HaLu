@@ -2,7 +2,7 @@ import subprocess
 import shutil
 
 OLLAMA_PATH = shutil.which("ollama")    
-if OLLAMA_CMD is None:
+if OLLAMA_PATH is None:
     raise RuntimeError("Ollama が見つかりません。インストールしてください。")
 
 def llm_generate(user_text, timeout_sec=30):
