@@ -12,10 +12,19 @@ def run_ai():
         return {"error": "音声テキストがありません"}
 
     #AIによる感情推論
+    print("感情推論開始")
     result = suiron_test(text)
-    #返答
+    print("感情推論できた", result)
+
+    #返答   
+    print("LLM呼び出し開始")
     ai_reply = llm_generate(text)
+    print("LLM返答:", ai_reply)
+
+    print("発話開始")
     speak(ai_reply)
+    print("発話終了")
+    
     return {
         "text": text,
         "valence": result["valence"],
