@@ -1,5 +1,4 @@
 from data.emotion_inference import suiron_test
-from Audio.Voice_Read import start_recording
 from Ollama_Response import llm_generate
 from Audio.Voice_Read import get_result
 from Audio.forest_paimon import speak
