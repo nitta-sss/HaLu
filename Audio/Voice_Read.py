@@ -72,4 +72,5 @@ def stop_recording():
     process_buffer()
 
 def get_result():
+    print("get_result呼び出し：",final_text)
     return final_text
