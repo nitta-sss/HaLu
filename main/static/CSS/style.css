@@ -151,7 +151,7 @@ html, body {
     border-radius: 50%;
     border: none;
     cursor: pointer;
-    
+
     background: url("/static/img/voiceMic.png") center / cover no-repeat;
 
     background-color: #ff4b4b; /* ← 通常時は赤 */
@@ -243,22 +243,35 @@ html, body {
    感情ゲージ（必須）
 ========================= */
 
+/* 感情バーエリア */
+.emotion-area {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    width: 60%;
+}
+
 /* ゲージ全体の箱 */
 .bar-item {
-    margin-bottom: 10px;
+    margin-bottom: 30px;
 }
 
 /* ラベル */
 .bar-label {
-    font-size: 13px;
-    margin-bottom: 4px;
+    font-size: 28px;
+    margin-bottom: 5px;
+    background: rgba(255,255,255,0.85);
+    color: #000;
+    display: inline-block;
+    padding: 4px 10px;
 }
 
 /* ゲージの土台 */
 .bar-base {
     width: 100%;
-    height: 14px;              /* ★ 高さが超重要 */
-    background: #e0e0e0;
+    height: 25px;           /* ★ 高さが超重要 */
+    background: #fff;
+    border: 2px solid #000;
     border-radius: 8px;
     overflow: hidden;
 }
@@ -268,7 +281,8 @@ html, body {
     height: 100%;
     width: 0%;                 /* JSがここを書き換える */
     border-radius: 8px;
-    transition: width 0.4s ease;
+    background: red;
+    transition: width 2.5s ease;
 }
 
 /* 覚醒度 */
