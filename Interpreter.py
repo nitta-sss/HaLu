@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from Audio.Voice_Read import start_recording, stop_recording,get_result
-from YOBIDASI import run_ai
+from YOBIDASI import run_ai,speak_ai
 import sys
 
 app = Flask(__name__)
@@ -37,6 +37,14 @@ def ai_run():
         return ("", 204)
     print("🚀 ai_run 呼び出し")
     return jsonify(run_ai())
+
+@app.route("/ai/speak", methods=["POST", "OPTIONS"])
+def ai_speak():
+    if request.method == "OPTIONS":
+        return ("", 204)
+    print("🚀 ai_speak 呼び出し")
+    return jsonify(speak_ai())
+
 
 if __name__ == "__main__":
     print("🚀 Flask 起動中...")

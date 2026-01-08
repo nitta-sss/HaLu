@@ -3,7 +3,9 @@ from Ollama_Response import llm_generate
 from Audio.Voice_Read import get_result
 from Audio.forest_paimon import speak
 
+last_reply = None
 def run_ai():
+    global last_reply
     #voice_readの結果(テキスト)を返す
     print("結果受け取り")
     text = get_result()
@@ -18,17 +20,23 @@ def run_ai():
 
     #返答   
     print("LLM呼び出し開始")
-    ai_reply = llm_generate(text)
-    print("LLM返答:", ai_reply)
+    last_reply = llm_generate(text)
+    print("LLM返答:", last_reply)
 
-    print("発話開始")
-    speak(ai_reply)
-    print("発話終了")
+ 
     
     return {
         "text": text,
         "valence": result["valence"],
         "arousal": result["arousal"],
         "category": result["category"],
-        "reply": ai_reply
+        "reply": last_reply
     }
+
+
+def speak_ai():
+    global last_reply
+    print("発話開始")
+    print(last_reply)
+    speak(last_reply)
+    print("発話終了")
