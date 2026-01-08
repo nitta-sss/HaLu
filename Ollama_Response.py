@@ -2,7 +2,7 @@ import subprocess
 import shutil
 from collections import deque
 
-OLLAMA_PATH = shutil.which("ollama")    
+OLLAMA_PATH = shutil.which("ollama")
 if OLLAMA_PATH is None:
     raise RuntimeError("Ollamaが見つからないヨ")
 
@@ -31,7 +31,14 @@ def build_conversation_prompt() -> str:
         else:
             lines.append(f"AI: {msg['content']}")
 
-    return "\n".join(lines)
+    conversation_text = "\n".join(lines)
+
+    # ★ここで中身を確認できる
+    print("===== conversation_text =====")
+    print(conversation_text)
+    print("===== /conversation_text =====")
+
+    return conversation_text
 
 
 def llm_generate(user_text, timeout_sec=30):
@@ -75,6 +82,7 @@ def llm_generate(user_text, timeout_sec=30):
             timeout=timeout_sec
         )
     except subprocess.TimeoutExpired:
+        print("LLM timeout")
         return None
 
     if result.returncode != 0:
@@ -96,14 +104,3 @@ def llm_generate(user_text, timeout_sec=30):
 # 会話リセットしたいとき用
 def reset_conversation():
     conversation_history.clear()
-
-
-# ===== テスト =====
-if __name__ == "__main__":
-    text1 = "今日は天気よくて気分いいんだよね"
-    print("ユーザー:", text1)
-    print("AI     :", llm_generate(text1))
-
-    text2 = "昨日の話覚えてる？"
-    print("ユーザー:", text2)
-    print("AI     :", llm_generate(text2))
