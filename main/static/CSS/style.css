@@ -280,7 +280,7 @@ html, body {
 .bar-fill {
     height: 100%;
     width: 0%;                 /* JSがここを書き換える */
-    border-radius: 8px;
+    /* border-radius: 8px; */
     background: red;
     transition: width 2.5s ease;
 }
