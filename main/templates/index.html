@@ -26,10 +26,20 @@
                 <button id="soundbtn" class="button-32">BGMを有効化</button>
                 <audio id="BGMsound" src="{% static 'sound/gauge.mp3' %}" loop></audio>
                 <!-- ゲージ表示切替ボタン -->
-                <button id="showbtn" class="button-32">ゲージ表示</button>
+                <div class="tooltip-wrapper">
+                    <button id="showbtn" class="button-32">ゲージ表示</button>
+                    <div class="tooltip-balloon">
+                        ユーザーの感情ゲージを表示します
+                    </div>
+                </div>
                 <!-- 背景画像変更 -->
-                <button id="bgChangeBtn" class="button-32">背景変更</button>
-                <input type="file" id="bgFileInput" accept="image/*" style="display: none;">
+                <div class="tooltip-wrapper">
+                    <button id="bgChangeBtn" class="button-32">背景変更</button>
+                    <input type="file" id="bgFileInput" accept="image/*" style="display: none;">
+                    <div class="tooltip-balloon">
+                        背景画像を変更します
+                    </div>
+                </div>
             </div>
         </div>
 
