@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-from Audio.Voice_Read import start_recording, stop_recording
+from Audio.Voice_Read import start_recording, stop_recording,get_result
 from YOBIDASI import run_ai
 import sys
 
@@ -27,7 +27,9 @@ def mic_stop():
     if request.method == "OPTIONS":
         return ("", 204)
     stop_recording()
-    return jsonify({"status": "processing"})
+    text = get_result() 
+    print("flask",text)
+    return jsonify({"status": "processing","text"  : text or ""})
 
 @app.route("/ai/run", methods=["POST", "OPTIONS"])
 def ai_run():
