@@ -299,3 +299,41 @@ html, body {
 .emotion-area.hide {
     display: none;
 }
+
+/* =========================
+   ボタンにカーソル合わせたときに説明文を表示
+========================= */
+
+.tooltip-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+.bgChangeBtn {
+    cursor: pointer;
+}
+
+.tooltip-balloon{
+    position: absolute;
+  top: 140%;   
+  left: 50%;
+  transform: translateX(-50%);
+
+  background: #333;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  white-space: nowrap;
+
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s;
+
+  z-index: 100;
+}
+
+.tooltip-wrapper:hover .tooltip-balloon{
+    opacity: 1;
+    visibility: visible;
+  }
