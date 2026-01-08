@@ -18,7 +18,16 @@ document.addEventListener("DOMContentLoaded", () => {
             isRecording = false;
             window.voiceUI.stop();
 
-            await fetch("http://127.0.0.1:5000/mic/stop", { method: "POST" });
+            const stopRes = await fetch("http://127.0.0.1:5000/mic/stop", { method: "POST" });
+            const stopData = await stopRes.json();
+
+            console.log("mic/stop 結果:", stopData);
+
+            // 2️⃣ 先にユーザーの文字起こしだけ表示
+            if (stopData.text) {
+                addMessage("user", stopData.text);   // ← final_text がここ
+            }
+
             await new Promise(r => setTimeout(r, 300));
             await fetch("http://127.0.0.1:5000/ai/run", { method: "POST" })
                 .then(res => res.json())
@@ -27,7 +36,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     console.log("AI結果:", data);
 
                     // ===== 左の会話欄更新 =====
-                    addMessage("user", data.text);     // Whisper文字起こし
                     addMessage("bot", data.reply);     // LLM返答
 
                     // ===== 感情ゲージ更新 =====
