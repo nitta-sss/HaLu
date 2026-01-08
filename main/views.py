@@ -13,10 +13,7 @@ def index(request):
     awakening = float(result["arousal"])
 
     messages = [
-        {"sender": "user", "text": "こんにちは！"},
-        {"sender": "bot",  "text": "リラックスしてるよ"},
-        {"sender": "user", "text": "今日は調子いい？"},
-        {"sender": "bot",  "text": "だまれ"},
+        {"sender": "bot",  "text": "おいらは森のパイモン。気軽に話しかけてね"},
     ]
 
     return render(request, "index.html", {
