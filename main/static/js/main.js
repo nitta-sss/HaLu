@@ -41,10 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     // ===== 感情ゲージ更新 =====
                     window.emotion.x = parseFloat(data.arousal); // 覚醒
                     window.emotion.y = parseFloat(data.valence); // 快楽
-
-                    if (typeof updateGauge === "function") {
-                        updateGauge();
-                    }
+                    window.updateGauge();
                 });
             
             await fetch("http://127.0.0.1:5000/ai/speak", { method: "POST" })

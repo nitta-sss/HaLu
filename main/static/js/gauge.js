@@ -29,7 +29,8 @@ document.addEventListener("DOMContentLoaded", () => {
     /* =========================
        ゲージ描画
     ========================= */
-    function updateGauge() {
+    window.updateGauge = function () {
+        console.log("updateGauge called", window.emotion);
         const awake    = normalize(window.emotion.x);
         const pleasure = normalize(window.emotion.y);
 
@@ -38,22 +39,22 @@ document.addEventListener("DOMContentLoaded", () => {
         pleasureBar.style.width = pleasure + "%";
 
         // 覚醒度（青 → 赤）
-        const r = Math.round(awake * 2.55);
-        const b = Math.round(255 - awake * 2.55);
-        awakeBar.style.background =
-            `linear-gradient(to right, rgb(${r},0,${b}), rgba(255,255,255,0.6))`;
+        if (awake < 50) {
+            awakeBar.style.background =
+                "linear-gradient(to right, green)";
+        } else {
+            awakeBar.style.background =
+                "linear-gradient(to right, red)";
+        } 
 
         // 快楽度（赤 → 黄）
-        if (pleasure < 30) {
+        if (pleasure < 50) {
             pleasureBar.style.background =
-                "linear-gradient(to right, red, orange)";
-        } else if (pleasure < 70) {
-            pleasureBar.style.background =
-                "linear-gradient(to right, orange, yellow)";
+                "linear-gradient(to right, lightblue)";
         } else {
             pleasureBar.style.background =
-                "linear-gradient(to right, yellow, lightyellow)";
-        }
+                "linear-gradient(to right, pink)";
+        } 
     }
 
     /* =========================
