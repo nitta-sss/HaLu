@@ -104,3 +104,4 @@ def llm_generate(user_text, timeout_sec=30):
 # 会話リセットしたいとき用
 def reset_conversation():
     conversation_history.clear()
+    print("conversation_historyをリセットしました!")
