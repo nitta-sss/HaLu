@@ -302,23 +302,13 @@ html, body {
     max-height: 80%;
 }
 
-/* EMOTION */
-.emotion-area {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 200px;
-}
-.emotion-area.hide {
-    display: none;
-}
 /* =========================
    感情ゲージ（必須）
 ========================= */
 
 /* 感情バーエリア */
 .emotion-area {
-    position: absolute;
+    position: relative;
     top: 40px;
     left: 40px;
     width: 60%;
@@ -369,7 +359,23 @@ html, body {
 }
 
 /* 非表示制御 */
-.emotion-area.hide {
+/* .emotion-area.hide {
+    display: none;
+} */
+
+.user-gauge{
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    width: 100%;
+    height: 35%;                 
+    background: rgba(245, 222, 222, 0.95);
+
+    z-index: 2;
+}
+
+.hide {
     display: none;
 }
 
