@@ -29,11 +29,11 @@ html, body {
 .user-box {
     display: flex;
     align-items: center;
-    gap: 30px;
+    gap: 20px;
 }
 
 .user-box {
-    width: 40px;
+    width: 600px;
     height: 40px;
 }
 
@@ -44,7 +44,7 @@ html, body {
 
 .icon {
     width: 50px;
-    height: 45px;
+    height: 50px;
     cursor: pointer;
 }
 
@@ -58,13 +58,6 @@ html, body {
 }
 
 /*キャラ説明*/
-
-.character{
-    display: flex;
-    gap: 10px;
-    height: 40px;
-    width: 500px;
-}
 
 .character-name {
     font-size: 25px;
@@ -414,9 +407,9 @@ html, body {
 }
 
 .tooltip-left .tooltip-balloon {
-    top: 30%;
-    right: -230%;
-    transform: translatex(-120%);
+    top: 100%;
+    right: -150%;
+    transform: translatex(20%);
 }
 
 .tooltip-wrapper:hover .tooltip-balloon{
