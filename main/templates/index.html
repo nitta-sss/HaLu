@@ -102,34 +102,36 @@
                 </div> -->
                 <!-- HaLuの顔画像 -->
                 <div class="face-area">
-                    <img id = "icon" src="{% static 'img/HaLu.png' %}" class="face-img">
+                    <img id = "icon" src="{% static 'img/ForestPaimon.png' %}" class="face-img">
                 </div>
             
                 <!-- 感情ゲージ -->
-                <div class="emotion-area fade hide" id="emotionArea">
+                <div class="usergauge">
+                    <div class="emotion-area fade hide" id="emotionArea">
 
-                    <!-- 覚醒度バー -->
-                    <div class="bar-item">
-                        <div class="fade show">
-                            <div class="bar-label">
-                                覚醒度
+                        <!-- 覚醒度バー -->
+                        <div class="bar-item">
+                            <div class="fade show">
+                                <div class="bar-label">
+                                    覚醒度
+                                </div>
+                            </div>
+                            <div class="bar-base">
+                                <div class="bar-fill fill1" id="awakeBar"></div>
                             </div>
                         </div>
-                        <div class="bar-base">
-                            <div class="bar-fill fill1" id="awakeBar"></div>
-                        </div>
-                    </div>
 
-                    <!-- 快楽度バー -->
-                    <div class="bar-item">
-                        <div class="bar-label">
-                            快楽度
+                        <!-- 快楽度バー -->
+                        <div class="bar-item">
+                            <div class="bar-label">
+                                快楽度
+                            </div>
+                            <div class="bar-base" class="fade show">
+                                <div class="bar-fill fill2" id="pleasureBar"></div>
+                            </div>
                         </div>
-                        <div class="bar-base" class="fade show">
-                            <div class="bar-fill fill2" id="pleasureBar"></div>
-                        </div>
-                    </div>
 
+                    </div>
                 </div>
             </div>
         </div>
