@@ -29,21 +29,57 @@ html, body {
 .user-box {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 30px;
 }
 
-.user-box .icon {
+.user-box {
     width: 40px;
     height: 40px;
 }
 
+.user-box .tooltip-balloon{
+    left: calc(50% - 40px);
+    transform: translateX(-50%);
+  }
+
+.icon {
+    width: 50px;
+    height: 45px;
+    cursor: pointer;
+}
+
+.icon:hover {
+    filter: brightness(1.15);
+}
+
 .username {
+    font-size: 40px;
     font-weight: bold;
+}
+
+/*キャラ説明*/
+
+.character{
+    display: flex;
+    gap: 10px;
+    height: 40px;
+    width: 500px;
+}
+
+.character-name {
+    font-size: 25px;
+    font-weight: bold;
+    color: black;
+}
+
+.character-personality {
+    font-size: 25px;
+    color: black;
 }
 
 .headerButton {
     display: flex;
-    gap: 10px; 
+    gap: 30px; 
     align-items: center;
     justify-content: flex-end;
 
@@ -333,7 +369,62 @@ html, body {
   z-index: 100;
 }
 
+.tooltip-left .tooltip-balloon {
+    top: 30%;
+    right: -230%;
+    transform: translatex(-120%);
+}
+
 .tooltip-wrapper:hover .tooltip-balloon{
     opacity: 1;
     visibility: visible;
   }
+
+  /*キャラクター変更*/
+
+  .bg-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 20px;
+    width: 500px;   /* 横幅 */
+    height: 300px;  /* 高さ */
+    padding: 20px;  /* 内側の余白を広げる */
+    background: rgba(0,0,0,0.6);
+    border-radius: 10px;
+    z-index: 1000;
+}
+
+.hidden{
+    display: none;
+}
+
+.bg-panel::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: -1;
+}
+
+.bg-card { 
+    cursor: pointer; 
+    text-align: center; 
+    color: white; 
+}
+
+.bg-card img { 
+    width: 150px; 
+    height: 150px; 
+    border-radius: 6px; 
+    object-fit: cover; 
+    transition: transform 0.2s;
+}
+
+.bg-card:hover img { 
+    transform: scale(1.05); 
+}
+
+
