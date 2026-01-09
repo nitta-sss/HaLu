@@ -15,7 +15,12 @@
             <!-- 左上のアイコン -->
             <div class="user-box">
                 <!-- アイコンの画像 -->
-                <img src="{% static 'img/face.png' %}" class="icon">
+                <div class="tooltip-wrapper tooltip-left">
+                        <img src="{% static 'img/HaLu.png' %}" class="icon">   
+                    <div class="tooltip-balloon">
+                        キャラクターを変更
+                    </div>
+                </div>
                 <span class="username">Halu</span>
             </div>
         
@@ -77,7 +82,7 @@
             <div class="right-area">
 
                 <!-- 右画面背景画像 -->
-                <img src="{% static 'img/windows.jpg' %}" class="right-back">
+                <img src="{% static 'img/backForest.jpg' %}" class="right-back">
 
                 <!-- 起動ボタン押下時のアニメーション -->
                 <!-- <div class="start-area">
@@ -119,6 +124,24 @@
                 </div>
             </div>
         </div>
+
+        <div id="bgSelectPanel" class="bg-panel hidden">
+
+            <div id="Forest" class="bg-card"
+                 data-bg="{% static 'img/backForest.jpg' %}"
+                 data-chara="{% static 'img/ForestPaimon.png' %}">
+                <img src="{% static 'img/ForestPaimon.png' %}">
+                <p>森のパイモン</p>
+            </div>
+        
+            <div id="ice" class="bg-card"
+                 data-bg="{% static 'img/背景 雪A.jpg' %}"
+                 data-chara="{% static 'img/icePaimon.png' %}">
+                <img src="{% static 'img/icePaimon.png' %}">
+                <p>氷のパイモン</p>
+            </div>
+        </div>
+
         <!-- pythonから値を受け取る場所 -->
         <script>
             window.emotion = { x: 0, y: 0 };
@@ -143,6 +166,7 @@
         <script src="{% static 'js/delete.js' %}"></script>
         <script src="{% static 'js/gauge.js' %}"></script>
         <script src="{% static 'js/main.js' %}"></script>
+        <script src="{% static 'js/themeChange.js' %}"></script>
         <script src="{% static 'js/voice_animation.js' %}"></script>
         <script src="{% static 'js/updateBackimg.js' %}"></script>
     </body>

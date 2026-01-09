@@ -32,9 +32,24 @@ html, body {
     gap: 10px;
 }
 
-.user-box .icon {
+.user-box {
     width: 40px;
     height: 40px;
+}
+
+.user-box .tooltip-balloon{
+    left: calc(50% - 40px);
+    transform: translateX(-50%);
+  }
+
+.icon {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.icon:hover {
+    filter: brightness(1.15);
 }
 
 .username {
@@ -333,7 +348,62 @@ html, body {
   z-index: 100;
 }
 
+.tooltip-left .tooltip-balloon {
+    top: 50%;
+    left: 110%;
+    transform: translateY(-50%);
+}
+
 .tooltip-wrapper:hover .tooltip-balloon{
     opacity: 1;
     visibility: visible;
   }
+
+  /*キャラクター変更*/
+
+  .bg-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 20px;
+    width: 500px;   /* 横幅 */
+    height: 300px;  /* 高さ */
+    padding: 20px;  /* 内側の余白を広げる */
+    background: rgba(0,0,0,0.6);
+    border-radius: 10px;
+    z-index: 1000;
+}
+
+.hidden{
+    display: none;
+}
+
+.bg-panel::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: -1;
+}
+
+.bg-card { 
+    cursor: pointer; 
+    text-align: center; 
+    color: white; 
+}
+
+.bg-card img { 
+    width: 150px; 
+    height: 150px; 
+    border-radius: 6px; 
+    object-fit: cover; 
+    transition: transform 0.2s;
+}
+
+.bg-card:hover img { 
+    transform: scale(1.05); 
+}
+
+
