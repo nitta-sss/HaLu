@@ -3,6 +3,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!btn) return;
 
     btn.addEventListener("click", () => {
+
+        // ★ 最終確認ダイアログ
+        const ok = confirm("本当に会話履歴を削除しますか？\nこの操作は元に戻せません。");
+
+        if (!ok) {
+            return; // キャンセルされたら何もしない
+        }
+
         fetch("/run/", {
             method: "POST",
             headers: {
@@ -12,6 +20,10 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(res => res.json())
         .then(() => {
             alert("履歴を削除しました");
+        })
+        .catch(err => {
+            alert("削除に失敗しました");
+            console.error(err);
         });
     });
 });
