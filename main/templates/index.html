@@ -106,8 +106,8 @@
                 </div>
             
                 <!-- 感情ゲージ -->
-                <div class="usergauge">
-                    <div class="emotion-area fade hide" id="emotionArea">
+                <div class="user-gauge hide"  id="emotionArea">
+                    <div class="emotion-area fade ">
 
                         <!-- 覚醒度バー -->
                         <div class="bar-item">
@@ -170,8 +170,9 @@
         </script>
         {% endif %}
 
-        <audio id="seOn" src="{% static 'sound/seOnOff.mp3' %}"></audio>
-        <audio id="seOff" src="{% static 'sound/seOnOff.mp3' %}"></audio>
+        <!-- BGMを有効化するやつ一旦消してる -->
+        <!-- <audio id="seOn" src="{% static 'sound/seOnOff.mp3' %}"></audio>
+        <audio id="seOff" src="{% static 'sound/seOnOff.mp3' %}"></audio> -->
 
         <script src="{% static 'js/BGM.js' %}"></script>
         <script src="{% static 'js/delete.js' %}"></script>
