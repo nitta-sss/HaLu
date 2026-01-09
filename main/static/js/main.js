@@ -1,118 +1,219 @@
 console.log("✅ main.js 読み込まれたよ");
 
-
 document.addEventListener("DOMContentLoaded", () => {
-    const voiceBtn = document.getElementById("voiceBtn");
-    if (!voiceBtn) return;
+  const voiceBtn  = document.getElementById("voiceBtn");
+  const textInput = document.getElementById("textInput");
+  const sendBtn   = document.getElementById("sendBtn");
 
-    let isRecording = false;
+  if (!voiceBtn) return;
 
-    voiceBtn.addEventListener("click", async () => {
-        if (!isRecording) {
-            isRecording = true;
-            window.voiceUI.start();
+  let isRecording = false;
+  let isBusy = false; // AI処理中の連打防止
 
-            await fetch("http://127.0.0.1:5000/mic/start", { method: "POST" });
+  // =========================
+  // 共通：メッセージ表示 + AI呼び出し + 表示 + 読み上げ
+  // =========================
+  async function runAIFlow(userText, { speak = true, typeSpeed = 25 } = {}) {
+    if (!userText) return;
 
-        } else {
-            isRecording = false;
-            window.voiceUI.stop();
+    // すでに処理中なら弾く（任意）
+    if (isBusy) return;
+    isBusy = true;
 
-            const stopRes = await fetch("http://127.0.0.1:5000/mic/stop", { method: "POST" });
-            const stopData = await stopRes.json();
+    try {
+      console.time("AI_FLOW");
 
-            console.log("mic/stop 結果:", stopData);
+      // 1) /ai/run に text を渡す（重要）
+      const res = await fetch("http://127.0.0.1:5000/ai/run", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: userText }),
+      });
 
-            // 2️⃣ 先にユーザーの文字起こしだけ表示
-            if (stopData.text) {
-                addMessage("user", stopData.text);   // ← final_text がここ
-            }
+      if (!res.ok) {
+        const t = await res.text();
+        throw new Error(`/ai/run failed: ${res.status} ${t}`);
+      }
 
-            await new Promise(r => setTimeout(r, 300));
-            await fetch("http://127.0.0.1:5000/ai/run", { method: "POST" })
-                .then(res => res.json())
-                .then(async (data) => {
+      const data = await res.json();
+      console.log("AI結果:", data);
 
-            console.log("AI結果:", data);
+      // 2) エラー返ってきた場合
+      if (data?.error) {
+        addMessage("bot", `⚠ ${data.error}`);
+        return;
+      }
 
-            // ===== 感情ゲージ更新 =====
-            window.emotion.x = parseFloat(data.arousal);
-            window.emotion.y = parseFloat(data.valence);
-            window.updateGauge();
+      // 3) 感情ゲージ更新
+      if (data.arousal != null && data.valence != null) {
+        window.emotion.x = parseFloat(data.arousal);
+        window.emotion.y = parseFloat(data.valence);
+        window.updateGauge?.();
+      }
 
-            console.time("AI_FLOW");
-            console.timeLog("AI_FLOW", "typing start");
-            // ① 空の吹き出し作成
-            const botDiv = addMessageElement("bot");
+      // 4) タイプライター表示
+      console.timeLog("AI_FLOW", "typing start");
+      const botDiv = addMessageElement("bot");
+      const typingPromise = typeWriter(botDiv, String(data.reply ?? ""), typeSpeed);
 
-            // ② タイプライター開始（Promise）非同期処理
-            const typingPromise = typeWriter(botDiv, data.reply, 25);//作成したdivの中にAI返答を入れる
+      // 5) 読み上げ（待たずに並走）
+      if (speak) {
+        console.timeLog("AI_FLOW", "voice fetch start");
+        fetch("http://127.0.0.1:5000/ai/speak", { method: "POST" })
+          .catch(err => console.warn("ai/speak error:", err));
+      }
 
-            console.timeLog("AI_FLOW", "voice fetch start");
-            // ③ 読み上げ開始（ここは “待たない”）非同期処理
-            fetch("http://127.0.0.1:5000/ai/speak", { method: "POST" });
-            
-            console.timeLog("AI_FLOW", "typing end");
-            console.timeEnd("AI_FLOW");
-            // ④ 表示が全部終わるまで待ちたいならこれ（任意）
-            await typingPromise;
-        });
-            
-           
-            
-        }
-    });
+      // 6) 表示完了まで待ちたいなら待つ
+      await typingPromise;
+
+      console.timeLog("AI_FLOW", "typing end");
+      console.timeEnd("AI_FLOW");
+    } catch (err) {
+      console.error(err);
+      addMessage("bot", "⚠ エラーが発生しました（コンソール確認して）");
+    } finally {
+      isBusy = false;
+    }
+  }
+
+  // =========================
+  // 音声ボタン
+  // =========================
+  voiceBtn.addEventListener("click", async () => {
+    // AI処理中に録音開始させない（任意）
+    if (isBusy) return;
+
+    try {
+      if (!isRecording) {
+        isRecording = true;
+
+        // 見た目：録音中クラス
+        voiceBtn.classList.add("recording");
+
+        window.voiceUI?.start();
+
+        const res = await fetch("http://127.0.0.1:5000/mic/start", { method: "POST" });
+        if (!res.ok) throw new Error(`/mic/start failed: ${res.status}`);
+        return;
+      }
+
+      // ---- stop ----
+      isRecording = false;
+
+      voiceBtn.classList.remove("recording");
+      voiceBtn.classList.add("recording-end");
+      setTimeout(() => voiceBtn.classList.remove("recording-end"), 1800);
+
+      window.voiceUI?.stop();
+
+      const stopRes = await fetch("http://127.0.0.1:5000/mic/stop", { method: "POST" });
+      if (!stopRes.ok) throw new Error(`/mic/stop failed: ${stopRes.status}`);
+
+      const stopData = await stopRes.json();
+      console.log("mic/stop 結果:", stopData);
+
+      // 先にユーザー文を表示
+      const userText = (stopData.text || "").trim();
+      if (userText) {
+        addMessage("user", userText);
+      } else {
+        addMessage("bot", "⚠ 音声テキストが取得できませんでした");
+        return;
+      }
+
+      // ちょい待ち（UI安定用）
+      await new Promise(r => setTimeout(r, 200));
+
+      // AI処理（textを渡す！）
+      await runAIFlow(userText, { speak: true, typeSpeed: 25 });
+
+    } catch (err) {
+      console.error(err);
+      addMessage("bot", "⚠ マイク処理でエラーが出ました（コンソール確認）");
+
+      // 状態復旧
+      isRecording = false;
+      voiceBtn.classList.remove("recording");
+    }
+  });
+
+  // =========================
+  // テキスト送信（マイク横）
+  // =========================
+  async function sendText() {
+    const text = (textInput?.value || "").trim();
+    if (!text) return;
+
+    // 入力欄クリア + 表示
+    textInput.value = "";
+    addMessage("user", text);
+
+    // AI処理へ
+    await runAIFlow(text, { speak: true, typeSpeed: 25 });
+  }
+
+  sendBtn?.addEventListener("click", sendText);
+
+  textInput?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") sendText();
+  });
 });
 
+
+// =========================
+// 表示系ユーティリティ
+// =========================
 function addMessage(sender, text) {
-    console.log("addMessage 呼ばれた:", sender, text);
+  console.log("addMessage 呼ばれた:", sender, text);
 
-    const chatBox = document.querySelector(".chat-box");
-    if (!chatBox) return;
+  const chatBox = document.querySelector(".chat-box");
+  if (!chatBox) return;
 
-    const div = document.createElement("div");
-    div.className = `balloon ${sender}`; // balloon user / balloon bot
-    div.textContent = text;
+  const div = document.createElement("div");
+  div.className = `balloon ${sender}`;
+  div.textContent = text;
 
-    chatBox.appendChild(div);
-    chatBox.scrollTop = chatBox.scrollHeight;
+  chatBox.appendChild(div);
+  chatBox.scrollTop = chatBox.scrollHeight;
 }
-
 
 function addMessageElement(sender) {
-    const chatBox = document.querySelector(".chat-box");//chat-boxに接続
-    if (!chatBox) return null;
+  const chatBox = document.querySelector(".chat-box");
+  if (!chatBox) return null;
 
-    const div = document.createElement("div");
-    div.className = `balloon ${sender}`;
-    div.textContent = ""; // 空で作る
-    chatBox.appendChild(div);
+  const div = document.createElement("div");
+  div.className = `balloon ${sender}`;
+  div.textContent = ""; // 空で作る
+  chatBox.appendChild(div);
 
-    chatBox.scrollTop = chatBox.scrollHeight;
-    return div;
+  chatBox.scrollTop = chatBox.scrollHeight;
+  return div;
 }
 
-function typeWriter(div, fullText, msPerChar = 200) {
-    return new Promise(resolve => {
-        if (!div) return resolve();
+function typeWriter(div, fullText, msPerChar = 25) {
+  return new Promise(resolve => {
+    if (!div) return resolve();
 
-        let i = 0;
-        const chatBox = document.querySelector(".chat-box");//自動スクロール
+    // 文字列化して安全に
+    const text = String(fullText ?? "");
+    if (text.length === 0) {
+      div.textContent = "";
+      return resolve();
+    }
 
-        const timer = setInterval(() => {//25ms秒ごとに1文字追加
-            div.textContent += fullText[i];
-            i++;
+    let i = 0;
+    const chatBox = document.querySelector(".chat-box");
 
-            if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+    const timer = setInterval(() => {
+      div.textContent += text[i];
+      i++;
 
-            if (i >= fullText.length) {//全ての文字を出力したか判定
-                clearInterval(timer);//タイマー停止
-                resolve();
-            }
-        }, msPerChar);
-    });
+      if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+
+      if (i >= text.length) {
+        clearInterval(timer);
+        resolve();
+      }
+    }, msPerChar);
+  });
 }
-
-
-
-

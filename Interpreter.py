@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
-from Audio.Voice_Read import start_recording, stop_recording,get_result
-from YOBIDASI import run_ai,speak_ai
+from Audio.Voice_Read import start_recording, stop_recording, get_result
+from YOBIDASI import run_ai, speak_ai
 import sys
 
 app = Flask(__name__)
@@ -27,24 +27,31 @@ def mic_stop():
     if request.method == "OPTIONS":
         return ("", 204)
     stop_recording()
-    text = get_result() 
-    print("flask",text)
-    return jsonify({"status": "processing","text"  : text or ""})
+    text = get_result()
+    print("flask", text)
+    return jsonify({"status": "processing", "text": text or ""})
 
 @app.route("/ai/run", methods=["POST", "OPTIONS"])
 def ai_run():
     if request.method == "OPTIONS":
         return ("", 204)
-    print("🚀 ai_run 呼び出し")
-    return jsonify(run_ai())
+
+    # ★キーボード入力はここで受け取る
+    data = request.get_json(silent=True) or {}
+    text = data.get("text")  # 無ければ None
+
+    print("🚀 ai_run 呼び出し text:", text)
+
+    # ★textがあればそれを使う / 無ければrun_ai側でget_result()
+    return jsonify(run_ai(text))
 
 @app.route("/ai/speak", methods=["POST", "OPTIONS"])
 def ai_speak():
     if request.method == "OPTIONS":
         return ("", 204)
+
     print("🚀 ai_speak 呼び出し")
     return jsonify(speak_ai())
-
 
 if __name__ == "__main__":
     print("🚀 Flask 起動中...")
