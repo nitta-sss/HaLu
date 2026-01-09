@@ -29,7 +29,8 @@ document.addEventListener("DOMContentLoaded", () => {
     /* =========================
        ゲージ描画
     ========================= */
-    function updateGauge() {
+    window.updateGauge = function () {
+        console.log("updateGauge called", window.emotion);
         const awake    = normalize(window.emotion.x);
         const pleasure = normalize(window.emotion.y);
 
