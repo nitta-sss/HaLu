@@ -29,7 +29,7 @@ html, body {
 .user-box {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 30px;
 }
 
 .user-box {
@@ -43,8 +43,8 @@ html, body {
   }
 
 .icon {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 45px;
     cursor: pointer;
 }
 
@@ -53,12 +53,33 @@ html, body {
 }
 
 .username {
+    font-size: 40px;
     font-weight: bold;
+}
+
+/*キャラ説明*/
+
+.character{
+    display: flex;
+    gap: 10px;
+    height: 40px;
+    width: 500px;
+}
+
+.character-name {
+    font-size: 25px;
+    font-weight: bold;
+    color: black;
+}
+
+.character-personality {
+    font-size: 25px;
+    color: black;
 }
 
 .headerButton {
     display: flex;
-    gap: 10px; 
+    gap: 30px; 
     align-items: center;
     justify-content: flex-end;
 
@@ -349,9 +370,9 @@ html, body {
 }
 
 .tooltip-left .tooltip-balloon {
-    top: 50%;
-    left: 110%;
-    transform: translateY(-50%);
+    top: 30%;
+    right: -230%;
+    transform: translatex(-120%);
 }
 
 .tooltip-wrapper:hover .tooltip-balloon{
