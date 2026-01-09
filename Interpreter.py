@@ -2,6 +2,8 @@ from flask import Flask, jsonify, request
 from Audio.Voice_Read import start_recording, stop_recording, get_result
 from YOBIDASI import run_ai, speak_ai
 import sys
+import threading
+
 
 app = Flask(__name__)
 
@@ -49,9 +51,9 @@ def ai_run():
 def ai_speak():
     if request.method == "OPTIONS":
         return ("", 204)
-
     print("🚀 ai_speak 呼び出し")
-    return jsonify(speak_ai())
+    threading.Thread(target=speak_ai, daemon=True).start()
+    return jsonify({"status": "started"})
 
 if __name__ == "__main__":
     print("🚀 Flask 起動中...")

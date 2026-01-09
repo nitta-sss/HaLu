@@ -2,6 +2,7 @@ from data.emotion_inference import suiron_test
 from Ollama_Response import llm_generate
 from Audio.Voice_Read import get_result
 from Audio.forest_paimon import speak
+import time
 
 last_reply = None
 
@@ -42,10 +43,11 @@ def speak_ai():
     global last_reply
     print("発話開始")
     print(last_reply)
-
+    print("🔊 speak called:", time.time())
+    
     # last_reply が None のとき落ちないように保険
     speak(last_reply or "")
-
+    print("🔊 speak finished:", time.time())
     print("発話終了")
 
     # Flaskがjsonifyするので辞書返す（フロントが使わなくてもOK）

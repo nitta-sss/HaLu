@@ -190,30 +190,21 @@ function addMessageElement(sender) {
   return div;
 }
 
-function typeWriter(div, fullText, msPerChar = 25) {
+function typeWriter(div, fullText, msPerChar = 700, startDelay = 500) {
   return new Promise(resolve => {
-    if (!div) return resolve();
-
-    // 文字列化して安全に
     const text = String(fullText ?? "");
-    if (text.length === 0) {
-      div.textContent = "";
-      return resolve();
-    }
-
     let i = 0;
     const chatBox = document.querySelector(".chat-box");
 
-    const timer = setInterval(() => {
-      div.textContent += text[i];
-      i++;
-
+    setTimeout(function tick() {
+      div.textContent += text[i++];
       if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
 
-      if (i >= text.length) {
-        clearInterval(timer);
-        resolve();
-      }
-    }, msPerChar);
+      if (i >= text.length) return resolve();
+
+      setTimeout(tick, msPerChar);
+    }, startDelay);
   });
 }
+
+
