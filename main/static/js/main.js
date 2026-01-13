@@ -51,20 +51,22 @@ document.addEventListener("DOMContentLoaded", () => {
         window.updateGauge?.();
       }
 
-      // 4) タイプライター表示
-      console.timeLog("AI_FLOW", "typing start");
-      const botDiv = addMessageElement("bot");
-      const typingPromise = typeWriter(botDiv, String(data.reply ?? ""), typeSpeed);
 
-      // 5) 読み上げ（待たずに並走）
+
+      const botDiv = addMessageElement("bot");
+
+      let speakPromise = Promise.resolve();
       if (speak) {
-        console.timeLog("AI_FLOW", "voice fetch start");
-        fetch("http://127.0.0.1:5000/ai/speak", { method: "POST" })
-          .catch(err => console.warn("ai/speak error:", err));
+        speakPromise = fetch("http://127.0.0.1:5000/ai/speak", { method: "POST" });
       }
 
-      // 6) 表示完了まで待ちたいなら待つ
-      await typingPromise;
+      // speak が返ってくるまで待つ（＝Flask側の処理が返るまで）
+      await speakPromise.catch(() => {});
+
+      // その後にタイプ開始
+      const START_DELAY = 1500;
+      const TYPE_SPEED =120
+      await typeWriter(botDiv, String(data.reply ?? ""), TYPE_SPEED,START_DELAY);
 
       console.timeLog("AI_FLOW", "typing end");
       console.timeEnd("AI_FLOW");
@@ -149,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
     addMessage("user", text);
 
     // AI処理へ
-    await runAIFlow(text, { speak: true, typeSpeed: 25 });
+    await runAIFlow(text, { speak: true, typeSpeed: 30 });
   }
 
   sendBtn?.addEventListener("click", sendText);
@@ -190,7 +192,7 @@ function addMessageElement(sender) {
   return div;
 }
 
-function typeWriter(div, fullText, msPerChar = 700, startDelay = 500) {
+function typeWriter(div, fullText, msPerChar, startDelay) {
   return new Promise(resolve => {
     const text = String(fullText ?? "");
     let i = 0;
