@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================
   // 音声ボタン
   // =========================
-  voiceBtn.addEventListener("click", async () => {
+    voiceBtn.addEventListener("click", async () => {
     // AI処理中に録音開始させない（任意）
     if (isBusy) return;
 
