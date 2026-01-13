@@ -226,7 +226,7 @@ html, body {
     border: none;
     cursor: pointer;
 
-    background: url("/static/img/voiceMic.png") center / cover no-repeat;
+    background: url("/static/img/voiceMic.png") center / contain no-repeat;
 
     background-color: #ff4b4b; /* ← 通常時は赤 */
     box-shadow: 0 4px 10px #0003;
