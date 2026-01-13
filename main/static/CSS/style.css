@@ -150,6 +150,7 @@ html, body {
 ========================= */
 .balloon {
     max-width: 70%;
+    margin-bottom: 40px;
     padding: 10px 14px;
     border-radius: 16px;
     font-size: 14px;
