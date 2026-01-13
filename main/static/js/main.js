@@ -78,6 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  
   // =========================
   // 音声ボタン
   // =========================
@@ -94,11 +95,6 @@ document.addEventListener("DOMContentLoaded", () => {
         await window.voiceUI.start();
         isRecording = true;
         
-        // 見た目：録音中クラス
-        // voiceBtn.classList.add("recording");
-
-        // window.voiceUI?.start();
-
         return;
       }
 
@@ -107,15 +103,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       window.voiceUI.stop();
 
-      // voiceBtn.classList.remove("recording");
-      // voiceBtn.classList.add("recording-end");
-      // setTimeout(() => voiceBtn.classList.remove("recording-end"), 1800);
-
-      // window.voiceUI?.stop();
-
       const stopRes = await fetch("http://127.0.0.1:5000/mic/stop", { method: "POST" });
       if (!stopRes.ok) throw new Error(`/mic/stop failed: ${stopRes.status}`);
-
 
       const stopData = await stopRes.json();
       console.log("mic/stop 結果:", stopData);
@@ -142,10 +131,9 @@ document.addEventListener("DOMContentLoaded", () => {
       // 状態復旧
       isRecording = false;
       // addMessage("bot", "⚠ マイク処理でエラーが出ました（コンソール確認）");
-
-      // voiceBtn.classList.remove("recording");
     }
   });
+
 
   // =========================
   // テキスト送信（マイク横）

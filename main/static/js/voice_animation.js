@@ -1,5 +1,3 @@
-
-
 window.voiceUI = {
 
     // SE 定義 
@@ -33,9 +31,7 @@ window.voiceUI = {
     }
 };
 
-// -------------------------
 // マイクチェック
-// -------------------------
 async function checkMicrophone() {
     if (!navigator.mediaDevices?.getUserMedia) {
         throw new Error("このブラウザは音声入力に対応していません");
@@ -45,29 +41,24 @@ async function checkMicrophone() {
     stream.getTracks().forEach(t => t.stop());
 }
 
-// -------------------------
 // エラー表示
-// -------------------------
 function showError(message) {
     alert(message);
 }
 
-// -------------------------
-// 録音状態（唯一の真実）
-// -------------------------
+// 録音状態
 let isRecording = false;
 let isCheckingMic = false;
-// -------------------------
+
 // ボタン制御
-// -------------------------
 document.getElementById("voiceBtn").addEventListener("click", async () => {
 
     // マイク確認中は何もしない
     if (isCheckingMic) return;
 
-    // ▶ 録音開始
+    // 録音開始
     if (!isRecording) {
-        isCheckingMic = true;   // ★ ロックON
+        isCheckingMic = true;   // ロックON
 
         try {
             await checkMicrophone();
@@ -78,11 +69,11 @@ document.getElementById("voiceBtn").addEventListener("click", async () => {
         } catch (e) {
             showError(e.message);
         } finally {
-            isCheckingMic = false; // ★ 必ず解除
+            isCheckingMic = false; // 解除
         }
     }
 
-    // ■ 録音停止
+    // 録音停止
     else {
         isRecording = false;
         window.voiceUI.stop();
