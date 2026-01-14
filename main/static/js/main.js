@@ -1,9 +1,9 @@
 console.log("✅ main.js 読み込まれたよ");
 
 document.addEventListener("DOMContentLoaded", () => {
-  const voiceBtn  = document.getElementById("voiceBtn");
-  const textInput = document.getElementById("textInput");
-  const sendBtn   = document.getElementById("sendBtn");
+  let voiceBtn  = document.getElementById("voiceBtn");
+  let textInput = document.getElementById("textInput");
+  let sendBtn   = document.getElementById("sendBtn");
 
   if (!voiceBtn) return;
 
@@ -82,57 +82,116 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================
   // 音声ボタン
   // =========================
-    voiceBtn.addEventListener("click", async () => {
-    // AI処理中に録音開始させない（任意）
+  voiceBtn = document.getElementById("voiceBtn");
+
+  isRecording = false;
+  isBusy = false;
+  
+  // マイクエラーメッセージ
+  function getMicErrorMessage(err) {
+    if (!err) return "マイクが使用できません";
+  
+    // ラウザ由来の例外
+    switch (err.name) {
+      case "NotFoundError":
+        return "マイクが接続されていません";
+      case "NotAllowedError":
+        return "マイクの使用が許可されていません";
+      case "NotReadableError":
+        return "マイクが他のアプリで使用中です";
+    }
+  
+    // 通信エラー
+    if (err.message?.includes("Failed to fetch")) {
+      return "音声サーバーに接続できません（サーバーが起動していない可能性があります）";
+    }
+  
+    // 自前エラー
+    switch (err.message) {
+      case "MIC_START_FAILED":
+        return "マイクを開始できませんでした";
+      case "MIC_STOP_FAILED":
+        return "マイクを停止できませんでした";
+    }
+    return "マイクが使用できません";
+  }
+  
+  
+  
+  // -------------------------
+  // マイク存在チェック
+  // -------------------------
+  async function checkMicrophone() {
+    if (!navigator.mediaDevices?.getUserMedia) {
+      throw new Error("BROWSER_NOT_SUPPORTED");
+    }
+  
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    stream.getTracks().forEach(t => t.stop());
+  }
+  
+  let uiStarted = false;
+
+  voiceBtn.addEventListener("click", async () => {
     if (isBusy) return;
-
+    isBusy = true;
+  
     try {
+      // START
       if (!isRecording) {
-
-        const res = await fetch("http://127.0.0.1:5000/mic/start", { method: "POST" });
-        if (!res.ok) throw new Error(`/mic/start failed: ${res.status}`);
-
-        await window.voiceUI.start();
+        await checkMicrophone();
+  
+        const res = await fetch("http://127.0.0.1:5000/mic/start", {
+          method: "POST"
+        });
+        if (!res.ok) throw new Error("MIC_START_FAILED");
+  
+        console.log("START 成功、voiceUI.start 呼ぶ直前");
+        window.voiceUI.start();
+        uiStarted = true;
         isRecording = true;
-        
         return;
       }
-
-      // ---- stop ----
+  
+      // STOP
       isRecording = false;
-
-      window.voiceUI.stop();
-
-      const stopRes = await fetch("http://127.0.0.1:5000/mic/stop", { method: "POST" });
-      if (!stopRes.ok) throw new Error(`/mic/stop failed: ${stopRes.status}`);
-
-      const stopData = await stopRes.json();
-      console.log("mic/stop 結果:", stopData);
-
-      // 先にユーザー文を表示
-      const userText = (stopData.text || "").trim();
-      if (userText) {
-        addMessage("user", userText);
-      } else {
+  
+      if (uiStarted) {
+        window.voiceUI.stop();
+        uiStarted = false;
+      }
+  
+      const stopRes = await fetch("http://127.0.0.1:5000/mic/stop", {
+        method: "POST"
+      });
+      if (!stopRes.ok) throw new Error("MIC_STOP_FAILED");
+  
+      const data = await stopRes.json();
+      const text = (data.text || "").trim();
+  
+      if (!text) {
         addMessage("bot", "⚠ 音声テキストが取得できませんでした");
         return;
       }
-
-      // ちょい待ち（UI安定用）
-      await new Promise(r => setTimeout(r, 200));
-
-      // AI処理（textを渡す！）
-      await runAIFlow(userText, { speak: true, typeSpeed: 25 });
-
+  
+      addMessage("user", text);
+      await runAIFlow(text, { speak: true, typeSpeed: 25 });
+  
     } catch (err) {
       console.error(err);
-      // window.voiceUI?.stop();
-      
-      // 状態復旧
+  
       isRecording = false;
-      // addMessage("bot", "⚠ マイク処理でエラーが出ました（コンソール確認）");
+      uiStarted = false;
+  
+      const jp = getMicErrorMessage(err);
+      showErrorModal(jp);
+  
+    } finally {
+      isBusy = false;
     }
   });
+  
+  
 
 
   // =========================

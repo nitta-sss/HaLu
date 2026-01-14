@@ -478,4 +478,53 @@ html, body {
 
 .bg-card:hover img { 
     transform: scale(1.05); 
+<<<<<<< HEAD
 }
+=======
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 120px;
+    z-index: 9999;
+  }
+  
+  .modal.hidden {
+    display: none;
+  }
+  
+  .modal-box {
+    background: white;
+    width: 380px;
+    border-radius: 10px;
+    padding: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  }
+  
+  .modal-title {
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  
+  .modal-message {
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+  
+  .modal-box button {
+    float: right;
+    padding: 6px 18px;
+    border-radius: 20px;
+    border: none;
+    background: #1a73e8;
+    color: white;
+    cursor: pointer;
+  }
+  
+
+>>>>>>> 61fa487172f1e2962912d437867f16ccd1718f2b
