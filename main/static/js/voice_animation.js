@@ -1,6 +1,7 @@
-// voice_animation.js
 window.voiceUI = {
     start() {
+      console.log("voiceUI.start 呼ばれた");
+
       const btn = document.getElementById("voiceBtn");
       if (!btn) return;
   
@@ -13,6 +14,8 @@ window.voiceUI = {
     },
   
     stop() {
+      console.log("voiceUI.stop 呼ばれた"); 
+
       const btn = document.getElementById("voiceBtn");
       if (!btn) return;
   

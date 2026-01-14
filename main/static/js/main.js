@@ -130,12 +130,14 @@ document.addEventListener("DOMContentLoaded", () => {
     stream.getTracks().forEach(t => t.stop());
   }
   
-  // クリック制御
+  let uiStarted = false;
+
   voiceBtn.addEventListener("click", async () => {
     if (isBusy) return;
+    isBusy = true;
   
     try {
-      // START 
+      // START
       if (!isRecording) {
         await checkMicrophone();
   
@@ -144,14 +146,20 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         if (!res.ok) throw new Error("MIC_START_FAILED");
   
-        window.voiceUI?.start();
+        console.log("START 成功、voiceUI.start 呼ぶ直前");
+        window.voiceUI.start();
+        uiStarted = true;
         isRecording = true;
         return;
       }
   
-      // STOP 
+      // STOP
       isRecording = false;
-      window.voiceUI?.stop();
+  
+      if (uiStarted) {
+        window.voiceUI.stop();
+        uiStarted = false;
+      }
   
       const stopRes = await fetch("http://127.0.0.1:5000/mic/stop", {
         method: "POST"
@@ -172,16 +180,17 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (err) {
       console.error(err);
   
-      console.log("ERR NAME:", err.name);
-      console.log("ERR MESSAGE:", err.message);
-
-      const jp = getMicErrorMessage(err);
-      addMessage("bot", `⚠ ${jp}`);
-  
       isRecording = false;
-      window.voiceUI?.stop();
+      uiStarted = false;
+  
+      const jp = getMicErrorMessage(err);
+      showErrorModal(jp);
+  
+    } finally {
+      isBusy = false;
     }
   });
+  
   
 
 
