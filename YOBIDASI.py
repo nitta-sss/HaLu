@@ -46,7 +46,8 @@ def speak_ai():
     print("🔊 speak called:", time.time())
     
     # last_reply が None のとき落ちないように保険
-    speak(last_reply or "")
+    type="forest"
+    speak(last_reply or "",type)
     print("🔊 speak finished:", time.time())
     print("発話終了")
 

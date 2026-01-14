@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // 共通：メッセージ表示 + AI呼び出し + 表示 + 読み上げ
   // =========================
   async function runAIFlow(userText, { speak = true, typeSpeed = 25 } = {}) {
+    console.log("runai入った",userText)
     if (!userText) return;
 
     // すでに処理中なら弾く（任意）
@@ -29,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: userText }),
       });
+      
 
       if (!res.ok) {
         const t = await res.text();
@@ -175,8 +177,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
   
       addMessage("user", text);
+      isBusy = false;
       await runAIFlow(text, { speak: true, typeSpeed: 25 });
   
+      
     } catch (err) {
       console.error(err);
   
@@ -198,13 +202,17 @@ document.addEventListener("DOMContentLoaded", () => {
   // テキスト送信（マイク横）
   // =========================
   async function sendText() {
+    if (isBusy) return;
+    isBusy = true;
     const text = (textInput?.value || "").trim();
     if (!text) return;
+    
 
     // 入力欄クリア + 表示
     textInput.value = "";
     addMessage("user", text);
 
+    isBusy=false;
     // AI処理へ
     await runAIFlow(text, { speak: true, typeSpeed: 30 });
   }
