@@ -15,11 +15,8 @@ VOICEVOX_URL = "http://127.0.0.1:50021"
 # 森の妖精 音声パラメータ
 # ※ speaker ID は変更しない
 # =========================
-FAIRY_SPEAKER = 29
-FAIRY_SPEED = 0.90          # ゆったり
-FAIRY_PITCH = -0.11          # ほんのり高め
-FAIRY_INTONATION = 0.65     # なだらか
-FAIRY_VOLUME = 1.0
+
+
 
 # -------------------------
 # 安全な pau モーラ
@@ -51,12 +48,18 @@ def safe_add_pauses(query: dict) -> dict:
             continue
 
         # 妖精はよく一息つく
-        if len(moras) >= 7:
-            ap["pause_mora"] = PAUSE_SHORT
+        if type != "ice":
+            if len(moras) >= 7:
+                ap["pause_mora"] = PAUSE_SHORT
+        else :
+            print("一息なし")
 
         # 文末は深呼吸
-        if i == len(aps) - 1:
-            ap["pause_mora"] = PAUSE_LONG
+        if type != "ice":
+            if i == len(aps) - 1:
+                ap["pause_mora"] = PAUSE_LONG
+        else :
+            print("深呼吸なし")
 
     query["accent_phrases"] = aps
 
@@ -88,11 +91,29 @@ def _synthesis(session, query, speaker: int):
         timeout=10
     )
 
-def speak(text: str):
+def speak(text: str,type):
     if not text or not str(text).strip():
         return
 
-    print("🌿 妖精がそっと語りかけています…")
+    
+    if type == "forest":
+        print("🌿 妖精がそっと語りかけています…")
+        FAIRY_SPEAKER=29
+        FAIRY_SPEED = 0.90          # ゆったり
+        FAIRY_PITCH = -0.11          # ほんのり高め
+        FAIRY_INTONATION = 0.65     # なだらか
+        FAIRY_VOLUME = 1.0
+
+    elif type == "ice":
+        print("🍧 妖精がそっと語りかけています…")
+        FAIRY_SPEAKER = 11      # 玄野武宏
+        FAIRY_SPEED = 0.95
+        FAIRY_PITCH = 0.03      # ← 男声を少しだけ中性に寄せる
+        FAIRY_INTONATION = 0.55 # 感情を殺す
+        FAIRY_VOLUME = 0.95
+        
+    else:
+        print("🔥 妖精がそっと語りかけています…")
 
     session = requests.Session()
     session.trust_env = False
@@ -145,4 +166,5 @@ def speak(text: str):
     os.remove(tmp_path)
 
 if __name__ == "__main__":
-    speak("おはよう……森は今日も、しずかでやさしいよ。")
+    type="ice"
+    speak("……それが命令なら、従う。……感情は、必要ない",type)
