@@ -171,8 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("mic/stop failed after disconnect", e);
       }
   
-      // ※ 通知は後回し
-      // showErrorModal("マイクが取り外されました");
+      showToast("マイクが取り外されました");
     };
   }
 
