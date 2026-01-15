@@ -201,8 +201,6 @@ html, body {
     gap: 10px;
 }
 
-/* 既存の #voiceBtn スタイルはそのまま使える（80x80の丸ボタン） */
-
 /* テキスト入力 */
 .text-input {
     flex: 1;
@@ -221,9 +219,14 @@ html, body {
     border-radius: 24px;
     border: 1px solid #ccc;
     background: #fff;
+    color: #000;
     cursor: pointer;
 }
 
+.send-btn.active {
+    background-color: #6eb4ec;
+    color: #fff;
+}
 
 #voiceBtn {
     width: 80px;
@@ -236,6 +239,11 @@ html, body {
 
     background-color: #ff4b4b; /* ← 通常時は赤 */
     box-shadow: 0 4px 10px #0003;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+#voiceBtn:hover{
+    transform: translateY(-0.1875em);
 }
 
 /* 録音中 */
@@ -393,14 +401,47 @@ html, body {
    ボタンにカーソル合わせたときに説明文を表示
 ========================= */
 
+.bgChangeBtn {
+    cursor: pointer;
+}
+
+.charaChageBtn {
+    position: relative;
+    display: inline-block;
+}
+
+.charaChageBtn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: calc(100% + 8px);
+    aspect-ratio: 1 / 1;
+  
+    border-radius: 50%;
+    border: 2px solid #2589d0;
+  
+    opacity: 0;
+    pointer-events: none;
+  
+    transform: translate(-50%, -50%);
+}
+
+.charaChageBtn:hover::before {
+    opacity: 1;
+    transition: opacity 0.2s ease; 
+}
+
+@keyframes circle-spin {
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
 .tooltip-wrapper {
     position: relative;
     display: inline-block;
   }
-
-.bgChangeBtn {
-    cursor: pointer;
-}
 
 .tooltip-balloon{
     position: absolute;
