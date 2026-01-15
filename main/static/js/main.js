@@ -131,9 +131,12 @@ document.addEventListener("DOMContentLoaded", () => {
     return "マイクが使用できません";
   }
 
-  // -------------------------
+  // 音声入力ボタン
+
+  let micStream = null;
+  let uiStarted = false;
+
   // マイク存在チェック
-  // -------------------------
   async function checkMicrophone() {
     if (!navigator.mediaDevices?.getUserMedia) {
       throw new Error("BROWSER_NOT_SUPPORTED");
@@ -142,11 +145,39 @@ document.addEventListener("DOMContentLoaded", () => {
     stream.getTracks().forEach(t => t.stop());
   }
 
-  let uiStarted = false;
 
-  // =========================
+  function watchMicDisconnect(stream) {
+    const track = stream.getAudioTracks()[0];
+    if (!track) return;
+  
+    track.onended = async () => {
+      console.warn("🎤 マイクが抜かれました");
+  
+      if (!isRecording) return;
+  
+      isRecording = false;
+  
+      if (uiStarted) {
+        window.voiceUI.stop();
+        uiStarted = false;
+      }
+  
+      micStream?.getTracks().forEach(t => t.stop());
+      micStream = null;
+
+      try {
+        await fetch("http://127.0.0.1:5000/mic/stop", { method: "POST" });
+      } catch (e) {
+        console.error("mic/stop failed after disconnect", e);
+      }
+  
+      // ※ 通知は後回し
+      // showErrorModal("マイクが取り外されました");
+    };
+  }
+
+
   // 音声ボタン
-  // =========================
   voiceBtn.addEventListener("click", async () => {
     if (isBusy) return;
     isBusy = true;
@@ -154,7 +185,11 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       // START
       if (!isRecording) {
+        //開始前チェック
         await checkMicrophone();
+
+        micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        watchMicDisconnect(micStream);
 
         const res = await fetch("http://127.0.0.1:5000/mic/start", { method: "POST" });
         if (!res.ok) throw new Error("MIC_START_FAILED");
@@ -172,6 +207,9 @@ document.addEventListener("DOMContentLoaded", () => {
         window.voiceUI.stop();
         uiStarted = false;
       }
+
+      micStream?.getTracks().forEach(t => t.stop());
+      micStream = null;
 
       const stopRes = await fetch("http://127.0.0.1:5000/mic/stop", { method: "POST" });
       if (!stopRes.ok) throw new Error("MIC_STOP_FAILED");
@@ -195,6 +233,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       isRecording = false;
       uiStarted = false;
+
+      micStream?.getTracks().forEach(t => t.stop());
+      micStream = null;
 
       const jp = getMicErrorMessage(err);
       showErrorModal(jp);
