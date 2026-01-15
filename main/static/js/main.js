@@ -317,3 +317,19 @@ function typeWriter(div, fullText, msPerChar, startDelay) {
     }, startDelay);
   });
 }
+
+//キャラクター変更画面で黒いパネル以外をクリックしたら画面が消える処理
+document.addEventListener("click", (e) => {
+  const panel = document.getElementById("bgSelectPanel");
+  const icon = document.querySelector(".icon");
+
+  if (panel.classList.contains("hidden")) return;
+
+  // クリックした場所が「パネルの中」または「アイコン」なら何もしない
+  if (panel.contains(e.target) || icon.contains(e.target)) {
+      return;
+  }
+
+  // それ以外をクリックしたら閉じる
+  panel.classList.add("hidden");
+});
