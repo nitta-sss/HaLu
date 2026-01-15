@@ -133,10 +133,10 @@ html, body {
 
     position: relative; /*大堀追記*/
 
-    border-right: 3px solid rgb(0, 0, 0);
-    border-left: 3px solid rgb(0, 0, 0);
-    border-top: 3px solid rgb(0, 0, 0);
-    border-bottom: 3px solid rgb(0, 0, 0);
+    border-right: 3px solid #2589d0;
+    border-left: 3px solid #2589d0;
+    border-top: 3px solid #2589d0;
+    border-bottom: 3px solid #2589d0;
     
 }
 
@@ -224,7 +224,7 @@ html, body {
 }
 
 .send-btn.active {
-    background-color: #6eb4ec;
+    background-color: #2589d0;
     color: #fff;
 }
 
@@ -388,9 +388,9 @@ html, body {
     background: #faf3e8;
     z-index: 2;
 
-    border-right: 3px solid rgb(0, 0, 0);
-    border-top: 3px solid rgb(0, 0, 0);
-    border-bottom: 3px solid rgb(0, 0, 0);
+    border-right: 3px solid #2589d0;
+    border-top: 3px solid #2589d0;
+    border-bottom: 3px solid #2589d0;
 }
 
 .hide {
@@ -486,7 +486,7 @@ html, body {
     width: 500px;   /* 横幅 */
     height: 300px;  /* 高さ */
     padding: 20px;  /* 内側の余白を広げる */
-    background: rgba(0,0,0,0.6);
+    background: #83cbff;
     border-radius: 10px;
     z-index: 1000;
 }
@@ -499,7 +499,7 @@ html, body {
     content: "";
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.4);
+    background: #83cbff;
     z-index: -1;
 }
 
@@ -559,7 +559,7 @@ html, body {
     padding: 6px 18px;
     border-radius: 20px;
     border: none;
-    background: #1a73e8;
+    background: #2589d0;
     color: white;
     cursor: pointer;
   }
@@ -583,7 +583,7 @@ html, body {
 
   /* 右側：境界線つき表情パネル */
   .emoji-panel{
-    border-left: 2px solid rgba(0,0,0,0.35);  /* ← 境界線 */
+    border-left: 2px solid #2589d0(0,0,0,0.35);  /* ← 境界線 */
     padding-left: 24px;
     display: flex;
     flex-direction: column;
@@ -619,14 +619,14 @@ html, body {
     to  { transform: scale(1); }
   }
 
-  
+
   .toast {
     position: fixed;
     top: 20px;
     left: 50%;
     transform: translateX(-50%) translateY(-10px);
-    background: rgba(0, 0, 0, 0.85);
-    color: #fff;
+    background: #000;
+    color: #d0ff00;
     padding: 12px 20px;
     border-radius: 8px;
     font-size: 14px;

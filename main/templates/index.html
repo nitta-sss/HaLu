@@ -31,14 +31,14 @@
             <div class="headerButton">
                 <!-- 履歴削除ボタン -->
                 <div class="tooltip-wrapper">
-                <button id="deleteHistoryBtn" class="button-32">履歴削除</button>
+                    <button id="deleteHistoryBtn" class="button-32">履歴削除</button>
                     <div class="tooltip-balloon">
                         会話履歴を削除します
                     </div>
                 </div>
                 <!-- 音声切替ボタン -->
-                    <button id="soundbtn" class="button-32">BGMを有効化</button>
-                    <audio id="BGMsound" src="{% static 'sound/gauge.mp3' %}" loop></audio>
+                <button id="soundbtn" class="button-32">BGMを有効化</button>
+                <audio id="BGMsound" src="{% static 'sound/gauge.mp3' %}" loop></audio>
                 <!-- ゲージ表示切替ボタン -->
                 <div class="tooltip-wrapper">
                     <button id="showbtn" class="button-32">ゲージ表示</button>
@@ -84,7 +84,6 @@
                     <button id="sendBtn" class="send-btn">送信</button>
                 </div>
 
-
             </div>
 
             <!-- ★★★ 右エリア ★★★ -->
@@ -100,6 +99,7 @@
                         <source src="{% static 'video/startvideo.mp4' %}" type="video/mp4">
                     </video>
                 </div> -->
+
                 <!-- HaLuの顔画像 -->
                 <div class="face-area">
                     <img id = "icon" src="{% static 'img/ForestPaimon.png' %}" class="face-img">
@@ -108,32 +108,32 @@
                 <!-- 感情ゲージ -->
                 <div class="user-gauge hide" id="emotionArea">
                     <div class="emotion-area fade">
-                    <div class="emotion-wrap fade show">
-                        <!-- 左：2本のゲージ -->
-                        <div class="emotion-bars">
-                        <!-- 覚醒度 -->
-                        <div class="bar-item">
-                            <div class="bar-label">覚醒度</div>
-                            <div class="bar-base">
-                            <div class="bar-fill fill1" id="awakeBar"></div>
+                        <div class="emotion-wrap fade show">
+                            <!-- 左：2本のゲージ -->
+                            <div class="emotion-bars">
+                                <!-- 覚醒度 -->
+                                <div class="bar-item">
+                                    <div class="bar-label">覚醒度</div>
+                                    <div class="bar-base">
+                                        <div class="bar-fill fill1" id="awakeBar"></div>
+                                    </div>
+                                </div>
+                        
+                                <!-- 快楽度 -->
+                                <div class="bar-item">
+                                    <div class="bar-label">快楽度</div>
+                                    <div class="bar-base">
+                                        <div class="bar-fill fill2" id="pleasureBar"></div>
+                                    </div>
+                                </div>
+                            </div>
+                    
+                            <!-- 右：表情エリア（境界線 + ラベル + 顔文字） -->
+                            <div class="emoji-panel">
+                                <div class="emoji-title" id="emoji-label">ふつう</div>
+                                <div class="bar-emoji" id="emoji-face">😐</div>
                             </div>
                         </div>
-                
-                        <!-- 快楽度 -->
-                        <div class="bar-item">
-                            <div class="bar-label">快楽度</div>
-                            <div class="bar-base">
-                            <div class="bar-fill fill2" id="pleasureBar"></div>
-                            </div>
-                        </div>
-                        </div>
-                
-                        <!-- 右：表情エリア（境界線 + ラベル + 顔文字） -->
-                        <div class="emoji-panel">
-                        <div class="emoji-title" id="emoji-label">ふつう</div>
-                        <div class="bar-emoji" id="emoji-face">😐</div>
-                        </div>
-                    </div>
                     </div>
                 </div>
   
@@ -144,15 +144,15 @@
         <div id="bgSelectPanel" class="bg-panel hidden">
 
             <div id="Forest" class="bg-card"
-                 data-bg="{% static 'img/backForest.jpg' %}"
-                 data-chara="{% static 'img/ForestPaimon.png' %}">
+                data-bg="{% static 'img/backForest.jpg' %}"
+                data-chara="{% static 'img/ForestPaimon.png' %}">
                 <img src="{% static 'img/ForestPaimon.png' %}">
                 <p>森のパイモン</p>
             </div>
         
             <div id="ice" class="bg-card"
-                 data-bg="{% static 'img/背景 雪A.jpg' %}"
-                 data-chara="{% static 'img/icePaimon.png' %}">
+                data-bg="{% static 'img/背景 雪A.jpg' %}"
+                data-chara="{% static 'img/icePaimon.png' %}">
                 <img src="{% static 'img/icePaimon.png' %}">
                 <p>氷のパイモン</p>
             </div>
