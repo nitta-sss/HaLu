@@ -4,6 +4,7 @@ from YOBIDASI import run_ai, speak_ai
 import sys
 import threading
 import traceback
+from Ollama_Response import reset_conversation
 
 app = Flask(__name__)
 
@@ -121,6 +122,15 @@ def ai_speak():
         with _speaking_lock:
             _is_speaking = False
         return _safe_json({"error": "AI_SPEAK_FAILED"}, 500)
+
+@app.route("/ai/reset", methods=["POST", "OPTIONS"])
+def ai_reset():
+    if request.method == "OPTIONS":
+        return ("", 204)
+
+    reset_conversation()
+    print("🧹 会話履歴をリセットしました")
+    return jsonify({"status": "ok"})
 
 if __name__ == "__main__":
     print("🚀 Flask 起動中...")
