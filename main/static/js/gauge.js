@@ -31,6 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const a = clamp(Math.floor(Number(awake) / 20), 0, 4);
       const p = clamp(Math.floor(Number(pleasure) / 20), 0, 4);
   
+      //縦が覚醒度、横が快楽度（0.4刻みで表情が変わる）
       const table = [
         ["😞","😟","😐","🙂","😊"],
         ["😔","😕","😐","🙂","😄"],
