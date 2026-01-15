@@ -106,33 +106,38 @@
                 </div>
             
                 <!-- 感情ゲージ -->
-                <div class="user-gauge hide"  id="emotionArea">
-                    <div class="emotion-area fade ">
-
-                        <!-- 覚醒度バー -->
+                <div class="user-gauge hide" id="emotionArea">
+                    <div class="emotion-area fade">
+                
+                    <div class="emotion-wrap fade show">
+                        <!-- 左：2本のゲージ -->
+                        <div class="emotion-bars">
+                
+                        <!-- 覚醒度 -->
                         <div class="bar-item">
-                            <div class="fade show">
-                                <div class="bar-label">
-                                    覚醒度
-                                </div>
-                            </div>
+                            <div class="bar-label">覚醒度</div>
                             <div class="bar-base">
-                                <div class="bar-fill fill1" id="awakeBar"></div>
+                            <div class="bar-fill fill1" id="awakeBar"></div>
                             </div>
                         </div>
-
-                        <!-- 快楽度バー -->
+                
+                        <!-- 快楽度 -->
                         <div class="bar-item">
-                            <div class="bar-label">
-                                快楽度
-                            </div>
-                            <div class="bar-base" class="fade show">
-                                <div class="bar-fill fill2" id="pleasureBar"></div>
+                            <div class="bar-label">快楽度</div>
+                            <div class="bar-base">
+                            <div class="bar-fill fill2" id="pleasureBar"></div>
                             </div>
                         </div>
-
+                
+                        </div>
+                
+                        <!-- 右：顔文字は1個だけ -->
+                        <div class="bar-emoji" id="emoji-face">😐</div>
+                    </div>
+                
                     </div>
                 </div>
+  
             </div>
         </div>
 
@@ -155,20 +160,16 @@
 
         <!-- pythonから値を受け取る場所 -->
         <script>
-            window.emotion = { x: 0, y: 0 };
+            window.emotion = window.emotion ?? { x: 0, y: 0 };
         </script>
         
-        {% if awakening is not None %}
+        {% if awakening is not None and pleasure is not None %}
         <script>
-            window.emotion.x = {{ awakening }};
+            // ✅ 初期値も updateEmotion 経由で反映
+            window.updateEmotion?.({{ awakening }}, {{ pleasure }});
         </script>
         {% endif %}
-        
-        {% if pleasure is not None %}
-        <script>
-            window.emotion.y = {{ pleasure }};
-        </script>
-        {% endif %}
+          
 
         <!-- BGMを有効化するやつ一旦消してる -->
         <!-- <audio id="seOn" src="{% static 'sound/seOnOff.mp3' %}"></audio>
@@ -195,3 +196,6 @@
 
     </body>
 </html>
+
+
+window.emotion

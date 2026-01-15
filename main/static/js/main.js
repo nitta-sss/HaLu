@@ -11,26 +11,61 @@ document.addEventListener("DOMContentLoaded", () => {
   let isBusy = false; // AI処理中の連打防止
 
   // =========================
+  // 感情更新（ゲージ.js に丸投げする唯一の入口）
+  // =========================
+  function applyEmotionFromAI(data) {
+    // data から取り出し（候補を広めに対応）
+    const arousal  = (data?.arousal  ?? data?.awakening ?? data?.x);
+    const valence  = (data?.valence  ?? data?.pleasure  ?? data?.y);
+
+    // どっちもある時だけ反映
+    if (arousal == null || valence == null) {
+      console.warn("⚠ emotionがレスポンスに無い", data);
+      return;
+    }
+
+    const x = parseFloat(arousal);
+    const y = parseFloat(valence);
+
+    console.log("🎚 emotion update request:", { x, y });
+
+    // ✅ gauge.js の入口を優先
+    if (typeof window.updateEmotion === "function") {
+      window.updateEmotion(x, y);
+      return;
+    }
+
+    // フォールバック（古い実装用）
+    window.emotion = window.emotion ?? { x: 0, y: 0 };
+    window.emotion.x = x;
+    window.emotion.y = y;
+
+    if (typeof window.updateGauge === "function") {
+      window.updateGauge();
+    } else {
+      console.warn("⚠ updateGauge が存在しない（gauge.js 読み込み順を確認）");
+    }
+  }
+
+  // =========================
   // 共通：メッセージ表示 + AI呼び出し + 表示 + 読み上げ
   // =========================
   async function runAIFlow(userText, { speak = true, typeSpeed = 25 } = {}) {
-    console.log("runai入った",userText)
+    console.log("runai入った", userText);
     if (!userText) return;
 
-    // すでに処理中なら弾く（任意）
     if (isBusy) return;
     isBusy = true;
 
     try {
       console.time("AI_FLOW");
 
-      // 1) /ai/run に text を渡す（重要）
+      // 1) /ai/run に text を渡す
       const res = await fetch("http://127.0.0.1:5000/ai/run", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: userText }),
       });
-      
 
       if (!res.ok) {
         const t = await res.text();
@@ -46,29 +81,25 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // 3) 感情ゲージ更新
-      if (data.arousal != null && data.valence != null) {
-        window.emotion.x = parseFloat(data.arousal);
-        window.emotion.y = parseFloat(data.valence);
-        window.updateGauge?.();
-      }
+      // 3) ✅ 感情ゲージ更新（ここが確定）
+      applyEmotionFromAI(data);
 
-
-
+      // 4) BOT吹き出し（空で作る）
       const botDiv = addMessageElement("bot");
 
+      // 5) 読み上げを先に開始
       let speakPromise = Promise.resolve();
       if (speak) {
         speakPromise = fetch("http://127.0.0.1:5000/ai/speak", { method: "POST" });
       }
 
-      // speak が返ってくるまで待つ（＝Flask側の処理が返るまで）
+      // speak が返るまで待つ（失敗しても継続）
       await speakPromise.catch(() => {});
 
-      // その後にタイプ開始
+      // 6) タイプ開始
       const START_DELAY = 1500;
-      const TYPE_SPEED =120
-      await typeWriter(botDiv, String(data.reply ?? ""), TYPE_SPEED,START_DELAY);
+      const TYPE_SPEED = 120;
+      await typeWriter(botDiv, String(data.reply ?? ""), TYPE_SPEED, START_DELAY);
 
       console.timeLog("AI_FLOW", "typing end");
       console.timeEnd("AI_FLOW");
@@ -80,46 +111,26 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  
   // =========================
-  // 音声ボタン
-  // =========================
-  voiceBtn = document.getElementById("voiceBtn");
-
-  isRecording = false;
-  isBusy = false;
-  
   // マイクエラーメッセージ
+  // =========================
   function getMicErrorMessage(err) {
     if (!err) return "マイクが使用できません";
-  
-    // ラウザ由来の例外
     switch (err.name) {
-      case "NotFoundError":
-        return "マイクが接続されていません";
-      case "NotAllowedError":
-        return "マイクの使用が許可されていません";
-      case "NotReadableError":
-        return "マイクが他のアプリで使用中です";
+      case "NotFoundError":   return "マイクが接続されていません";
+      case "NotAllowedError": return "マイクの使用が許可されていません";
+      case "NotReadableError":return "マイクが他のアプリで使用中です";
     }
-  
-    // 通信エラー
     if (err.message?.includes("Failed to fetch")) {
       return "音声サーバーに接続できません（サーバーが起動していない可能性があります）";
     }
-  
-    // 自前エラー
     switch (err.message) {
-      case "MIC_START_FAILED":
-        return "マイクを開始できませんでした";
-      case "MIC_STOP_FAILED":
-        return "マイクを停止できませんでした";
+      case "MIC_START_FAILED": return "マイクを開始できませんでした";
+      case "MIC_STOP_FAILED":  return "マイクを停止できませんでした";
     }
     return "マイクが使用できません";
   }
-  
-  
-  
+
   // -------------------------
   // マイク存在チェック
   // -------------------------
@@ -127,101 +138,97 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!navigator.mediaDevices?.getUserMedia) {
       throw new Error("BROWSER_NOT_SUPPORTED");
     }
-  
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     stream.getTracks().forEach(t => t.stop());
   }
-  
+
   let uiStarted = false;
 
+  // =========================
+  // 音声ボタン
+  // =========================
   voiceBtn.addEventListener("click", async () => {
     if (isBusy) return;
     isBusy = true;
-  
+
     try {
       // START
       if (!isRecording) {
         await checkMicrophone();
-  
-        const res = await fetch("http://127.0.0.1:5000/mic/start", {
-          method: "POST"
-        });
+
+        const res = await fetch("http://127.0.0.1:5000/mic/start", { method: "POST" });
         if (!res.ok) throw new Error("MIC_START_FAILED");
-  
-        console.log("START 成功、voiceUI.start 呼ぶ直前");
+
         window.voiceUI.start();
         uiStarted = true;
         isRecording = true;
         return;
       }
-  
+
       // STOP
       isRecording = false;
-  
+
       if (uiStarted) {
         window.voiceUI.stop();
         uiStarted = false;
       }
-  
-      const stopRes = await fetch("http://127.0.0.1:5000/mic/stop", {
-        method: "POST"
-      });
+
+      const stopRes = await fetch("http://127.0.0.1:5000/mic/stop", { method: "POST" });
       if (!stopRes.ok) throw new Error("MIC_STOP_FAILED");
-  
+
       const data = await stopRes.json();
       const text = (data.text || "").trim();
-  
+
       if (!text) {
         addMessage("bot", "⚠ 音声テキストが取得できませんでした");
         return;
       }
-  
+
       addMessage("user", text);
+
+      // ✅ ここで忙しさ解除してAIへ
       isBusy = false;
       await runAIFlow(text, { speak: true, typeSpeed: 25 });
-  
-      
+
     } catch (err) {
       console.error(err);
-  
+
       isRecording = false;
       uiStarted = false;
-  
+
       const jp = getMicErrorMessage(err);
       showErrorModal(jp);
-  
+
     } finally {
       isBusy = false;
     }
   });
-  
-  
-
 
   // =========================
-  // テキスト送信（マイク横）
+  // テキスト送信
   // =========================
   async function sendText() {
     if (isBusy) return;
     isBusy = true;
-    const text = (textInput?.value || "").trim();
-    if (!text) return;
-    
 
-    // 入力欄クリア + 表示
+    const text = (textInput?.value || "").trim();
+    if (!text) {
+      isBusy = false;
+      return;
+    }
+
     textInput.value = "";
     addMessage("user", text);
 
-    isBusy=false;
-    // AI処理へ
+    isBusy = false;
     await runAIFlow(text, { speak: true, typeSpeed: 30 });
   }
 
   sendBtn?.addEventListener("click", sendText);
-
   textInput?.addEventListener("keydown", (e) => {
     if (e.key === "Enter") sendText();
   });
+
 });
 
 
@@ -248,7 +255,7 @@ function addMessageElement(sender) {
 
   const div = document.createElement("div");
   div.className = `balloon ${sender}`;
-  div.textContent = ""; // 空で作る
+  div.textContent = "";
   chatBox.appendChild(div);
 
   chatBox.scrollTop = chatBox.scrollHeight;
@@ -262,14 +269,11 @@ function typeWriter(div, fullText, msPerChar, startDelay) {
     const chatBox = document.querySelector(".chat-box");
 
     setTimeout(function tick() {
-      div.textContent += text[i++];
+      div.textContent += text[i++] ?? "";
       if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
 
       if (i >= text.length) return resolve();
-
       setTimeout(tick, msPerChar);
     }, startDelay);
   });
 }
-
-
