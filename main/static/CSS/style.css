@@ -219,11 +219,13 @@ html, body {
     border-radius: 24px;
     border: 1px solid #ccc;
     background: #fff;
+    color: #000;
     cursor: pointer;
 }
 
 .send-btn.active {
-    background-color: #56cf5a;
+    background-color: #6eb4ec;
+    color: #fff;
 }
 
 #voiceBtn {
