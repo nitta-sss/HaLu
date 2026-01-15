@@ -580,6 +580,26 @@ html, body {
   .bar-base{
     width: 100%;
   }
+
+  /* 右側：境界線つき表情パネル */
+  .emoji-panel{
+    border-left: 2px solid rgba(0,0,0,0.35);  /* ← 境界線 */
+    padding-left: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 180px;
+  }
+  
+  /* 表情名（顔文字の上） */
+  .emoji-title{
+    font-size: 20px;
+    font-weight: 700;
+    background: rgba(255,255,255,0.85);
+    padding: 6px 12px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+  }
   
   /* 顔文字 */
   .bar-emoji{
