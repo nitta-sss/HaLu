@@ -3,7 +3,7 @@ from Audio.Voice_Read import start_recording, stop_recording, get_result
 from YOBIDASI import run_ai, speak_ai
 import sys
 import threading
-
+import traceback
 
 app = Flask(__name__)
 
@@ -17,44 +17,112 @@ def add_cors_headers(response):
 
 print("🐍 Flask Python:", sys.executable)
 
+# -------------------------
+# しゃべり連打防止（任意）
+# -------------------------
+_speaking_lock = threading.Lock()
+_is_speaking = False
+
+def _safe_json(payload, status=200):
+    """必ずJSONで返す"""
+    return jsonify(payload), status
+
 @app.route("/mic/start", methods=["POST", "OPTIONS"])
 def mic_start():
     if request.method == "OPTIONS":
         return ("", 204)
-    start_recording()
-    return jsonify({"status": "recording"})
+    try:
+        start_recording()
+        return _safe_json({"status": "recording"})
+    except Exception as e:
+        print("❌ mic/start error:", e)
+        traceback.print_exc()
+        return _safe_json({"error": "MIC_START_FAILED"}, 500)
 
 @app.route("/mic/stop", methods=["POST", "OPTIONS"])
 def mic_stop():
     if request.method == "OPTIONS":
         return ("", 204)
-    stop_recording()
-    text = get_result()
-    print("flask", text)
-    return jsonify({"status": "processing", "text": text or ""})
+    try:
+        stop_recording()
+        text = get_result()
+        print("🎤 flask mic_stop text:", text)
+        return _safe_json({"status": "processing", "text": text or ""})
+    except Exception as e:
+        print("❌ mic/stop error:", e)
+        traceback.print_exc()
+        return _safe_json({"error": "MIC_STOP_FAILED", "text": ""}, 500)
 
 @app.route("/ai/run", methods=["POST", "OPTIONS"])
 def ai_run():
     if request.method == "OPTIONS":
         return ("", 204)
 
-    # ★キーボード入力はここで受け取る
-    data = request.get_json(silent=True) or {}
-    text = data.get("text")  # 無ければ None
+    try:
+        # JSから来る: { "text": "..." }
+        data = request.get_json(silent=True) or {}
+        text = data.get("text", None)
 
-    print("🚀 ai_run 呼び出し text:", text)
+        print("🚀 ai_run called. text:", repr(text))
 
-    # ★textがあればそれを使う / 無ければrun_ai側でget_result()
-    return jsonify(run_ai(text))
+        # run_ai(text) は dict を返す想定（あなたの既存仕様）
+        result = run_ai(text)
+
+        # 保険：dictじゃない場合でも落ちないようにする
+        if not isinstance(result, dict):
+            result = {"reply": str(result)}
+
+        # 必須キーが無いとJSが困る場合があるので補完（任意）
+        result.setdefault("reply", "")
+        result.setdefault("valence", None)
+        result.setdefault("arousal", None)
+
+        return _safe_json(result)
+
+    except Exception as e:
+        print("❌ ai/run error:", e)
+        traceback.print_exc()
+        return _safe_json({"error": "AI_RUN_FAILED", "reply": ""}, 500)
 
 @app.route("/ai/speak", methods=["POST", "OPTIONS"])
 def ai_speak():
     if request.method == "OPTIONS":
         return ("", 204)
-    print("🚀 ai_speak 呼び出し")
-    threading.Thread(target=speak_ai, daemon=True).start()
-    return jsonify({"status": "started"})
+
+    global _is_speaking
+
+    try:
+        # 連打防止（任意）
+        with _speaking_lock:
+            if _is_speaking:
+                return _safe_json({"status": "busy"})
+            _is_speaking = True
+
+        def _worker():
+            global _is_speaking
+            try:
+                print("🗣 speak_ai start")
+                speak_ai()
+            except Exception as e:
+                print("❌ speak_ai error:", e)
+                traceback.print_exc()
+            finally:
+                with _speaking_lock:
+                    _is_speaking = False
+                print("🗣 speak_ai end")
+
+        threading.Thread(target=_worker, daemon=True).start()
+        return _safe_json({"status": "started"})
+
+    except Exception as e:
+        print("❌ ai/speak error:", e)
+        traceback.print_exc()
+        # lock解除
+        with _speaking_lock:
+            _is_speaking = False
+        return _safe_json({"error": "AI_SPEAK_FAILED"}, 500)
 
 if __name__ == "__main__":
     print("🚀 Flask 起動中...")
+    # debug=True + use_reloader=False はそのままでOK
     app.run(port=5000, debug=True, use_reloader=False)
