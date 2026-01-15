@@ -201,8 +201,6 @@ html, body {
     gap: 10px;
 }
 
-/* 既存の #voiceBtn スタイルはそのまま使える（80x80の丸ボタン） */
-
 /* テキスト入力 */
 .text-input {
     flex: 1;
@@ -224,6 +222,9 @@ html, body {
     cursor: pointer;
 }
 
+.send-btn.active {
+    background-color: #56cf5a;
+}
 
 #voiceBtn {
     width: 80px;
@@ -236,6 +237,11 @@ html, body {
 
     background-color: #ff4b4b; /* ← 通常時は赤 */
     box-shadow: 0 4px 10px #0003;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+#voiceBtn:hover{
+    transform: translateY(-0.1875em);
 }
 
 /* 録音中 */
