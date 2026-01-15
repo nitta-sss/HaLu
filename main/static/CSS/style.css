@@ -393,14 +393,47 @@ html, body {
    ボタンにカーソル合わせたときに説明文を表示
 ========================= */
 
+.bgChangeBtn {
+    cursor: pointer;
+}
+
+.charaChageBtn {
+    position: relative;
+    display: inline-block;
+}
+
+.charaChageBtn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: calc(100% + 8px);
+    aspect-ratio: 1 / 1;
+  
+    border-radius: 50%;
+    border: 2px solid #2589d0;
+  
+    opacity: 0;
+    pointer-events: none;
+  
+    transform: translate(-50%, -50%);
+}
+
+.charaChageBtn:hover::before {
+    opacity: 1;
+    transition: opacity 0.2s ease; 
+}
+
+@keyframes circle-spin {
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
 .tooltip-wrapper {
     position: relative;
     display: inline-block;
   }
-
-.bgChangeBtn {
-    cursor: pointer;
-}
 
 .tooltip-balloon{
     position: absolute;
