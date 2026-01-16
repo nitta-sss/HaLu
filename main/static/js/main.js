@@ -86,6 +86,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const data = await res.json();
+      applyEmotionFromAI(data);
+      addMessage("user", userText);
+
       console.log("AI結果:", data);
 
       if (data?.error) {
@@ -96,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // resetが途中で入った場合も止める
       if (guardReset("runAIFlow after /ai/run")) return;
 
-      applyEmotionFromAI(data);
+      
 
       const botDiv = addMessageElement("bot");
 
@@ -234,7 +237,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // reset中なら表示＆AI呼び出しもしない
       if (guardReset("after mic stop")) return;
 
-      addMessage("user", text);
+      //addMessage("user", text);
 
       // ここで忙しさ解除してAIへ
       isBusy = false;
@@ -273,7 +276,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     textInput.value = "";
-    addMessage("user", text);
+    //addMessage("user", text);
 
     isBusy = false;
     await runAIFlow(text, { speak: true, typeSpeed: 30 });
