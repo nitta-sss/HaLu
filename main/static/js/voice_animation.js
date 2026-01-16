@@ -8,7 +8,7 @@ window.voiceUI = {
       btn.classList.remove("recording-end");
       btn.classList.add("recording");
   
-      const se = new Audio("/static/sound/seOn.mp3");
+      const se = new Audio("/static/sound/seOnOff.mp3");
       se.currentTime = 0;
       se.play().catch(() => {});
     },
@@ -22,7 +22,7 @@ window.voiceUI = {
       btn.classList.remove("recording");
       btn.classList.add("recording-end");
   
-      const se = new Audio("/static/sound/seOff.mp3");
+      const se = new Audio("/static/sound/seOnOff.mp3");
       se.currentTime = 0;
       se.play().catch(() => {});
   
