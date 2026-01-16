@@ -71,11 +71,7 @@ def llm_generate(user_text, emotion=None, timeout_sec=30):
         )
 
     prompt = (
-        "あなたは聞き役のAIです。\n"
-        "これまでの会話履歴を踏まえて、最後のユーザーの発言に返答してください。\n"
-        "日本語で、優しく自然な口調で、1〜3文程度で話してください。\n"
-        "相手の感情に寄り添い、押し付けや説教はしない。\n"
-        "\n"
+        "大事な要件を120字以内で話して"
         "=== 会話履歴 ===\n"
         f"{conversation_text}\n"
         f"{emotion_block}\n"
