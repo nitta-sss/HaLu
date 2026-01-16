@@ -60,15 +60,26 @@ html, body {
 /*キャラ説明*/
 
 .character-name {
+    width: 300px;
     font-size: 25px;
     font-weight: bold;
     color: #96E025;
 }
 
 .character-personality {
+    width: 400px;
     font-size: 25px;
     color: #A8EE3F;
 }
+
+.character-name.forest {color: #A8EE3F;}
+.character-personality.forest {color: #A8EE3F;}
+
+.character-name.ice {color: #bae6fd;}
+.character-personality.ice {color: #bae6fd;}
+
+.character-name.dande {color: #bae6fd;}
+.character-personality.dande {color: #bae6fd;}
 
 .headerButton {
     display: flex;
@@ -659,3 +670,4 @@ html, body {
     z-index: 1000;
     pointer-events: auto;
 }
+

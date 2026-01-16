@@ -22,8 +22,8 @@
                         キャラクターを変更
                     </div>
                 </div>
-                <div class="character-name">森のパイモン</div>
-                <div class="character-personality">
+                <div class="character-name forest">森のパイモン</div>
+                <div class="character-personality forest">
                     森の元気な案内役
                 </div>
             </div>
@@ -141,16 +141,29 @@
 
             <div id="Forest" class="bg-card"
                 data-bg="{% static 'img/backForest.jpg' %}"
-                data-chara="{% static 'img/ForestPaimon.png' %}">
+                data-chara="{% static 'img/ForestPaimon.png' %}"
+                data-name="森のパイモン"
+                data-personality="森の元気な案内役">
                 <img src="{% static 'img/ForestPaimon.png' %}">
                 <p>森のパイモン</p>
             </div>
         
             <div id="ice" class="bg-card"
                 data-bg="{% static 'img/背景 雪A.jpg' %}"
-                data-chara="{% static 'img/icePaimon.png' %}">
+                data-chara="{% static 'img/icePaimon.png' %}"
+                data-name="氷のパイモン"
+                data-personality="クールな氷の守護神">
                 <img src="{% static 'img/icePaimon.png' %}">
                 <p>氷のパイモン</p>
+            </div>
+
+            <div id="dande" class="bg-card"
+                data-bg="{% static 'img/danBattle.png' %}"
+                data-chara="{% static 'img/dan.png' %}"
+                data-name="ダンデ"
+                data-personality="最強最悪の元チャンピオン">
+                <img src="{% static 'img/dan.png' %}">
+                <p>ダンデ(笑)</p>
             </div>
         </div>
 
