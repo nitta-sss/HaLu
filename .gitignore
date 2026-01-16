@@ -16,7 +16,6 @@ env/
 *.h5
 *.pt
 *.wav
-*.mp3
 
 # allow trained model and tokenizer
 !emotion_model_regression.h5
