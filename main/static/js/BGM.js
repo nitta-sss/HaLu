@@ -13,16 +13,16 @@ document.addEventListener("DOMContentLoaded", () => {
   
     soundBtn.addEventListener("click", () => {
       if (!bgmEnabled) {
-        alert("BGMを有効化しました");
+        // alert("BGMを有効化しました");
         bgm.volume = 0.5;
         bgm.play().catch(()=>{});
         soundBtn.textContent = "BGMを無効化";
       } else {
-        alert("BGMを無効化しました");
+        // alert("BGMを無効化しました");
         bgm.pause();
         bgm.currentTime = 0;
         soundBtn.textContent = "BGMを有効化";
-      }
+      } 
       bgmEnabled = !bgmEnabled;
     });
   });
