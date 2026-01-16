@@ -1,62 +1,89 @@
+// delete.js（完全版）
+console.log("🔥 delete.js VERSION = 2026-01-16 A");
+
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("① DOMContentLoaded 発火");
+  console.log("① delete.js DOMContentLoaded");
 
-    const btn = document.getElementById("deleteHistoryBtn");
-    console.log("② deleteHistoryBtn 取得:", btn);
+  const btn = document.getElementById("deleteHistoryBtn");
+  console.log("② deleteHistoryBtn:", btn);
 
-    if (!btn) {
-        console.log("③ ボタンが無いので終了");
-        return;
+  if (!btn) return;
+
+  btn.addEventListener("click", async () => {
+    console.log("③ 削除ボタン クリック");
+
+    const ok = confirm("本当に会話履歴を削除しますか？\nこの操作は元に戻せません。");
+    console.log("④ confirm:", ok);
+    if (!ok) return;
+
+    // まずUIを消す（ここが一番体感ある）
+    const cleared = clearChatUI();
+    console.log("⑤ clearChatUI 結果:", cleared);
+
+    // 入力欄も初期化
+    const input = document.getElementById("textInput");
+    if (input) input.value = "";
+    console.log("⑥ input clear");
+
+    // 感情も初期化（任意）
+    if (typeof window.updateEmotion === "function") {
+      window.updateEmotion(0, 0);
+      console.log("⑦ updateEmotion(0,0)");
+    } else {
+      console.log("⑦ updateEmotion なし");
     }
 
-    btn.addEventListener("click", () => {
-        console.log("④ 削除ボタンがクリックされた");
+    // 連打防止（任意：main.js側で見てるなら効く）
+    window.isResetting = true;
+    console.log("⑧ isResetting = true");
 
-        // ★ 最終確認ダイアログ
-        const ok = confirm("本当に会話履歴を削除しますか？\nこの操作は元に戻せません。");
-        console.log("⑤ confirm の結果:", ok);
+    // Flaskの会話履歴を削除
+    try {
+      console.log("⑨ fetch Flask /ai/reset start");
+      const res = await fetch("http://127.0.0.1:5000/ai/reset", { method: "POST" });
+      console.log("⑩ fetch res:", res.status);
 
-        if (!ok) {
-            console.log("⑥ キャンセルされたので終了");
-            return;
-        }
+      if (!res.ok) {
+        const t = await res.text();
+        console.log("⑪ res text:", t);
+        alert("サーバー側の削除に失敗（コンソール見て）");
+        return;
+      }
 
-        console.log("⑦ fetch 開始 → /run/");
+      const data = await res.json().catch(() => ({}));
+      console.log("⑫ reset json:", data);
 
-        fetch("http://127.0.0.1:5000/ai/reset", {
-            method: "POST"
-        })
-        .then(res => {
-            console.log("⑧ reset response:", res);
-            return res.json();
-        })
-        .then(data => {
-            console.log("⑨ reset result:", data);
-            alert("履歴を削除しました");
-        })
-        .catch(err => {
-            console.error("⑩ reset error", err);
-            alert("削除に失敗しました");
-        });
-        
-    });
+      alert("履歴を削除しました");
+    } catch (e) {
+      console.error("⑬ fetch error:", e);
+      alert("Flaskに繋がらないっぽい（起動してる？）");
+    } finally {
+      window.isResetting = false;
+      console.log("⑭ isResetting = false");
+    }
+  });
 });
 
-function getCookie(name) {
-    console.log("⑪ getCookie 呼び出し:", name);
 
-    let cookieValue = null;
-    document.cookie.split(";").forEach(c => {
-        c = c.trim();
-        if (c.startsWith(name + "=")) {
-            cookieValue = decodeURIComponent(c.substring(name.length + 1));
-            console.log("⑫ Cookie 発見:", cookieValue);
-        }
-    });
+// =========================
+// 左チャットDOMを強制削除
+// =========================
+function clearChatUI() {
+  const chatBox = document.querySelector(".chat-box");
+  console.log("A chatBox:", chatBox);
 
-    if (!cookieValue) {
-        console.log("⑬ Cookie が見つからなかった");
-    }
+  if (!chatBox) return { ok: false, reason: "chatBox not found" };
 
-    return cookieValue;
+  const before = chatBox.querySelectorAll(".balloon").length;
+  console.log("B balloons before:", before);
+
+  // 100%消す（Djangoで描いた分も、JSで足した分も）
+  chatBox.querySelectorAll(".balloon").forEach(el => el.remove());
+
+  const after = chatBox.querySelectorAll(".balloon").length;
+  console.log("C balloons after:", after);
+
+  ensureInitialMessage();//最初の文呼び出し(おいらは、、)
+
+  return { ok: true, before, after };
 }

@@ -1,6 +1,11 @@
 console.log("✅ main.js 読み込まれたよ");
 
 document.addEventListener("DOMContentLoaded", () => {
+  ensureInitialMessage(); //最初の文呼び出し(おいらは、、)
+
+  // delete.js が先に読み込まれててもOK
+  window.isResetting = window.isResetting ?? false;
+
   let voiceBtn  = document.getElementById("voiceBtn");
   let textInput = document.getElementById("textInput");
   let sendBtn   = document.getElementById("sendBtn");
@@ -8,17 +13,26 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!voiceBtn) return;
 
   let isRecording = false;
-  let isBusy = false; // AI処理中の連打防止
+  let isBusy = false;
 
   // =========================
-  // 感情更新（ゲージ.js に丸投げする唯一の入口）
+  // reset中は全部止める（共通ガード）
+  // =========================
+  function guardReset(label = "") {
+    if (window.isResetting) {
+      console.log(`🚫 reset中なのでブロック: ${label}`);
+      return true;
+    }
+    return false;
+  }
+
+  // =========================
+  // 感情更新（gauge.js に丸投げ）
   // =========================
   function applyEmotionFromAI(data) {
-    // data から取り出し（候補を広めに対応）
-    const arousal  = (data?.arousal  ?? data?.awakening ?? data?.x);
-    const valence  = (data?.valence  ?? data?.pleasure  ?? data?.y);
+    const arousal = (data?.arousal ?? data?.awakening ?? data?.x);
+    const valence = (data?.valence ?? data?.pleasure  ?? data?.y);
 
-    // どっちもある時だけ反映
     if (arousal == null || valence == null) {
       console.warn("⚠ emotionがレスポンスに無い", data);
       return;
@@ -29,13 +43,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     console.log("🎚 emotion update request:", { x, y });
 
-    // ✅ gauge.js の入口を優先
     if (typeof window.updateEmotion === "function") {
       window.updateEmotion(x, y);
       return;
     }
 
-    // フォールバック（古い実装用）
     window.emotion = window.emotion ?? { x: 0, y: 0 };
     window.emotion.x = x;
     window.emotion.y = y;
@@ -48,9 +60,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================
-  // 共通：メッセージ表示 + AI呼び出し + 表示 + 読み上げ
+  // AIフロー
   // =========================
   async function runAIFlow(userText, { speak = true, typeSpeed = 25 } = {}) {
+    if (guardReset("runAIFlow")) return;
+
     console.log("runai入った", userText);
     if (!userText) return;
 
@@ -60,7 +74,6 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       console.time("AI_FLOW");
 
-      // 1) /ai/run に text を渡す
       const res = await fetch("http://127.0.0.1:5000/ai/run", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -75,34 +88,36 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await res.json();
       console.log("AI結果:", data);
 
-      // 2) エラー返ってきた場合
       if (data?.error) {
         addMessage("bot", `⚠ ${data.error}`);
         return;
       }
 
-      // 3) ✅ 感情ゲージ更新（ここが確定）
+      // resetが途中で入った場合も止める
+      if (guardReset("runAIFlow after /ai/run")) return;
+
       applyEmotionFromAI(data);
 
-      // 4) BOT吹き出し（空で作る）
       const botDiv = addMessageElement("bot");
 
-      // 5) 読み上げを先に開始
+      // 読み上げ開始
       let speakPromise = Promise.resolve();
       if (speak) {
         speakPromise = fetch("http://127.0.0.1:5000/ai/speak", { method: "POST" });
       }
 
-      // speak が返るまで待つ（失敗しても継続）
       await speakPromise.catch(() => {});
 
-      // 6) タイプ開始
+      // reset中ならタイプも中止
+      if (guardReset("typeWriter")) return;
+
       const START_DELAY = 1500;
-      const TYPE_SPEED = 120;
+      const TYPE_SPEED  = 120;
       await typeWriter(botDiv, String(data.reply ?? ""), TYPE_SPEED, START_DELAY);
 
       console.timeLog("AI_FLOW", "typing end");
       console.timeEnd("AI_FLOW");
+
     } catch (err) {
       console.error(err);
       addMessage("bot", "⚠ エラーが発生しました（コンソール確認して）");
@@ -112,14 +127,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================
-  // マイクエラーメッセージ
+  // マイクエラー文
   // =========================
   function getMicErrorMessage(err) {
     if (!err) return "マイクが使用できません";
     switch (err.name) {
-      case "NotFoundError":   return "マイクが接続されていません";
-      case "NotAllowedError": return "マイクの使用が許可されていません";
-      case "NotReadableError":return "マイクが他のアプリで使用中です";
+      case "NotFoundError":    return "マイクが接続されていません";
+      case "NotAllowedError":  return "マイクの使用が許可されていません";
+      case "NotReadableError": return "マイクが他のアプリで使用中です";
     }
     if (err.message?.includes("Failed to fetch")) {
       return "音声サーバーに接続できません（サーバーが起動していない可能性があります）";
@@ -131,37 +146,34 @@ document.addEventListener("DOMContentLoaded", () => {
     return "マイクが使用できません";
   }
 
-  // 音声入力ボタン
-
+  // =========================
+  // 音声入力
+  // =========================
   let micStream = null;
   let uiStarted = false;
 
-  // マイク存在チェック
   async function checkMicrophone() {
-    if (!navigator.mediaDevices?.getUserMedia) {
-      throw new Error("BROWSER_NOT_SUPPORTED");
-    }
+    if (!navigator.mediaDevices?.getUserMedia) throw new Error("BROWSER_NOT_SUPPORTED");
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     stream.getTracks().forEach(t => t.stop());
   }
 
-
   function watchMicDisconnect(stream) {
     const track = stream.getAudioTracks()[0];
     if (!track) return;
-  
+
     track.onended = async () => {
       console.warn("🎤 マイクが抜かれました");
-  
+
       if (!isRecording) return;
-  
+
       isRecording = false;
-  
+
       if (uiStarted) {
         window.voiceUI.stop();
         uiStarted = false;
       }
-  
+
       micStream?.getTracks().forEach(t => t.stop());
       micStream = null;
 
@@ -170,21 +182,19 @@ document.addEventListener("DOMContentLoaded", () => {
       } catch (e) {
         console.error("mic/stop failed after disconnect", e);
       }
-  
+
       showToast("マイクが取り外されました");
     };
   }
 
-
-  // 音声ボタン
   voiceBtn.addEventListener("click", async () => {
+    if (guardReset("voiceBtn click")) return;
     if (isBusy) return;
     isBusy = true;
 
     try {
       // START
       if (!isRecording) {
-        //開始前チェック
         await checkMicrophone();
 
         micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -221,9 +231,12 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // reset中なら表示＆AI呼び出しもしない
+      if (guardReset("after mic stop")) return;
+
       addMessage("user", text);
 
-      // ✅ ここで忙しさ解除してAIへ
+      // ここで忙しさ解除してAIへ
       isBusy = false;
       await runAIFlow(text, { speak: true, typeSpeed: 25 });
 
@@ -248,6 +261,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // テキスト送信
   // =========================
   async function sendText() {
+    if (guardReset("sendText")) return;
+
     if (isBusy) return;
     isBusy = true;
 
@@ -268,9 +283,7 @@ document.addEventListener("DOMContentLoaded", () => {
   textInput?.addEventListener("keydown", (e) => {
     if (e.key === "Enter") sendText();
   });
-
 });
-
 
 // =========================
 // 表示系ユーティリティ
@@ -318,18 +331,30 @@ function typeWriter(div, fullText, msPerChar, startDelay) {
   });
 }
 
-//キャラクター変更画面で黒いパネル以外をクリックしたら画面が消える処理
+// キャラ選択パネル外クリックで閉じる
 document.addEventListener("click", (e) => {
   const panel = document.getElementById("bgSelectPanel");
-  const icon = document.querySelector(".icon");
+  const icon  = document.querySelector(".icon");
+  if (!panel || !icon) return;
 
   if (panel.classList.contains("hidden")) return;
+  if (panel.contains(e.target) || icon.contains(e.target)) return;
 
-  // クリックした場所が「パネルの中」または「アイコン」なら何もしない
-  if (panel.contains(e.target) || icon.contains(e.target)) {
-      return;
-  }
-
-  // それ以外をクリックしたら閉じる
   panel.classList.add("hidden");
 });
+
+function ensureInitialMessage() {
+  const chatBox = document.querySelector(".chat-box");
+  if (!chatBox) return false;
+
+  // 既に吹き出しがあるなら何もしない（＝二重防止）
+  const hasBalloon = chatBox.querySelector(".balloon");
+  if (hasBalloon) return false;
+
+  const first = document.createElement("div");
+  first.className = "balloon bot";
+  first.textContent = "おいらは森のパイモン。気軽に話しかけてね";
+  chatBox.appendChild(first);
+  chatBox.scrollTop = chatBox.scrollHeight;
+  return true;
+}

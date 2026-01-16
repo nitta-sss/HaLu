@@ -65,16 +65,6 @@
             <!-- ★★★ 左エリア ★★★ -->
             <div class="left-area">
                 <div class="chat-box">
-
-                    <!-- messages というリスト（配列）から1つずつ msg に取り出して使っているfor文 -->
-                    {% for msg in messages %}
-                        <!-- CSS で user と bot の吹き出しデザインを分ける -->
-                        <div class="balloon {{ msg.sender }}">
-                            <!-- テキスト表示 -->
-                            {{ msg.text }}
-                        </div>
-                    {% endfor %}
-
                 </div>
 
                 <!-- 入力バー（マイク + テキスト + 送信） -->
