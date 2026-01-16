@@ -216,7 +216,7 @@ html, body {
     border-radius: 24px;
     border: 1px solid #ccc;
     background: #fff;
-    color: #000;
+    color: #333333;
     cursor: pointer;
 }
 
@@ -235,7 +235,7 @@ html, body {
     background: url("/static/img/voiceMic.png") center / contain no-repeat;
 
     background-color: #ff4b4b; /* ← 通常時は赤 */
-    box-shadow: 0 4px 10px #0003;
+    box-shadow: 0 4px 10px #333333;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
@@ -336,10 +336,10 @@ html, body {
     font-size: 35px;
     margin: 5px;
     background: #fff;
-    color: #000;
+    color: #333333;
     display: inline-block;
     padding: 4px 10px;
-    border-bottom: #000;
+    border-bottom: #333333;
     border-radius: 12px;
 }
 
@@ -348,7 +348,7 @@ html, body {
     font-size: 35px;
     margin-bottom: 5px;
     background: rgba(255,255,255,0.85);
-    color: #000;
+    color: #333333;
     display: inline-block;
     padding: 4px 10px;
     border-radius: 12px;
@@ -359,7 +359,7 @@ html, body {
     width: 100%;
     height: 25px;           /* ★ 高さが超重要 */
     background: #fff;
-    border: 2px solid #000;
+    border: 2px solid #333333;
     border-radius: 8px;
     overflow: hidden;
 }
@@ -640,7 +640,7 @@ html, body {
     font-size: 30px;
     transform: translateX(-50%) translateY(-10px);
     background: #d0ff00;
-    color: #000;
+    color: #333333;
     padding: 12px 20px;
     border-radius: 8px;
     font-size: 14px;
