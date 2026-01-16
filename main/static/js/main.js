@@ -11,14 +11,14 @@ document.addEventListener("DOMContentLoaded", () => {
   let isBusy = false; // AI処理中の連打防止
 
   // =========================
-  // 感情更新（ゲージ.js に丸投げする唯一の入口）
+  // 感情更新（ゲージ.js に丸投げする）
   // =========================
   function applyEmotionFromAI(data) {
     // data から取り出し（候補を広めに対応）
     const arousal  = (data?.arousal  ?? data?.awakening ?? data?.x);
     const valence  = (data?.valence  ?? data?.pleasure  ?? data?.y);
 
-    // どっちもある時だけ反映
+  // どっちもある時だけ反映
     if (arousal == null || valence == null) {
       console.warn("⚠ emotionがレスポンスに無い", data);
       return;
@@ -29,13 +29,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     console.log("🎚 emotion update request:", { x, y });
 
-    // ✅ gauge.js の入口を優先
+    // sgauge.js の入口を優先
     if (typeof window.updateEmotion === "function") {
       window.updateEmotion(x, y);
       return;
     }
 
-    // フォールバック（古い実装用）
+    // フォールバック
     window.emotion = window.emotion ?? { x: 0, y: 0 };
     window.emotion.x = x;
     window.emotion.y = y;
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       console.time("AI_FLOW");
 
-      // 1) /ai/run に text を渡す
+      // /ai/run に text を渡す
       const res = await fetch("http://127.0.0.1:5000/ai/run", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -75,19 +75,19 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await res.json();
       console.log("AI結果:", data);
 
-      // 2) エラー返ってきた場合
+      // エラー返ってきた場合
       if (data?.error) {
         addMessage("bot", `⚠ ${data.error}`);
         return;
       }
 
-      // 3) ✅ 感情ゲージ更新（ここが確定）
+      // 感情ゲージ更新
       applyEmotionFromAI(data);
 
-      // 4) BOT吹き出し（空で作る）
+      // BOT吹き出し
       const botDiv = addMessageElement("bot");
 
-      // 5) 読み上げを先に開始
+      // 読み上げを先に開始
       let speakPromise = Promise.resolve();
       if (speak) {
         speakPromise = fetch("http://127.0.0.1:5000/ai/speak", { method: "POST" });
@@ -96,13 +96,14 @@ document.addEventListener("DOMContentLoaded", () => {
       // speak が返るまで待つ（失敗しても継続）
       await speakPromise.catch(() => {});
 
-      // 6) タイプ開始
+      // タイプ開始
       const START_DELAY = 1500;
       const TYPE_SPEED = 120;
       await typeWriter(botDiv, String(data.reply ?? ""), TYPE_SPEED, START_DELAY);
 
       console.timeLog("AI_FLOW", "typing end");
       console.timeEnd("AI_FLOW");
+
     } catch (err) {
       console.error(err);
       addMessage("bot", "⚠ エラーが発生しました（コンソール確認して）");
@@ -223,7 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       addMessage("user", text);
 
-      // ✅ ここで忙しさ解除してAIへ
+      // ここで忙しさ解除してAIへ
       isBusy = false;
       await runAIFlow(text, { speak: true, typeSpeed: 25 });
 
