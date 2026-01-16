@@ -12,11 +12,11 @@ env/
 # OS
 .DS_Store
 
-# Models / large files（必要に応じて調整）
+# ここに入れた拡張子のファイルはローカルになる（必要に応じて調整）
 *.h5
 *.pt
 *.wav
 
-# allow trained model and tokenizer
+# ローカルにしたくない例外ファイル
 !emotion_model_regression.h5
 !tokenizer.pkl
