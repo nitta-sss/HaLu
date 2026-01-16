@@ -640,3 +640,8 @@ html, body {
     transform: translateX(-50%) translateY(0);
   }
   
+  #soundbtn {
+    position: relative;
+    z-index: 1000;
+    pointer-events: auto;
+}
