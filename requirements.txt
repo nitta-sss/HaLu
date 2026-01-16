@@ -11,6 +11,9 @@ scikit-learn==1.2.2
 sounddevice==0.4.6
 soundfile==0.12.1
 
+# --- Audio Analysis ---
+librosa==0.10.1
+
 # --- Text to Speech ---
 pyttsx3==2.90
 
