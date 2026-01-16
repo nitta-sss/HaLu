@@ -4,6 +4,10 @@
 
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+#from Audio.tone import analyze_tone
+
+#from Audio import Voice_Read
+#from Audio import tone
 import pickle
 
 # ===============================
@@ -31,6 +35,18 @@ def predict_emotion_raw(text):
     seq = tokenizer.texts_to_sequences([text])
     x = pad_sequences(seq, maxlen=MAX_LEN)
     val, aro = model.predict(x, verbose=0)[0]
+
+    """トーン調節用
+    name = "sora"
+    y=Voice_Read.data
+    waveform = y.squeeze()
+    #トーン調節
+    para=analyze_tone(name, waveform)
+    print("トーン調節結果：",para)
+    #覚醒度補正
+    aro += para
+    """
+
     return float(val), float(aro)
 
 # ===============================
@@ -108,6 +124,9 @@ def derive_ui_valence(text, raw_val, category):
 # 5. UI用 arousal（演出専用）
 # ===============================
 def derive_ui_arousal(text, raw_aro, category):
+
+
+
     a = raw_aro
 
     # 強調
