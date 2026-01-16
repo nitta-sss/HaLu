@@ -268,7 +268,7 @@ html, body {
 }
 
 /* ===========================
-録音終了エフェクト
+録音終了エフェクト（赤くホワン）
  =========================== */
  .recording-end {
     animation: endFlash 1.75s ease-out;
@@ -318,7 +318,7 @@ html, body {
 }
 
 /* =========================
-   感情ゲージ
+   感情ゲージ（必須）
 ========================= */
 
 /* 感情バーエリア */
@@ -338,11 +338,10 @@ html, body {
 .bar-label {
     font-size: 28px;
     margin-bottom: 5px;
-    /* background: rgba(255,255,255,0.85); */
+    background: rgba(255,255,255,0.85);
     color: #000;
     display: inline-block;
     padding: 4px 10px;
-    
 }
 
 /* ゲージの土台 */
@@ -475,9 +474,9 @@ html, body {
     visibility: visible;
   }
 
-/*キャラクター変更*/
+  /*キャラクター変更*/
 
-.bg-panel {
+  .bg-panel {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -531,31 +530,31 @@ html, body {
     align-items: flex-start;
     padding-top: 120px;
     z-index: 9999;
-}
+  }
   
-.modal.hidden {
+  .modal.hidden {
     display: none;
-}
+  }
   
-.modal-box {
+  .modal-box {
     background: white;
     width: 380px;
     border-radius: 10px;
     padding: 16px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
+  }
   
-.modal-title {
+  .modal-title {
     font-weight: bold;
     margin-bottom: 8px;
-}
+  }
   
-.modal-message {
+  .modal-message {
     font-size: 14px;
     margin-bottom: 16px;
-}
+  }
   
-.modal-box button {
+  .modal-box button {
     float: right;
     padding: 6px 18px;
     border-radius: 20px;
@@ -563,48 +562,47 @@ html, body {
     background: #2589d0;
     color: white;
     cursor: pointer;
-}
+  }
   
 /* 2本ゲージ(左) + 顔文字(右) を横並び */
 /* 2本ゲージ(左) + 顔文字(右) */
-
 .emotion-wrap{
     display: flex;
     align-items: center;
     gap: 150px;
-}
+  }
   
-.emotion-bars{
+  .emotion-bars{
     flex: 1;
-}
+  }
   
-/* 150%だと顔が押し出される */
-.bar-base{
+  /* ← ここ超重要：150%だと顔が押し出される */
+  .bar-base{
     width: 100%;
-}
+  }
 
-/* 右側：境界線つき表情パネル */
-.emoji-panel{
-    border-left: 2px solid #2589d0(0,0,0,0.35);
+  /* 右側：境界線つき表情パネル */
+  .emoji-panel{
+    border-left: 2px solid #2589d0(0,0,0,0.35);  /* ← 境界線 */
     padding-left: 24px;
     display: flex;
     flex-direction: column;
     align-items: center;
     min-width: 180px;
-}
+  }
   
-/* 表情名（顔文字の上） */
-.emoji-title{
+  /* 表情名（顔文字の上） */
+  .emoji-title{
     font-size: 20px;
     font-weight: 700;
     background: rgba(255,255,255,0.85);
     padding: 6px 12px;
     border-radius: 12px;
     margin-bottom: 10px;
-}
+  }
   
-/* 顔文字 */
-.bar-emoji{
+  /* 顔文字 */
+  .bar-emoji{
     width: 170px;
     height: 170px;
     display: grid;
@@ -612,17 +610,17 @@ html, body {
     font-size: 120px;
     line-height: 1;
     user-select: none;
-}
+  }
   
-/* 表情が変わった時にポン */
-    .pop{ animation: pop 0.25s ease-out; }
-@keyframes pop{
+  /* 表情が変わった時にポン */
+  .pop{ animation: pop 0.25s ease-out; }
+  @keyframes pop{
     from{ transform: scale(0.85); }
     to  { transform: scale(1); }
-}
+  }
 
 
-.toast {
+  .toast {
     position: fixed;
     top: 20px;
     left: 50%;
@@ -635,9 +633,15 @@ html, body {
     opacity: 0;
     transition: opacity 0.3s ease, transform 0.3s ease;
     z-index: 9999;
-}
+  }
   
-.toast.show {
+  .toast.show {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
+  }
+  
+  #soundbtn {
+    position: relative;
+    z-index: 1000;
+    pointer-events: auto;
 }
