@@ -19,7 +19,7 @@ html, body {
 .header {
     height: 80px;
     padding: 10px 20px;
-    background: #ffffff;
+    background: #f5f5f5;
     border-bottom: 1px solid #2589d0;
     display: flex;
     align-items: center;
@@ -88,7 +88,7 @@ html, body {
     overflow: hidden;
     border: 1px solid #2589d0;
     border-radius: 25px;
-    background-color: #fff;
+    background-color: #f5f5f5;
     color: #2589d0;
     font-size: 1em;
     z-index: 20;
@@ -96,7 +96,7 @@ html, body {
 
 .button-32:hover {
     background-color: transparent;
-    color: #fff;
+    color: #f5f5f5;
 }
 
 .button-32::before {
@@ -158,7 +158,7 @@ html, body {
     border-radius: 16px;
     font-size: 14px;
     line-height: 1.4;
-    background: #ffffff;
+    background: #f5f5f5;
     box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 
@@ -215,14 +215,14 @@ html, body {
     padding: 0 16px;
     border-radius: 24px;
     border: 1px solid #ccc;
-    background: #fff;
-    color: #000;
+    background: #f5f5f5;
+    color: #333333;
     cursor: pointer;
 }
 
 .send-btn.active {
     background-color: #2589d0;
-    color: #fff;
+    color: #f5f5f5;
 }
 
 #voiceBtn {
@@ -235,7 +235,7 @@ html, body {
     background: url("/static/img/voiceMic.png") center / contain no-repeat;
 
     background-color: #ff4b4b; /* ← 通常時は赤 */
-    box-shadow: 0 4px 10px #0003;
+    box-shadow: 0 4px 10px #333333;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
@@ -335,11 +335,11 @@ html, body {
 .watashiNoKokoro{
     font-size: 35px;
     margin: 5px;
-    background: #fff;
-    color: #000;
+    background: #f5f5f5;
+    color: #333333;
     display: inline-block;
     padding: 4px 10px;
-    border-bottom: #000;
+    border-bottom: #333333;
     border-radius: 12px;
 }
 
@@ -348,7 +348,7 @@ html, body {
     font-size: 35px;
     margin-bottom: 5px;
     background: rgba(255,255,255,0.85);
-    color: #000;
+    color: #333333;
     display: inline-block;
     padding: 4px 10px;
     border-radius: 12px;
@@ -358,8 +358,8 @@ html, body {
 .bar-base {
     width: 100%;
     height: 25px;           /* ★ 高さが超重要 */
-    background: #fff;
-    border: 2px solid #000;
+    background: #f5f5f5;
+    border: 2px solid #333333;
     border-radius: 8px;
     overflow: hidden;
 }
@@ -461,7 +461,7 @@ html, body {
   transform: translateX(-50%);
 
   background: #333;
-  color: #fff;
+  color: #f5f5f5;
   padding: 8px 12px;
   border-radius: 10px;
   font-size: 13px;
@@ -517,7 +517,7 @@ html, body {
 .bg-card { 
     cursor: pointer; 
     text-align: center; 
-    color: white; 
+    color: #f5f5f5; 
 }
 
 .bg-card img { 
@@ -548,7 +548,7 @@ html, body {
   }
   
   .modal-box {
-    background: white;
+    background: #f5f5f5;
     width: 380px;
     border-radius: 10px;
     padding: 16px;
@@ -571,7 +571,7 @@ html, body {
     border-radius: 20px;
     border: none;
     background: #2589d0;
-    color: white;
+    color: #f5f5f5;
     cursor: pointer;
   }
   
@@ -640,7 +640,7 @@ html, body {
     font-size: 30px;
     transform: translateX(-50%) translateY(-10px);
     background: #d0ff00;
-    color: #000;
+    color: #333333;
     padding: 12px 20px;
     border-radius: 8px;
     font-size: 14px;
