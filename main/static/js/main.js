@@ -63,6 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // AIフロー
   // =========================
   async function runAIFlow(userText, { speak = true, typeSpeed = 25 } = {}) {
+    window.lastUserText = userText;
     if (guardReset("runAIFlow")) return;
 
     console.log("runai入った", userText);
@@ -74,17 +75,27 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       console.time("AI_FLOW");
 
-      const res = await fetch("http://127.0.0.1:5000/ai/run", {
+    let res;
+    try {
+      res = await fetch("http://127.0.0.1:5000/ai/run", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: userText }),
       });
+    } catch (e) {
+      // fetch自体が失敗 = Flaskに繋がってない（未起動が多い）
+      addMessage("bot", "⚠Flask（Python側）を起動してください");
+      console.error("AI server fetch failed:", e);
+      return;
+    }
 
-      if (!res.ok) {
-        const t = await res.text();
-        throw new Error(`/ai/run failed: ${res.status} ${t}`);
-      }
-
+    if (!res.ok) {
+      const t = await res.text().catch(() => "");
+      // Flaskは起きてるが、Python側がエラーなど
+      addMessage("bot", `⚠ AI処理でエラーが発生しました（/ai/run ${res.status}）。Flask側のログを確認してください`);
+      console.error("/ai/run failed:", res.status, t);
+      return;
+    }
       const data = await res.json();
       applyEmotionFromAI(data);
       addMessage("user", userText);
@@ -99,14 +110,23 @@ document.addEventListener("DOMContentLoaded", () => {
       // resetが途中で入った場合も止める
       if (guardReset("runAIFlow after /ai/run")) return;
 
-      
-
       const botDiv = addMessageElement("bot");
 
       // 読み上げ開始
       let speakPromise = Promise.resolve();
       if (speak) {
-        speakPromise = fetch("http://127.0.0.1:5000/ai/speak", { method: "POST" });
+        try {
+          const speakRes = await fetch("http://127.0.0.1:5000/ai/speak", { method: "POST" });
+          // 返ってきたけど失敗系（500とか）
+          if (speakRes && !speakRes.ok) {
+            addMessage("bot", "⚠ 読み上げに失敗しました。VOICEVOXを起動しているか確認してね");
+            console.warn("/ai/speak not ok:", speakRes.status);
+          }
+        } catch (e) {
+          // fetch自体が失敗（Flask落ち or VOICEVOX絡みで内部が死んでる）
+          addMessage("bot", "⚠ 読み上げサーバーに接続できません。VOICEVOXを起動してください");
+          console.error("speak fetch failed:", e);
+        }
       }
 
       await speakPromise.catch(() => {});
@@ -286,6 +306,16 @@ document.addEventListener("DOMContentLoaded", () => {
   textInput?.addEventListener("keydown", (e) => {
     if (e.key === "Enter") sendText();
   });
+
+  document.getElementById("secretLabelBtn")?.addEventListener("click", async () => {
+    const text = window.lastUserText || "";
+    await fetch("http://127.0.0.1:5000/labeler/open", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({ text })
+    });
+  });  
+
 });
 
 // =========================
@@ -361,3 +391,4 @@ function ensureInitialMessage() {
   chatBox.scrollTop = chatBox.scrollHeight;
   return true;
 }
+runAIFlow

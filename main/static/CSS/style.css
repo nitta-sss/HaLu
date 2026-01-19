@@ -680,5 +680,17 @@ html, body {
     position: relative;
     z-index: 1000;
     pointer-events: auto;
-}
+  }
+
+  #secretLabelBtn{
+    position: fixed;
+    right: 8px;
+    bottom: 8px;
+    width: 24px;
+    height: 24px;
+    opacity: 0.01;   /* ほぼ見えない */
+    z-index: 99999;
+    border: none;
+    background: transparent;
+  }
 

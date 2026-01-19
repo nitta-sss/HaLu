@@ -1,10 +1,14 @@
 from flask import Flask, jsonify, request
 from Audio.Voice_Read import start_recording, stop_recording, get_result
 from YOBIDASI import run_ai, speak_ai
+import subprocess
+import os
 import sys
 import threading
 import traceback
 from Ollama_Response import reset_conversation
+
+
 
 app = Flask(__name__)
 
@@ -122,6 +126,22 @@ def ai_speak():
         with _speaking_lock:
             _is_speaking = False
         return _safe_json({"error": "AI_SPEAK_FAILED"}, 500)
+
+@app.route("/labeler/open", methods=["POST", "OPTIONS"])
+def open_labeler():
+    if request.method == "OPTIONS":
+        return ("", 204)
+
+    data = request.get_json(force=True)
+    text = (data.get("text") or "").strip()
+
+    script = os.path.join(os.path.dirname(__file__), "DB_INSERT_TK.py")
+
+    # Windowsで確実に venv の python で起動
+    subprocess.Popen([sys.executable, script, text])
+
+    return jsonify({"status": "opened"})
+
 
 @app.route("/ai/reset", methods=["POST", "OPTIONS"])
 def ai_reset():

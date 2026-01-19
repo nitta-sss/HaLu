@@ -6,7 +6,7 @@ cursor = conn.cursor()
 
 
 cursor.execute("""
-DELETE FROM TestData
+DELETE FROM EmotionLog
 """)
 
 

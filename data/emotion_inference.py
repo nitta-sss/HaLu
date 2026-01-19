@@ -33,8 +33,11 @@ def clamp(x, lo, hi):
 # ===============================
 def predict_emotion_raw(text):
     seq = tokenizer.texts_to_sequences([text])
+    print(seq)
     x = pad_sequences(seq, maxlen=MAX_LEN)
+    print(x)
     val, aro = model.predict(x, verbose=0)[0]
+    print(val, aro)
 
     """トーン調節用
     name = "sora"
@@ -168,6 +171,33 @@ def decide_message(category):
 # 7. 外部から呼ぶ唯一の関数
 # ===============================
 def suiron_test(text):
+
+    print("\n🔥 suiron_test CALLED")
+    print("🔥 emotion_inference file:", __file__)
+    print("🔥 vocab size:", len(tokenizer.word_index))
+    print("🔥 oov_token:", tokenizer.oov_token)
+    print("🔥 sample seq:", tokenizer.texts_to_sequences([text])[0])
+
+    # ① 空文字 or 空白だけ → (0,0)
+    if text is None or str(text).strip() == "":
+        return {
+            "valence": 0.0,
+            "arousal": 0.0,
+            "category": "neutral",
+            "message": decide_message("neutral")
+        }
+
+    # ② 予期せぬ言葉（tokenizerが理解できず seq が空）→ (0,0)
+    seq = tokenizer.texts_to_sequences([text])[0]
+    if len(seq) == 0:
+        return {
+            "valence": 0.0,
+            "arousal": 0.0,
+            "category": "neutral",
+            "message": decide_message("neutral")
+        }
+
+    # ③ いつも通り推論
     raw_val, raw_aro = predict_emotion_raw(text)
 
     category = classify_category(text, raw_val)
@@ -176,11 +206,12 @@ def suiron_test(text):
     ui_aro = derive_ui_arousal(text, raw_aro, category)
 
     return {
-        "valence": ui_val,     # 快楽度メーター
-        "arousal": ui_aro,     # 覚醒度メーター
-        "category": category,  # 感情カテゴリ
+        "valence": ui_val,
+        "arousal": ui_aro,
+        "category": category,
         "message": decide_message(category)
     }
+
 
 # ===============================
 # 8. 動作確認
