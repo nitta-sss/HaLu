@@ -684,10 +684,10 @@ html, body {
 
   #secretLabelBtn{
     position: fixed;
-    right: 8px;
-    bottom: 8px;
-    width: 24px;
-    height: 24px;
+    right: 2px;
+    bottom: 24px;
+    width: 60px;
+    height: 60px;
     opacity: 0.01;   /* ほぼ見えない */
     z-index: 99999;
     border: none;
