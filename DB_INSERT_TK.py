@@ -1,3 +1,4 @@
+# DB_INSERT_TK.py
 import tkinter as tk
 from tkinter import messagebox
 import sqlite3
@@ -13,8 +14,8 @@ TABLE = [
 ]
 
 def idx_to_vals(a, p):
-    valence = (p - 2) / 2   # -1 .. 1
-    arousal = (a - 2) / 2   # -1 .. 1
+    valence = (p - 2) / 2   # -1..1
+    arousal = (a - 2) / 2   # -1..1
     return float(valence), float(arousal)
 
 def ensure_table(conn):
@@ -39,32 +40,35 @@ class App(tk.Tk):
         super().__init__()
         self.title("HaLu 感情ラベル入力")
 
-        # ✅ 高さを少し増やす（下のバーが消えにくい）
-        self.geometry("980x620")
-        self.minsize(900, 560)
+        # ✅ 初期表示で下のボタンが見切れないように大きくする
+        self.geometry("1200x780")     # ← ここ増やした
+        self.minsize(1100, 720)       # ← ここ増やした
         self.resizable(True, True)
 
-        self.FONT_TITLE = ("Meiryo", 14, "bold")
-        self.FONT_BTN   = ("Meiryo", 13, "bold")
-        self.FONT_TEXT  = ("Meiryo", 12)
+        # フォント
+        self.FONT_TITLE = ("Meiryo", 18, "bold")
+        self.FONT_BTN   = ("Meiryo", 16, "bold")
+        self.FONT_TEXT  = ("Meiryo", 14)
 
-        self.selected = None  # (a, p)
+        self.selected = None
+        self.buttons = {}
 
-        # ===== 画面を3段に分ける =====
+        # ===== レイアウト：top / mid / bottom =====
         top = tk.Frame(self)
-        top.pack(side="top", fill="x", padx=14, pady=12)
+        top.pack(side="top", fill="x", padx=16, pady=14)
 
         mid = tk.Frame(self)
-        mid.pack(side="top", fill="both", expand=True, padx=14, pady=(0, 10))
+        mid.pack(side="top", fill="both", expand=True, padx=16, pady=(0, 12))
 
         bottom = tk.Frame(self)
-        bottom.pack(side="bottom", fill="x", padx=14, pady=12)  # ✅ ここを必ず表示
+        bottom.pack(side="bottom", fill="x", padx=16, pady=14)
 
         # ===== top =====
         tk.Label(top, text="テキスト（ラベル付け対象）", font=self.FONT_TEXT).pack(anchor="w")
+
         self.entry = tk.Entry(top, font=self.FONT_TEXT)
         self.entry.insert(0, text)
-        self.entry.pack(fill="x", pady=8)
+        self.entry.pack(fill="x", pady=10)
         self.entry.focus_set()
 
         tk.Label(top, text="感情を選択（25段階）", font=self.FONT_TITLE).pack(anchor="w")
@@ -78,8 +82,6 @@ class App(tk.Tk):
         for c in range(5):
             grid.grid_columnconfigure(c, weight=1)
 
-        self.buttons = {}
-
         for a in range(5):
             for p in range(5):
                 label = TABLE[a][p]
@@ -87,17 +89,25 @@ class App(tk.Tk):
                     grid,
                     text=label,
                     font=self.FONT_BTN,
-                    padx=10, pady=12,
-                    wraplength=220,
+                    padx=12, pady=18,      # ✅ 少し大きく
+                    wraplength=260,         # ✅ 文字つぶれ防止
                     justify="center",
                     command=lambda a=a, p=p: self.select(a, p)
                 )
-                btn.grid(row=a, column=p, padx=8, pady=8, sticky="nsew")
+                btn.grid(row=a, column=p, padx=10, pady=10, sticky="nsew")
                 self.buttons[(a, p)] = btn
 
-        # ===== bottom（送信＆閉じる）=====
+        # ===== bottom =====
         self.status = tk.Label(bottom, text="未選択", font=self.FONT_TEXT, fg="gray")
         self.status.pack(side="left")
+
+        tk.Button(
+            bottom,
+            text="閉じる",
+            font=self.FONT_TEXT,
+            width=10,
+            command=self.destroy
+        ).pack(side="right", padx=8)
 
         tk.Button(
             bottom,
@@ -107,17 +117,19 @@ class App(tk.Tk):
             bg="#4CAF50",
             fg="white",
             command=self.submit
-        ).pack(side="right", padx=6)
+        ).pack(side="right", padx=8)
 
-        tk.Button(
-            bottom,
-            text="閉じる",
-            font=self.FONT_TEXT,
-            width=10,
-            command=self.destroy
-        ).pack(side="right")
-
+        # ===== ショートカット =====
         self.bind("<Escape>", lambda e: self.destroy())
+        self.bind("<Return>", lambda e: self.submit())
+        self.bind("<Control-Return>", lambda e: self.submit())
+        self.bind("<BackSpace>", lambda e: self.clear_selection())
+
+    def clear_selection(self):
+        self.selected = None
+        self.status.config(text="未選択", fg="gray")
+        for btn in self.buttons.values():
+            btn.config(relief="raised", bg="SystemButtonFace")
 
     def select(self, a, p):
         for btn in self.buttons.values():
@@ -127,7 +139,8 @@ class App(tk.Tk):
         btn.config(relief="sunken", bg="#FFD966")
 
         self.selected = (a, p)
-        self.status.config(text=f"選択中：{TABLE[a][p]}", fg="black")
+        v, ar = idx_to_vals(a, p)
+        self.status.config(text=f"選択中：{TABLE[a][p]}   (valence={v}, arousal={ar})", fg="black")
 
     def submit(self):
         if not self.selected:
@@ -153,16 +166,15 @@ class App(tk.Tk):
         conn.commit()
         conn.close()
 
-        messagebox.showinfo("保存完了", f"{label}\nvalence={valence}, arousal={arousal}")
+        # ✅ ポップアップ無しで保存結果だけ表示
+        self.status.config(text=f"✅ 保存OK：{label}  (v={valence}, a={arousal})", fg="green")
 
-        # 次の入力に備える
-        self.entry.selection_range(0, tk.END)
+        # ✅ 送信後：テキストボックスを完全に空にする
+        self.entry.delete(0, tk.END)
+
+        # 次の入力に備える：選択解除＆フォーカス
+        self.clear_selection()
         self.entry.focus_set()
-        self.status.config(text="未選択", fg="gray")
-        self.selected = None
-
-        for btn in self.buttons.values():
-            btn.config(relief="raised", bg="SystemButtonFace")
 
 if __name__ == "__main__":
     import sys
