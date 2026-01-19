@@ -32,12 +32,23 @@ def clamp(x, lo, hi):
 # 1. モデル生推論（数値はUI用）
 # ===============================
 def predict_emotion_raw(text):
-    seq = tokenizer.texts_to_sequences([text])
-    print(seq)
-    x = pad_sequences(seq, maxlen=MAX_LEN)
-    print(x)
+    # 空文字は即ニュートラル
+    if text is None:
+        return 0.0, 0.0
+
+    text = str(text).strip()
+    if text == "":
+        return 0.0, 0.0
+
+    seq = tokenizer.texts_to_sequences([text])[0]
+
+    # 未知語だらけなら (0,0) に落とす
+    if is_unknownish(seq, tokenizer, oov_threshold=0.7):
+        print("⚠ unknown-ish input -> neutral (0,0):", text)
+        return 0.0, 0.0
+
+    x = pad_sequences([seq], maxlen=MAX_LEN)
     val, aro = model.predict(x, verbose=0)[0]
-    print(val, aro)
 
     """トーン調節用
     name = "sora"
@@ -202,15 +213,38 @@ def suiron_test(text):
 
     category = classify_category(text, raw_val)
 
-    ui_val = derive_ui_valence(text, raw_val, category)
-    ui_aro = derive_ui_arousal(text, raw_aro, category)
+    # 補正かけてるこの関数で　一回切ってる
+    #ui_val = derive_ui_valence(text, raw_val, category)
+    #ui_aro = derive_ui_arousal(text, raw_aro, category)
 
     return {
-        "valence": ui_val,
-        "arousal": ui_aro,
+        "valence": raw_val,
+        "arousal": raw_aro,
         "category": category,
         "message": decide_message(category)
     }
+
+# ゴミ入力判定  
+def is_unknownish(seq, tokenizer, oov_threshold=0.7):
+    """
+    seq: tokenizer.texts_to_sequences([text])[0]
+    oov_threshold: 0.7 = 7割以上OOVなら未知語だらけ判定
+    """
+    if not seq or len(seq) == 0:
+        return True
+
+    oov_id = tokenizer.word_index.get("<OOV>")
+    if oov_id is None:
+        # oov_tokenを使ってない場合は判定できないのでFalse扱い
+        return False
+
+    oov_count = sum(1 for t in seq if t == oov_id)
+    ratio = oov_count / max(1, len(seq))
+
+    # デバッグしたいなら一時的にON
+    # print("seq_len", len(seq), "oov_count", oov_count, "ratio", ratio)
+
+    return ratio >= oov_threshold
 
 
 # ===============================
