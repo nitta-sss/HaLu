@@ -63,20 +63,20 @@ html, body {
     width: 300px;
     font-size: 25px;
     font-weight: bold;
-    color: #96E025;
+    color: #91da24;
 }
 
 .character-personality {
     width: 400px;
     font-size: 25px;
-    color: #A8EE3F;
+    color: #91da24;
 }
 
-.character-name.forest {color: #A8EE3F;}
-.character-personality.forest {color: #A8EE3F;}
+.character-name.forest {color: #91da24;}
+.character-personality.forest {color: #91da24;}
 
-.character-name.ice {color: #bae6fd;}
-.character-personality.ice {color: #bae6fd;}
+.character-name.ice {color: #87d5ff;}
+.character-personality.ice {color: #87d5ff;}
 
 .character-name.dande {color: #bae6fd;}
 .character-personality.dande {color: #bae6fd;}
@@ -505,7 +505,7 @@ html, body {
     transform: translate(-50%, -50%);
     display: flex;
     gap: 20px;
-    width: 500px;   /* 横幅 */
+    width: 530px;   /* 横幅 */
     height: 300px;  /* 高さ */
     padding: 20px;  /* 内側の余白を広げる */
     background: #83cbff;
