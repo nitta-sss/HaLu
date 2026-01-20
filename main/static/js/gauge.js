@@ -86,46 +86,46 @@ document.addEventListener("DOMContentLoaded", () => {
   // -------------------------
   // 描画
   // -------------------------
-    window.updateGauge = function () {
-    const awake = Number(window.emotion.x);
-    const pleasure = Number(window.emotion.y);
+  window.updateGauge = function () {
+    const awakePct = toPercent(window.emotion.x);     // 0..100
+    const pleasurePct = toPercent(window.emotion.y); // 0..100
   
     // 初期化
     LeftawakeBar.style.transform  = "scaleX(0)";
     RightawakeBar.style.transform = "scaleX(0)";
-    LeftpleasureBar.style.transform = "scaleX(0)";
+    LeftpleasureBar.style.transform  = "scaleX(0)";
     RightpleasureBar.style.transform = "scaleX(0)";
   
-    //覚醒度を変える
-    // 覚醒度左（マイナス専用）
-    if (awake < 0) {
-      const scale = Math.min(Math.abs(awake), 1);
+    // ===== 覚醒度 =====
+    if (awakePct < 50) {
+      const scale = (50 - awakePct) / 50; // 0..1
       LeftawakeBar.style.background = AWAKE_LEFT_COLOR;
       LeftawakeBar.style.transform = `scaleX(${scale})`;
     }
   
-    // 覚醒度右（プラス専用）
-    if (awake > 0) {
-      const scale = Math.min(awake, 1);
+    if (awakePct > 50) {
+      const scale = (awakePct - 50) / 50; // 0..1
       RightawakeBar.style.background = AWAKE_RIGHT_COLOR;
       RightawakeBar.style.transform = `scaleX(${scale})`;
     }
-
-    //快楽度を変える  
-    // 快楽度左（マイナス専用）
-    if (pleasure < 0) {
-      const scale = Math.min(Math.abs(pleasure), 1);
+  
+    // ===== 快楽度 =====
+    if (pleasurePct < 50) {
+      const scale = (50 - pleasurePct) / 50;
       LeftpleasureBar.style.background = PLEASURE_LEFT_COLOR;
       LeftpleasureBar.style.transform = `scaleX(${scale})`;
     }
   
-    // 快楽度右（プラス専用）
-    if (pleasure > 0) {
-      const scale = Math.min(pleasure, 1);
+    if (pleasurePct > 50) {
+      const scale = (pleasurePct - 50) / 50;
       RightpleasureBar.style.background = PLEASURE_RIGHT_COLOR;
       RightpleasureBar.style.transform = `scaleX(${scale})`;
     }
+  
+    // 表情はそのまま使える
+    updateFace(awakePct, pleasurePct);
   };
+  
   
  
 
