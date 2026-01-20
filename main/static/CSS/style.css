@@ -377,8 +377,14 @@ html, body {
 }
 
 /* ゲージの土台 */
-.bar-base {
-    width: 100%;
+/*ゲージを横並びにするためにまとめる箱*/
+.bar-row{
+    display: flex;
+    gap: 0;
+}
+
+.bar-base{
+    flex: 1;
     height: 25px;           /* ★ 高さが超重要 */
     background: #f5f5f5;
     border: 2px solid #333333;
@@ -386,24 +392,114 @@ html, body {
     overflow: hidden;
 }
 
+/* 左バー：右の境界線と内側の角丸をなくす */
+.bar-base.left {
+    border-right: none;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  
+  /* 右バー：左の境界線と内側の角丸をなくす */
+  .bar-base.right {
+    border-left: none;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
 /* 実際に伸びるバー */
 .bar-fill {
+    width: 100%;
     height: 100%;
-    width: 0%;                 /* JSがここを書き換える */
+    transform: scaleX(0);              /* JSがここを書き換える */
     /* border-radius: 8px; */
     background: red;
-    transition: width 2.5s ease;
+    transition: transform  2.5s ease;
+    position: relative;
 }
 
-/* 覚醒度 */
-.fill1 {
-    background: linear-gradient(to right, #3b82f6, #ef4444);
+/* 左ゲージ：中央側（右端）だけをなじませる */
+/* 覚醒度 左バー（中央側だけ） */
+.fill1-1::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    width: 35%; /*ここの値を変えるとグラデーションの太さが変わる*/
+    height: 100%;
+
+    background: linear-gradient(
+        to right,
+        #3b82f6,   /* 左バーの色 */
+        #95639d    /* 中間色 */
+    );
+    pointer-events: none;
 }
 
-/* 快楽度 */
-.fill2 {
-    background: linear-gradient(to right, #f97316, #fde047);
+/* 覚醒度 右バー（中央側だけ） */
+.fill1-2::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 35%;
+    height: 100%;
+
+    background: linear-gradient(
+        to left,
+        #ef4444,   /* 右バーの色 */
+        #95639d   /* 中間色の色 */
+    );
+    pointer-events: none;
 }
+
+/* 右ゲージ：中央側（左端）だけをなじませる */
+/* 快楽度 左バー */
+.fill2-1::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    width: 35%;
+    height: 100%;
+
+    background: linear-gradient(
+        to right,
+        #f97316,
+        #fbaa2f
+    );
+    pointer-events: none;
+}
+
+/* 快楽度 右バー */
+.fill2-2::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 35%;
+    height: 100%;
+
+    background: linear-gradient(
+        to left,
+        #fde047,
+        #fbaa2f
+    );
+    pointer-events: none;
+}
+
+/* 左のゲージを右から動かす */
+.bar-base.left .bar-fill {
+    transform-origin: right;
+  }
+  
+/* 右のゲージを左から動かす */
+  .bar-base.right .bar-fill {
+    transform-origin: left;
+  }
 
 /* 非表示制御 */
 /* .emotion-area.hide {
@@ -610,9 +706,9 @@ html, body {
   }
   
   /* ← ここ超重要：150%だと顔が押し出される */
-  .bar-base{
+  /* .bar-base{
     width: 100%;
-  }
+  } */
 
   /* 右側：境界線つき表情パネル */
   .emoji-panel{

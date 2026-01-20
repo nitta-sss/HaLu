@@ -2,16 +2,24 @@ document.addEventListener("DOMContentLoaded", () => {
   // -------------------------
   // DOM取得
   // -------------------------
-  const awakeBar     = document.getElementById("awakeBar");
-  const pleasureBar  = document.getElementById("pleasureBar");
+  const LeftawakeBar     = document.getElementById("LeftawakeBar");
+  const RightawakeBar     = document.getElementById("RightawakeBar");
+  const LeftpleasureBar  = document.getElementById("LeftpleasureBar");
+  const RightpleasureBar  = document.getElementById("RightpleasureBar");
   const gauge        = document.getElementById("emotionArea");
   const btn          = document.getElementById("showbtn");
   const faceEl       = document.getElementById("emoji-face");
   const labelEl      = document.getElementById("emoji-label");
 
-  if (!awakeBar || !pleasureBar || !gauge || !faceEl || !labelEl) {
+  const AWAKE_LEFT_COLOR   = "#3b82f6"; // 覚醒度マイナス
+  const AWAKE_RIGHT_COLOR  = "#ef4444"; // 覚醒度プラス
+
+  const PLEASURE_LEFT_COLOR  = "#f97316"; // 快楽度マイナス
+  const PLEASURE_RIGHT_COLOR = "#fde047"; // 快楽度プラス
+
+  if (!LeftawakeBar || !RightawakeBar || !LeftpleasureBar || !RightpleasureBar || !gauge || !faceEl || !labelEl) {
     console.warn("⚠ ゲージ関連DOMが見つかりません", {
-      awakeBar, pleasureBar, gauge, btn, faceEl, labelEl
+      LeftawakeBar, RightawakeBar,LeftpleasureBar,RightpleasureBar, gauge, btn, faceEl, labelEl
     });
     return;
   }
@@ -78,27 +86,48 @@ document.addEventListener("DOMContentLoaded", () => {
   // -------------------------
   // 描画
   // -------------------------
-  window.updateGauge = function () {
-    const awakePct    = toPercent(window.emotion.x);
-    const pleasurePct = toPercent(window.emotion.y);
+    window.updateGauge = function () {
+    const awake = Number(window.emotion.x);
+    const pleasure = Number(window.emotion.y);
+  
+    // 初期化
+    LeftawakeBar.style.transform  = "scaleX(0)";
+    RightawakeBar.style.transform = "scaleX(0)";
+    LeftpleasureBar.style.transform = "scaleX(0)";
+    RightpleasureBar.style.transform = "scaleX(0)";
+  
+    //覚醒度を変える
+    // 覚醒度左（マイナス専用）
+    if (awake < 0) {
+      const scale = Math.min(Math.abs(awake), 1);
+      LeftawakeBar.style.background = AWAKE_LEFT_COLOR;
+      LeftawakeBar.style.transform = `scaleX(${scale})`;
+    }
+  
+    // 覚醒度右（プラス専用）
+    if (awake > 0) {
+      const scale = Math.min(awake, 1);
+      RightawakeBar.style.background = AWAKE_RIGHT_COLOR;
+      RightawakeBar.style.transform = `scaleX(${scale})`;
+    }
 
-    // デバッグ見たい時だけON
-    // console.log("RAW:", window.emotion.x, window.emotion.y, "PCT:", awakePct, pleasurePct);
-
-    awakeBar.style.width = awakePct + "%";
-    pleasureBar.style.width = pleasurePct + "%";
-
-    // 色（好みで調整してOK）
-    awakeBar.style.background = awakePct < 50
-      ? "linear-gradient(to right, green)"
-      : "linear-gradient(to right, red)";
-
-    pleasureBar.style.background = pleasurePct < 50
-      ? "linear-gradient(to right, lightblue)"
-      : "linear-gradient(to right, pink)";
-
-    updateFace(awakePct, pleasurePct);
+    //快楽度を変える  
+    // 快楽度左（マイナス専用）
+    if (pleasure < 0) {
+      const scale = Math.min(Math.abs(pleasure), 1);
+      LeftpleasureBar.style.background = PLEASURE_LEFT_COLOR;
+      LeftpleasureBar.style.transform = `scaleX(${scale})`;
+    }
+  
+    // 快楽度右（プラス専用）
+    if (pleasure > 0) {
+      const scale = Math.min(pleasure, 1);
+      RightpleasureBar.style.background = PLEASURE_RIGHT_COLOR;
+      RightpleasureBar.style.transform = `scaleX(${scale})`;
+    }
   };
+  
+ 
 
   // -------------------------
   // 外部から更新する唯一の入口
