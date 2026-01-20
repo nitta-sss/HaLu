@@ -352,6 +352,7 @@ html, body {
 /* ゲージ全体の箱 */
 .bar-item {
     margin-bottom: 20px;
+    text-align: center; 
 }
 
 .watashiNoKokoro{
