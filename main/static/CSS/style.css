@@ -92,7 +92,6 @@ html, body {
     gap: 30px; 
     align-items: center;
     justify-content: flex-end;
-
 }
 .button-32 {
     display: flex;
@@ -109,6 +108,7 @@ html, body {
     color: #2589d0;
     font-size: 1em;
     z-index: 20;
+    cursor: pointer;
 }
 
 .button-32:hover {
