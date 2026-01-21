@@ -96,7 +96,7 @@ def speak(text: str,type):
         return
 
     
-    if type == "forest":
+    if type == "forest":#まったりした優しい声
         print("🌿 妖精がそっと語りかけています…")
         FAIRY_SPEAKER=29
         FAIRY_SPEED = 0.90          # ゆったり
@@ -104,16 +104,22 @@ def speak(text: str,type):
         FAIRY_INTONATION = 0.65     # なだらか
         FAIRY_VOLUME = 1.0
 
-    elif type == "ice":
+    elif type == "ice":#そっけないお姉さん
         print("🍧 妖精がそっと語りかけています…")
-        FAIRY_SPEAKER = 11      # 玄野武宏
-        FAIRY_SPEED = 0.95
-        FAIRY_PITCH = 0.03      # ← 男声を少しだけ中性に寄せる
-        FAIRY_INTONATION = 0.55 # 感情を殺す
-        FAIRY_VOLUME = 0.95
+        FAIRY_SPEAKER = 78        # 冥鳴ひまり（クール寄り・安定）
+        FAIRY_SPEED = 0.93       # ゆっくりめで落ち着き
+        FAIRY_PITCH = -0.05      # 低めで冷静・大人っぽい
+        FAIRY_INTONATION = 0.45  # 抑揚少なめ＝クール
+        FAIRY_VOLUME = 0.94      # 控えめで透明感
         
-    else:
+    else:#flame　熱い若者
         print("🔥 妖精がそっと語りかけています…")
+        FAIRY_SPEAKER = 11        # 青山劉生（低音・男声・安定）
+        FAIRY_SPEED = 1.05       # 勢いはあるが重さを残す
+        FAIRY_PITCH = -0.50      # しっかり低音
+        FAIRY_INTONATION = 0.70  # 熱血だが叫びすぎない
+        FAIRY_VOLUME = 1.08      # 前に出る迫力
+        
 
     session = requests.Session()
     session.trust_env = False
@@ -166,5 +172,5 @@ def speak(text: str,type):
     os.remove(tmp_path)
 
 if __name__ == "__main__":
-    type="ice"
-    speak("……それが命令なら、従う。……感情は、必要ない",type)
+    type="ic"
+    speak("シンジ君がエヴァに乗らなくていいようにする",type)

@@ -113,10 +113,16 @@ document.addEventListener("DOMContentLoaded", () => {
       const botDiv = addMessageElement("bot");
 
       // 読み上げ開始
+      const SpeakType = window.currentThemeId ?? "forest"; // デフォルト
+      SpeakType=window.currentThemeId;
       let speakPromise = Promise.resolve();
       if (speak) {
         try {
-          const speakRes = await fetch("http://127.0.0.1:5000/ai/speak", { method: "POST" });
+          res = await fetch("http://127.0.0.1:5000/ai/speak", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({SpeakType}),
+        });
           // 返ってきたけど失敗系（500とか）
           if (speakRes && !speakRes.ok) {
             addMessage("bot", "⚠ 読み上げに失敗しました。VOICEVOXを起動しているか確認してね");

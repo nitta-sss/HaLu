@@ -11,7 +11,7 @@ from Ollama_Response import reset_conversation
 
 
 app = Flask(__name__)
-
+CURRENT_THEME_ID = "forest"
 # ===== CORS 強制許可 =====
 @app.after_request
 def add_cors_headers(response):
@@ -95,8 +95,15 @@ def ai_speak():
         return ("", 204)
 
     global _is_speaking
+    global CURRENT_THEME_ID  # ★追加
 
     try:
+        # ★追加：themeId を受け取る（無い/壊れてても落ちない）
+        data = request.get_json(silent=True) or {}
+        theme_id = data.get("themeId") or "forest"
+        CURRENT_THEME_ID = theme_id
+        print("🎭 themeId =", CURRENT_THEME_ID)
+
         # 連打防止（任意）
         with _speaking_lock:
             if _is_speaking:
@@ -107,7 +114,7 @@ def ai_speak():
             global _is_speaking
             try:
                 print("🗣 speak_ai start")
-                speak_ai()
+                speak_ai(CURRENT_THEME_ID)  # ★ここは壊さない（そのまま）
             except Exception as e:
                 print("❌ speak_ai error:", e)
                 traceback.print_exc()
@@ -117,7 +124,7 @@ def ai_speak():
                 print("🗣 speak_ai end")
 
         threading.Thread(target=_worker, daemon=True).start()
-        return _safe_json({"status": "started"})
+        return _safe_json({"status": "started", "themeId": CURRENT_THEME_ID})  # ★おまけ
 
     except Exception as e:
         print("❌ ai/speak error:", e)
@@ -126,6 +133,7 @@ def ai_speak():
         with _speaking_lock:
             _is_speaking = False
         return _safe_json({"error": "AI_SPEAK_FAILED"}, 500)
+
 
 @app.route("/labeler/open", methods=["POST", "OPTIONS"])
 def open_labeler():

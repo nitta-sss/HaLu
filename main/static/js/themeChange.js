@@ -48,11 +48,14 @@ document.addEventListener("DOMContentLoaded", () => {
             charaName.className = `character-name ${themeId}`;
             charaPersonality.className = `character-personality ${themeId}`;
 
+            // 🌍 グローバルに公開
+            window.currentThemeId = themeId;
+
             // キャラごとの微調整（必要なものだけ）
-            if (themeId === "ice") {
+            if (window.currentThemeId === "ice") {
                 charaImg.style.maxHeight = "550px";
                 charaImg.style.maxWidth = "550px";
-            } else if (themeId === "dande") {
+            } else if (window.currentThemeId === "flame") {
                 charaImg.style.maxHeight = "700px";
                 charaImg.style.maxWidth = "700px";
             } else {
