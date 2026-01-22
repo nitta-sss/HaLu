@@ -431,8 +431,8 @@ html, body {
 
     background: linear-gradient(
         to right,
-        #3b82f6,   /* 左バーの色 */
-        #95639d    /* 中間色 */
+        #FF52E7,   /* 左バーの色 */
+        #FF4590    /* 中間色 */
     );
     pointer-events: none;
 }
@@ -449,8 +449,8 @@ html, body {
 
     background: linear-gradient(
         to left,
-        #ef4444,   /* 右バーの色 */
-        #95639d   /* 中間色の色 */
+        #FF3737,   /* 右バーの色 */
+        #FF4590   /* 中間色の色 */
     );
     pointer-events: none;
 }
@@ -468,8 +468,8 @@ html, body {
 
     background: linear-gradient(
         to right,
-        #f97316,
-        #fbaa2f
+        #3B42FF,
+        #449AFF
     );
     pointer-events: none;
 }
@@ -486,8 +486,8 @@ html, body {
 
     background: linear-gradient(
         to left,
-        #fde047,
-        #fbaa2f
+        #4DF2FF,
+        #449AFF
     );
     pointer-events: none;
 }

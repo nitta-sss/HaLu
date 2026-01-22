@@ -11,11 +11,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const faceEl       = document.getElementById("emoji-face");
   const labelEl      = document.getElementById("emoji-label");
 
-  const AWAKE_LEFT_COLOR   = "#3b82f6"; // 覚醒度マイナス
-  const AWAKE_RIGHT_COLOR  = "#ef4444"; // 覚醒度プラス
+  const AWAKE_LEFT_COLOR   = "#FF52E7"; // 覚醒度マイナス
+  const AWAKE_RIGHT_COLOR  = "#FF3737"; // 覚醒度プラス
 
-  const PLEASURE_LEFT_COLOR  = "#f97316"; // 快楽度マイナス
-  const PLEASURE_RIGHT_COLOR = "#fde047"; // 快楽度プラス
+  const PLEASURE_LEFT_COLOR  = "#3B42FF"; // 快楽度マイナス
+  const PLEASURE_RIGHT_COLOR = "#4DF2FF"; // 快楽度プラス
 
   if (!LeftawakeBar || !RightawakeBar || !LeftpleasureBar || !RightpleasureBar || !gauge || !faceEl || !labelEl) {
     console.warn("⚠ ゲージ関連DOMが見つかりません", {
