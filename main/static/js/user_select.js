@@ -207,29 +207,29 @@ document.addEventListener("DOMContentLoaded", () => {
       userList.appendChild(row);
     });
   }
-
   async function refreshUserList() {
     try {
-      // Flask: GET /tone/users -> { users: [{name, baseline_hz}, ...] }
-      const data = await getJson(`${API_BASE}/tone/users`);
-      renderUserList(data.users);
+      const res = await fetch("/users.txt"); // ← Django(8000)から
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const text = await res.text();
 
-      // 現在選択中ユーザーが一覧にいない場合はHzだけ不明になることがあるので、
-      // 一覧から補完しておく（任意だけど便利）
-      if (window.activeUser && (!Number.isFinite(window.activeUserHz))) {
-        const hit = (data.users || []).find((u) => String(u?.name ?? "").trim() === window.activeUser);
-        if (hit && Number.isFinite(Number(hit.baseline_hz))) {
-          window.activeUserHz = Number(hit.baseline_hz);
-          saveActiveToStorage();
-          setCurrentUserUI();
-        }
-      }
+      const users = text.split(/\r?\n/)
+        .map(l => l.trim())
+        .filter(Boolean)
+        .map(l => {
+          const m = l.match(/^(.+?)\s+(-?\d+(?:\.\d+)?)$/);
+          if (!m) return { name: l, baseline_hz: null };
+          return { name: m[1].trim(), baseline_hz: Number(m[2]) };
+        });
 
-      setStatus("ユーザーを選ぶか、新規登録してね");
+      renderUserList(users);
+      setStatus("ユーザーを選んでね");
     } catch (e) {
       setStatus(`一覧取得失敗: ${e.message}`);
     }
   }
+
+  
 
   // ------------------------------
   // recording flow
