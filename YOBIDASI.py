@@ -3,7 +3,7 @@ from Ollama_Response import llm_generate
 from Audio.Voice_Read import get_result
 from Audio.forest_paimon import speak
 import time
-from Audio.Tone import analyze_tone
+from Audio.tone import analyze_tone
 
 last_reply = None
 
