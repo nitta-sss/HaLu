@@ -527,6 +527,54 @@ html, body {
     display: none;
 }
 
+
+/* ===== トーン登録モーダル ===== */
+.tone-box {
+  width: min(520px, 92vw);
+}
+
+.tone-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 10px 0 14px;
+}
+
+.tone-label {
+  min-width: 90px;
+  opacity: 0.9;
+}
+
+.tone-input {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(0,0,0,0.25);
+  color: #fff;
+  outline: none;
+}
+
+.tone-status {
+  margin: 10px 0 14px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.08);
+  line-height: 1.5;
+}
+
+.tone-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.tone-note {
+  opacity: 0.75;
+  font-size: 12px;
+}
+
 /* =========================
    ボタンにカーソル合わせたときに説明文を表示
 ========================= */
