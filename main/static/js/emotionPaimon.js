@@ -15,13 +15,29 @@ const icon = document.getElementById("icon");
         fun:   "/static/img/ForestPaimonFun.png", //楽しみ
     };
 
+    function toSigned(v) {
+        const n = Number(v);
+        if (!Number.isFinite(n)) return 0;
+    
+        // -1〜+1 っぽい
+        if (n >= -1 && n <= 1) return n;
+    
+        // 0〜100 っぽい
+        return (n - 50) / 50;
+    }
+    
+
     //座標で喜怒哀楽を判定
     function judgeEmotion(x, y) {
-        if (x >= 0 && y >= 0) return "happy"; // 喜
-        if (x <  0 && y >= 0) return "sad";   // 哀
-        if (x <  0 && y <  0) return "angry"; // 怒
-        return "fun";                         // 楽
+        const cx = toSigned(x);
+        const cy = toSigned(y);
+    
+        if (cx >= 0 && cy >= 0) return "happy"; //喜
+        if (cx <  0 && cy >= 0) return "sad"; //哀
+        if (cx <  0 && cy <  0) return "angry"; //怒
+        return "fun";哀
     }
+    
 
     //外部から呼べる関数
     window.updateFaceByEmotion = function (x, y) {
