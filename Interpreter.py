@@ -160,6 +160,8 @@ def ai_reset():
     print("🧹 会話履歴をリセットしました")
     return jsonify({"status": "ok"})
 
+
+
 if __name__ == "__main__":
     print("🚀 Flask 起動中...")
     # debug=True + use_reloader=False はそのままでOK
