@@ -20,3 +20,6 @@ env/
 # ローカルにしたくない例外ファイル
 !emotion_model_regression.h5
 !tokenizer.pkl
+
+!New_emotion_model_regression.h5
+!New_tokenizer.pkl

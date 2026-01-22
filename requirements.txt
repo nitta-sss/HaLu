@@ -28,3 +28,5 @@ flask-cors==4.0.0
 # --- Whisper (必須) ---
 #faster-whisper==0.6.0 --no-deps
 #ctranslate2==3.17.0
+
+janome==0.5.0

@@ -7,8 +7,11 @@ conn = sqlite3.connect("AI.db")
 # データ取得
 df = pd.read_sql_query(
     """
-    SELECT COUNT(*) AS total_rows, COUNT(DISTINCT テキストデータ) AS unique_texts
-    FROM TestData;
+    SELECT COUNT(*) AS n
+FROM EmotionLog
+WHERE valence IS NOT NULL AND arousal IS NOT NULL;
+
+
     """
     , conn)
 

@@ -65,95 +65,100 @@ document.addEventListener("DOMContentLoaded", () => {
   async function runAIFlow(userText, { speak = true, typeSpeed = 25 } = {}) {
     window.lastUserText = userText;
     if (guardReset("runAIFlow")) return;
-
+  
     console.log("runai入った", userText);
     if (!userText) return;
-
+  
     if (isBusy) return;
     isBusy = true;
-
+  
+    const timerLabel = "AI_FLOW";
+  
     try {
-      console.time("AI_FLOW");
-
-    let res;
-    try {
-      res = await fetch("http://127.0.0.1:5000/ai/run", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: userText }),
-      });
-    } catch (e) {
-      // fetch自体が失敗 = Flaskに繋がってない（未起動が多い）
-      addMessage("bot", "⚠Flask（Python側）を起動してください");
-      console.error("AI server fetch failed:", e);
-      return;
-    }
-
-    if (!res.ok) {
-      const t = await res.text().catch(() => "");
-      // Flaskは起きてるが、Python側がエラーなど
-      addMessage("bot", `⚠ AI処理でエラーが発生しました（/ai/run ${res.status}）。Flask側のログを確認してください`);
-      console.error("/ai/run failed:", res.status, t);
-      return;
-    }
-      const data = await res.json();
-      applyEmotionFromAI(data);
+      console.time(timerLabel);
+  
+      // 先にユーザー表示（体感も自然）
       addMessage("user", userText);
-
+  
+      // ---------- /ai/run ----------
+      let runRes;
+      try {
+        runRes = await fetch("http://127.0.0.1:5000/ai/run", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: userText }),
+        });
+      } catch (e) {
+        addMessage("bot", "⚠ Flask（Python側）を起動してください");
+        console.error("AI server fetch failed:", e);
+        return;
+      }
+  
+      if (!runRes.ok) {
+        const t = await runRes.text().catch(() => "");
+        addMessage("bot", `⚠ AI処理でエラーが発生しました（/ai/run ${runRes.status}）。Flask側のログを確認してください`);
+        console.error("/ai/run failed:", runRes.status, t);
+        return;
+      }
+  
+      const data = await runRes.json();
+  
+      // resetが途中で入った場合も止める
+      if (guardReset("runAIFlow after /ai/run")) return;
+  
+      // 感情反映
+      applyEmotionFromAI(data);
+  
       console.log("AI結果:", data);
-
+  
       if (data?.error) {
         addMessage("bot", `⚠ ${data.error}`);
         return;
       }
-
-      // resetが途中で入った場合も止める
-      if (guardReset("runAIFlow after /ai/run")) return;
-
+  
+      // bot吹き出し
       const botDiv = addMessageElement("bot");
-
-      // 読み上げ開始
-      const SpeakType = window.currentThemeId ?? "forest"; // デフォルト
-      SpeakType=window.currentThemeId;
-      let speakPromise = Promise.resolve();
+      if (!botDiv) return;
+  
+      // ---------- /ai/speak ----------
       if (speak) {
+        const themeId = window.currentThemeId ?? "forest";
+  
         try {
-          res = await fetch("http://127.0.0.1:5000/ai/speak", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({SpeakType}),
-        });
-          // 返ってきたけど失敗系（500とか）
-          if (speakRes && !speakRes.ok) {
+          const speakRes = await fetch("http://127.0.0.1:5000/ai/speak", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ themeId }), // ★Flask側の期待キー
+          });
+  
+          if (!speakRes.ok) {
             addMessage("bot", "⚠ 読み上げに失敗しました。VOICEVOXを起動しているか確認してね");
             console.warn("/ai/speak not ok:", speakRes.status);
           }
         } catch (e) {
-          // fetch自体が失敗（Flask落ち or VOICEVOX絡みで内部が死んでる）
           addMessage("bot", "⚠ 読み上げサーバーに接続できません。VOICEVOXを起動してください");
           console.error("speak fetch failed:", e);
         }
       }
-
-      await speakPromise.catch(() => {});
-
+  
       // reset中ならタイプも中止
       if (guardReset("typeWriter")) return;
-
+  
+      // タイプ演出
       const START_DELAY = 1500;
-      const TYPE_SPEED  = 120;
+      const TYPE_SPEED = typeSpeed ?? 120;
       await typeWriter(botDiv, String(data.reply ?? ""), TYPE_SPEED, START_DELAY);
-
-      console.timeLog("AI_FLOW", "typing end");
-      console.timeEnd("AI_FLOW");
-
+  
     } catch (err) {
       console.error(err);
       addMessage("bot", "⚠ エラーが発生しました（コンソール確認して）");
     } finally {
+      // タイマーは必ず閉じる（Timer already exists 防止）
+      try { console.timeEnd(timerLabel); } catch (_) {}
       isBusy = false;
     }
   }
+  
 
   // =========================
   // マイクエラー文
@@ -397,4 +402,3 @@ function ensureInitialMessage() {
   chatBox.scrollTop = chatBox.scrollHeight;
   return true;
 }
-runAIFlow

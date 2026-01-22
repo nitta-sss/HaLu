@@ -1,265 +1,87 @@
+# data/emotion_inference.py
 # ===============================
-# 感情推論 + 感情メーター制御（最終完成版）
+# 感情推論（補正なし・カテゴリー無し・安全版）
 # ===============================
 
+import pickle
+from janome.tokenizer import Tokenizer as JanomeTokenizer
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-#from Audio.tone import analyze_tone
-
-#from Audio import Voice_Read
-#from Audio import tone
-import pickle
 
 # ===============================
-# 設定
+# 設定（学習時と一致）
 # ===============================
-MAX_LEN = 30
+MAX_LEN = 40
+
+MODEL_PATH = "New_emotion_model_regression.h5"
+TOKENIZER_PATH = "New_tokenizer.pkl"
 
 # ===============================
-# モデル & tokenizer 読み込み
+# 読み込み
 # ===============================
-model = load_model("emotion_model_regression.h5")
-with open("tokenizer.pkl", "rb") as f:
+model = load_model(MODEL_PATH)
+with open(TOKENIZER_PATH, "rb") as f:
     tokenizer = pickle.load(f)
 
 # ===============================
-# ユーティリティ
+# Janome 分かち書き（学習と同じ）
 # ===============================
-def clamp(x, lo, hi):
-    return max(lo, min(hi, x))
+_janome = JanomeTokenizer()
 
-# ===============================
-# 1. モデル生推論（数値はUI用）
-# ===============================
-def predict_emotion_raw(text):
-    # 空文字は即ニュートラル
-    if text is None:
-        return 0.0, 0.0
-
-    text = str(text).strip()
-    if text == "":
-        return 0.0, 0.0
-
-    seq = tokenizer.texts_to_sequences([text])[0]
-
-    # 未知語だらけなら (0,0) に落とす
-    if is_unknownish(seq, tokenizer, oov_threshold=0.7):
-        print("⚠ unknown-ish input -> neutral (0,0):", text)
-        return 0.0, 0.0
-
-    x = pad_sequences([seq], maxlen=MAX_LEN)
-    val, aro = model.predict(x, verbose=0)[0]
-
-    """トーン調節用
-    name = "sora"
-    y=Voice_Read.data
-    waveform = y.squeeze()
-    #トーン調節
-    para=analyze_tone(name, waveform)
-    print("トーン調節結果：",para)
-    #覚醒度補正
-    aro += para
-    """
-
-    return float(val), float(aro)
+def wakati(text: str) -> str:
+    text = "" if text is None else str(text)
+    return " ".join(t.surface for t in _janome.tokenize(text))
 
 # ===============================
-# 2. テキストの性質判定（カテゴリ専用）
+# 未知語だらけ判定
 # ===============================
-def detect_strong_positive(text):
-    return any(w in text for w in [
-        "嬉しい","うれしい","楽しい","たのしい",
-        "最高","幸せ","やった","めっちゃ"
-    ])
-
-def detect_calm_positive(text):
-    return any(w in text for w in [
-        "気分がいい","いい感じ","悪くない",
-        "順調","落ち着く","天気がいい"
-    ]) and not detect_strong_positive(text)
-
-def detect_strong_negative(text):
-    return any(w in text for w in [
-        "不安","怖い","つらい","辛い",
-        "嫌だ","最悪","イライラ","無理"
-    ])
-
-# ===============================
-# 3. カテゴリ決定（※ arousalは使わない）
-# ===============================
-def classify_category(text, raw_val):
-    if detect_strong_positive(text):
-        return "happy_excited"
-
-    if detect_calm_positive(text):
-        return "calm_positive"
-
-    if detect_strong_negative(text):
-        return "negative_excited"
-
-    if raw_val < -0.15:
-        return "negative_calm"
-
-    if abs(raw_val) < 0.15:
-        return "neutral"
-
-    return "calm_positive"
-
-# ===============================
-# 4. UI用 valence（固定しない）
-# ===============================
-def derive_ui_valence(text, raw_val, category):
-    v = raw_val
-
-    # 強調語
-    if "めっちゃ" in text or "最高" in text:
-        v += 0.15
-    if "!" in text or "!" in text:
-        v += 0.10
-
-    if category == "happy_excited":
-        v = max(v, 0.35)
-
-    elif category == "calm_positive":
-        v = max(v, 0.20)
-
-    elif category == "negative_excited":
-        v = min(v, -0.35)
-
-    elif category == "negative_calm":
-        v = min(v, -0.20)
-
-    elif category == "neutral":
-        v = clamp(v, -0.10, 0.10)
-
-    return clamp(v, -1.0, 1.0)
-
-# ===============================
-# 5. UI用 arousal（演出専用）
-# ===============================
-def derive_ui_arousal(text, raw_aro, category):
-
-
-
-    a = raw_aro
-
-    # 強調
-    if "!" in text or "!" in text:
-        a += 0.15
-    if "めっちゃ" in text:
-        a += 0.15
-
-    if category == "happy_excited":
-        a = max(a, 0.75)
-
-    elif category == "calm_positive":
-        a = clamp(a, 0.25, 0.45)
-
-    elif category == "negative_excited":
-        a = max(a, 0.60)
-
-    elif category == "negative_calm":
-        a = clamp(a, 0.15, 0.35)
-
-    elif category == "neutral":
-        a = clamp(a, 0.15, 0.30)
-
-    return clamp(a, 0.05, 1.0)
-
-# ===============================
-# 6. セリフ (今はLLMで返答してるから使ってない)
-# ===============================
-def decide_message(category):
-    return {
-        "happy_excited": "テンション上がってるね！",
-        "calm_positive": "穏やかでいい感じだね。",
-        "negative_excited": "ちょっと不安やイライラが強いかも。",
-        "negative_calm": "気分が沈み気味かも…無理しないで。",
-        "neutral": "今はフラットな感じだよ。"
-    }.get(category, "今はフラットな感じだよ。")
-
-# ===============================
-# 7. 外部から呼ぶ唯一の関数
-# ===============================
-def suiron_test(text):
-
-    print("\n🔥 suiron_test CALLED")
-    print("🔥 emotion_inference file:", __file__)
-    print("🔥 vocab size:", len(tokenizer.word_index))
-    print("🔥 oov_token:", tokenizer.oov_token)
-    print("🔥 sample seq:", tokenizer.texts_to_sequences([text])[0])
-
-    # ① 空文字 or 空白だけ → (0,0)
-    if text is None or str(text).strip() == "":
-        return {
-            "valence": 0.0,
-            "arousal": 0.0,
-            "category": "neutral",
-            "message": decide_message("neutral")
-        }
-
-    # ② 予期せぬ言葉（tokenizerが理解できず seq が空）→ (0,0)
-    seq = tokenizer.texts_to_sequences([text])[0]
-    if len(seq) == 0:
-        return {
-            "valence": 0.0,
-            "arousal": 0.0,
-            "category": "neutral",
-            "message": decide_message("neutral")
-        }
-
-    # ③ いつも通り推論
-    raw_val, raw_aro = predict_emotion_raw(text)
-
-    category = classify_category(text, raw_val)
-
-    # 補正かけてるこの関数で　一回切ってる
-    #ui_val = derive_ui_valence(text, raw_val, category)
-    #ui_aro = derive_ui_arousal(text, raw_aro, category)
-
-    return {
-        "valence": raw_val,
-        "arousal": raw_aro,
-        "category": category,
-        "message": decide_message(category)
-    }
-
-# ゴミ入力判定  
-def is_unknownish(seq, tokenizer, oov_threshold=0.7):
-    """
-    seq: tokenizer.texts_to_sequences([text])[0]
-    oov_threshold: 0.7 = 7割以上OOVなら未知語だらけ判定
-    """
-    if not seq or len(seq) == 0:
+def is_unknownish(seq, tokenizer, threshold=0.7):
+    if not seq:
         return True
 
     oov_id = tokenizer.word_index.get("<OOV>")
     if oov_id is None:
-        # oov_tokenを使ってない場合は判定できないのでFalse扱い
+        # oov_token を使ってない場合は判定できないので「未知語扱いしない」
         return False
 
     oov_count = sum(1 for t in seq if t == oov_id)
-    ratio = oov_count / max(1, len(seq))
-
-    # デバッグしたいなら一時的にON
-    # print("seq_len", len(seq), "oov_count", oov_count, "ratio", ratio)
-
-    return ratio >= oov_threshold
-
+    return (oov_count / max(1, len(seq))) >= threshold
 
 # ===============================
-# 8. 動作確認
+# 推論（生出力のみ）
 # ===============================
+def predict_emotion(text):
+    # 空入力 → ニュートラル
+    if text is None or str(text).strip() == "":
+        return 0.0, 0.0
+
+    # 学習と同じ前処理
+    w = wakati(text)
+    seq = tokenizer.texts_to_sequences([w])[0]
+
+    # tokenizerが理解できない → ニュートラル
+    if is_unknownish(seq, tokenizer, threshold=0.7):
+        print("⚠ unknown-ish -> neutral:", repr(text))
+        return 0.0, 0.0
+
+    x = pad_sequences([seq], maxlen=MAX_LEN)
+    val, aro = model.predict(x, verbose=0)[0]
+    return float(val), float(aro)
+
+# ===============================
+# 外部から呼ぶ関数（互換名）
+# ===============================
+def suiron_test(text):
+    v, a = predict_emotion(text)
+    return {"valence": v, "arousal": a}
+
 if __name__ == "__main__":
     tests = [
-        "今日は朝から気分が良くて、何でもうまくいきそうな気がする。",
-        "特別なことはないけど、今の状態がちょうどいいと感じている。",
-        "やらなきゃいけないことが多くて、少し焦って落ち着かない。",
-        "なんとなく気力が出なくて、静かに過ごしたい気分だ。",
-        "良くも悪くもなく、普通の一日だと思う。"
-
+        "今日はめっちゃ嬉しい",
+        "特に何も感じない",
+        "不安で落ち着かない",
+        "",
+        "asdfghjkl",
     ]
-
     for t in tests:
-        print("\ntext:", t)
-        print("→", suiron_test(t))
+        print("text:", repr(t), "->", suiron_test(t))
