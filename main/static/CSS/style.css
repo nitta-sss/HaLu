@@ -809,3 +809,81 @@ html, body {
     background: transparent;
   }
 
+  /* =========================
+   ユーザー選択モーダル：白い背景カード
+   ※他のモーダルに影響させないため .modal-box.user-box にだけ適用
+========================= */
+.modal-box.user-box{
+  background: rgba(255,255,255,0.96);   /* 白背景（少し透け） */
+  color: #333333;                      /* 文字は黒寄り */
+  border-radius: 16px;
+  padding: 16px 18px 14px;
+  box-shadow: 0 18px 60px rgba(0,0,0,0.35);
+  border: 1px solid rgba(0,0,0,0.08);
+  backdrop-filter: blur(6px);
+}
+
+/* タイトル */
+.modal-box.user-box .modal-title{
+  color: #111;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+/* 区切り線 */
+.modal-box.user-box .user-sep{
+  border-top: 1px solid rgba(0,0,0,0.10);
+}
+
+/* 現在ユーザー表示の枠 */
+.modal-box.user-box .user-current{
+  background: rgba(245,245,245,0.95);
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+/* ユーザー一覧の枠 */
+.modal-box.user-box .user-list{
+  background: rgba(245,245,245,0.85);
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+}
+
+/* 各ユーザー行 */
+.modal-box.user-box .user-item{
+  background: rgba(255,255,255,0.95);
+  border: 1px solid rgba(0,0,0,0.10);
+}
+.modal-box.user-box .user-item:hover{
+  background: rgba(255,255,255,1);
+}
+
+/* ステータス文 */
+.modal-box.user-box .tone-status{
+  background: rgba(245,245,245,0.95);
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+  padding: 10px 12px;
+  color: #333;
+}
+
+/* 閉じるボタンだけ見た目を維持（button-32が青枠なのでそのままでOK）
+   ただしモーダル内で float:right の影響が気になる時はこれを追加 */
+.modal-box.user-box #userClose{
+  float: none;            /* 既存CSSの float:right を無効化 */
+  margin-left: auto;      /* 右寄せ */
+  display: block;
+}
+
+/* =========================
+   ユーザー選択：中身をまとめる白背景
+========================= */
+.modal-message{
+  background: rgba(255,255,255,0.96);
+  border-radius: 18px;
+  padding: 18px 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+

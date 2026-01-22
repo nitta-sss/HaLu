@@ -53,10 +53,7 @@
                         ユーザーの感情ゲージを表示します
                     </div>
                 </div>
-                <div class="tooltip-wrapper">
-                    <button id="userBtn" class="button-32">ユーザー選択</button>
-                    <div class="tooltip-balloon">ユーザーを選択 / 追加 / トーン取り直し</div>
-                </div>
+                
 
 
                 <!-- 背景画像変更 -->
@@ -66,6 +63,11 @@
                     <div class="tooltip-balloon">
                         背景画像を変更します
                     </div>
+                </div>
+                <!--ユーザー名-->
+                <div class="tooltip-wrapper">
+                    <button id="userBtn" class="button-32">ユーザー選択</button>
+                    <div class="tooltip-balloon">ユーザーを選択 / 追加 / トーン取り直し</div>
                 </div>
 
             </div>
@@ -208,10 +210,11 @@
 
         <!-- ユーザー選択モーダル（ここに全部詰め込み） -->
         <div id="userModal" class="modal hidden">
-        <div class="modal-box user-box">
-            <div class="modal-title">ユーザー選択</div>
+        
+            
 
             <div class="modal-message">
+                <div class="modal-title">ユーザー選択</div>
             <div class="user-current">
                 <div>現在のユーザー：<span id="currentUserLabel">未選択</span></div>
                 <div>トーン平均：<span id="currentUserHz">-</span></div>
@@ -236,11 +239,12 @@
             </div>
 
             <div id="userStatus" class="tone-status">ユーザーを選ぶか、新規登録してね</div>
+            <button id="userClose" class="button-32">閉じる</button>
             </div>
 
-    <button id="userClose" class="button-32">閉じる</button>
-  </div>
-</div>
+    
+  
+        </div>
 
 
         <div id="errorModal" class="modal hidden">
