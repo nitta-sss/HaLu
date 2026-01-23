@@ -6,7 +6,7 @@ OLLAMA_PATH = shutil.which("ollama")
 if OLLAMA_PATH is None:
     raise RuntimeError("Ollamaが見つからないヨ")
 
-MODEL_NAME = "gemma3:1b"
+MODEL_NAME = "gemma2:2b"
 
 conversation_history = deque()
 
