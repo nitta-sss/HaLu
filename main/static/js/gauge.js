@@ -136,6 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.emotion.x = x;
     window.emotion.y = y;
     window.updateGauge();
+    window.updateFaceByEmotion?.(x, y);
   };
 
   // -------------------------
