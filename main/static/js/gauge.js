@@ -133,10 +133,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // 外部から更新する唯一の入口
   // -------------------------
   window.updateEmotion = function (x, y) {
-    window.emotion.x = x;
-    window.emotion.y = y;
+    window.emotion.x = x*20;
+    window.emotion.y = y*20;
     window.updateGauge();
-    window.updateFaceByEmotion?.(x, y);
   };
 
   // -------------------------

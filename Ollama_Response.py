@@ -71,9 +71,10 @@ def llm_generate(user_text, emotion=None, timeout_sec=30):
         )
 
     prompt = (
-        "大事な要件を120字以内で話して"
+        "あなたの名前はパイモンです。大事な要件を120字以内で話して。"
         "=== 会話履歴 ===\n"
         f"{conversation_text}\n"
+        
         f"{emotion_block}\n"
         "AI:"
     )
