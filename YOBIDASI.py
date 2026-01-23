@@ -62,6 +62,12 @@ def run_ai(text=None):
     last_reply = "" if last_reply is None else str(last_reply)
     print("LLM返答:", last_reply)
 
+    emo_AI=suiron_test(last_reply)
+    AI_v = _safe_float(emo_AI.get("valence", 0.0), 0.0)
+    AI_a = _safe_float(emo_AI.get("arousal", 0.0), 0.0)
+
+    print("AI感情値：",AI_v,AI_a)
+
     # ※ AI側感情推論（Ollamaの返答）を使わないなら削除でOK
     # print("感情推論開始（reply）")
     # emo_reply = suiron_test(last_reply)
@@ -71,7 +77,9 @@ def run_ai(text=None):
         "text": str(text),
         "valence": v,
         "arousal": a,
-        "reply": last_reply
+        "reply": last_reply,
+        "AI_valence": AI_v,
+        "AI_arousal": AI_a,
     }
 
 

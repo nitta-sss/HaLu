@@ -119,7 +119,10 @@ document.addEventListener("DOMContentLoaded", () => {
       // bot吹き出し
       const botDiv = addMessageElement("bot");
       if (!botDiv) return;
-  
+
+      //AI感情動かし
+      window.updateFaceByEmotion(data);
+      
       // ---------- /ai/speak ----------
       if (speak) {
         const themeId = window.currentThemeId ?? "forest";
