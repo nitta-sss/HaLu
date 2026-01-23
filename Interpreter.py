@@ -58,6 +58,8 @@ def mic_stop():
         traceback.print_exc()
         return _safe_json({"error": "MIC_STOP_FAILED", "text": ""}, 500)
 
+
+
 @app.route("/ai/run", methods=["POST", "OPTIONS"])
 def ai_run():
     if request.method == "OPTIONS":
