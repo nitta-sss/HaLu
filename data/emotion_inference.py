@@ -66,7 +66,7 @@ def predict_emotion(text):
 
     x = pad_sequences([seq], maxlen=MAX_LEN)
     val, aro = model.predict(x, verbose=0)[0]
-    return float(val), float(aro)
+    return round(float(val), 5), round(float(aro), 5)
 
 # ===============================
 # 外部から呼ぶ関数（互換名）
@@ -77,7 +77,7 @@ def suiron_test(text):
 
 if __name__ == "__main__":
     tests = [
-        "今日はめっちゃ嬉しい",
+        "明日はスキー行くからとっても楽しみ",
         "特に何も感じない",
         "不安で落ち着かない",
         "",
