@@ -1,18 +1,18 @@
 console.log("emotionPaimon.js loaded");
 
 (() => {
-  const icon = document.getElementById("icon");
-  if (!icon) {
-    console.warn("⚠ 画像変更関連DOMが見つかりません", { icon });
+  const video = document.getElementById("iconVideo");
+  if (!video) {
+    console.warn("⚠ 画像変更関連DOMが見つかりません", { video });
     return;
   }
 
-  // 感情ごとの画像
+  // 感情ごとの動画
   const faceMap = {
-    happy: "/static/img/ForestPaimonJoy.png",   // 喜び
-    angry: "/static/img/ForestPaimonAnger.png", // 怒り
-    sad:   "/static/img/ForestPaimonSad.png",   // 悲しみ
-    fun:   "/static/img/ForestPaimonFun.png",   // 楽しみ
+    happy: "/static/video/b.webm",   // 喜び
+    angry: "/static/video/c.webm", // 怒り
+    sad:   "/static/video/d.webm",   // 悲しみ
+    fun:   "/static/video/e.webm",   // 楽しみ
   };
 
   // -1..1 に寄せる（入力が 0..100 とかでも対応）
@@ -48,6 +48,20 @@ console.log("emotionPaimon.js loaded");
     return "fun";                           // 楽
   }
 
+//   動画を安全に切り替える関数
+  function changeVideo(src) {
+    // すでにこの動画なら何もしない
+    if (video.dataset.current === src) return;
+
+    video.dataset.current = src;
+  
+    video.pause();
+    video.src = src;
+    video.load();
+    video.play().catch(() => {});
+  }
+  
+
   // 外部から呼べる関数（dataを受け取る版）
   window.updateFaceByEmotion = function (data) {
     const { x, y } = extractXY(data);
@@ -58,11 +72,11 @@ console.log("emotionPaimon.js loaded");
     }
 
     const type = judgeEmotion(x, y);
-    const newSrc = faceMap[type];
+    const src = faceMap[type];
 
-    // 既に同じ画像なら変更しない
-    if (icon.src.includes(newSrc)) return;
+    // // 既に同じ画像なら変更しない
+    // if (icon.src.includes(newSrc)) return;
 
-    icon.src = newSrc;
+    changeVideo(src);
   };
 })();
