@@ -82,11 +82,6 @@ console.log("emotionPaimon.js loaded");
     if (video.dataset.current === src) return;
 
     video.dataset.current = src;
-  
-    video.pause();
-    video.src = src;
-    video.load();
-    video.play().catch(() => {});
   }
   
 

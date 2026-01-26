@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const triggerIcon = document.querySelector(".icon");
 
     // 🔹 変更対象
-    const sceneVideo = document.getElementById("sceneVideo");
     const charaName = document.querySelector(".character-name");
     const charaPersonality = document.querySelector(".character-personality");
 
@@ -28,17 +27,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // 🔹 テーマ選択処理
     document.querySelectorAll(".bg-card").forEach(card => {
         card.addEventListener("click", () => {
-
-            const videoSrc   = card.dataset.video;    
+  
             const name = card.dataset.name;
             const personality = card.dataset.personality;
             const themeId = card.id; // Forest / ice など
-
-            // 背景動画
-            sceneVideo.pause();
-            sceneVideo.src = videoSrc;
-            sceneVideo.load();
-            sceneVideo.play().catch(() => {});
 
             // -----------------
             // 名前・説明変更
