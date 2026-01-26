@@ -12,7 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (
         !triggerIcon ||
-        !sceneVideo||
         !charaName ||
         !charaPersonality ||
         !panel
