@@ -1,21 +1,37 @@
 console.log("emotionPaimon.js loaded");
 
 (() => {
-  const video = document.getElementById("iconVideo");
+  const video = document.getElementById("sceneVideo");
   if (!video) {
     console.warn("⚠ 画像変更関連DOMが見つかりません", { video });
     return;
   }
 
-  // 感情ごとの動画
-  const faceMap = {
-    happy: "/static/video/b.webm",   // 喜び
-    angry: "/static/video/c.webm", // 怒り
-    sad:   "/static/video/d.webm",   // 悲しみ
-    fun:   "/static/video/e.webm",   // 楽しみ
+  // キャラごとの感情動画
+  const sceneMap = {
+    forest: {
+      happy: "/static/video/a.webm",
+      angry: "/static/video/b.webm",
+      sad:   "/static/video/c.webm",
+      fun:   "/static/video/d.webm",
+    },
+
+    ice: {
+      happy: "/static/video/b.webm",
+      angry: "/static/video/c.webm",
+      sad:   "/static/video/d.webm",
+      fun:   "/static/video/a.webm",
+    },
+
+    flame: {
+      happy: "/static/video/c.webm",
+      angry: "/static/video/d.webm",
+      sad:   "/static/video/a.webm",
+      fun:   "/static/video/b.webm",
+    }
   };
 
-  // -1..1 に寄せる（入力が 0..100 とかでも対応）
+  // -1..1 に正規化（入力が 0..100 とかでも対応）
   function toSigned(v) {
     const n = Number(v);
     if (!Number.isFinite(n)) return 0;
@@ -64,18 +80,25 @@ console.log("emotionPaimon.js loaded");
 
   // 外部から呼べる関数（dataを受け取る版）
   window.updateFaceByEmotion = function (data) {
+
     const { x, y } = extractXY(data);
 
     if (x == null || y == null) {
-      console.warn("⚠ 感情値が見つからない", data);
+      console.warn("⚠ emotion値がありません", data);
       return;
     }
 
-    const type = judgeEmotion(x, y);
-    const src = faceMap[type];
+    const emotionType = judgeEmotion(x, y);
 
-    // // 既に同じ画像なら変更しない
-    // if (icon.src.includes(newSrc)) return;
+    // 現在のテーマ（なければ forest）
+    const theme = window.currentThemeId || "forest";
+
+    const src = sceneMap[theme]?.[emotionType];
+
+    if (!src) {
+      console.warn("⚠ 対応動画なし:", theme, emotionType);
+      return;
+    }
 
     changeVideo(src);
   };

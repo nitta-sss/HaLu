@@ -4,8 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const triggerIcon = document.querySelector(".icon");
 
     // 🔹 変更対象
-    const bgImg = document.querySelector(".right-back");
-    const charaImg = document.getElementById("icon"); // 右側キャラ
+    const sceneVideo = document.getElementById("sceneVideo");
     const charaName = document.querySelector(".character-name");
     const charaPersonality = document.querySelector(".character-personality");
 
@@ -14,12 +13,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (
         !triggerIcon ||
-        !bgImg ||
-        !charaImg ||
+        !sceneVideo||
         !charaName ||
         !charaPersonality ||
         !panel
-    ) return;
+    ) 
+        return;
 
     // 🔹 アイコンクリック → パネル表示切替
     triggerIcon.addEventListener("click", () => {
@@ -30,15 +29,22 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".bg-card").forEach(card => {
         card.addEventListener("click", () => {
 
-            const bg = card.dataset.bg;
-            const chara = card.dataset.chara;
+            const videoSrc   = card.dataset.video;    
             const name = card.dataset.name;
             const personality = card.dataset.personality;
             const themeId = card.id; // Forest / ice など
 
-            // 背景・キャラ画像変更
-            bgImg.src = bg;
-            charaImg.src = chara;
+            // 背景動画
+            sceneVideo.pause();
+            sceneVideo.src = videoSrc;
+            sceneVideo.load();
+            sceneVideo.play().catch(() => {});
+
+            // -----------------
+            // 名前・説明変更
+            // -----------------
+            charaName.textContent = name;
+            charaPersonality.textContent = personality;
 
             // 名前・説明文変更
             charaName.textContent = name;
@@ -50,30 +56,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // 🌍 グローバルに公開
             window.currentThemeId = themeId;
-
-            // キャラごとの微調整（必要なものだけ）
-            if (window.currentThemeId === "ice") {
-                charaImg.style.maxHeight = "550px";
-                charaImg.style.maxWidth = "550px";
-            } else if (window.currentThemeId === "flame") {
-                charaImg.style.maxHeight = "700px";
-                charaImg.style.maxWidth = "700px";
-            } else {
-                charaImg.style.maxHeight = "";
-                charaImg.style.maxWidth = "";
-            }
-
-            // // 状態保存（将来の復元用）
-            // localStorage.setItem(
-            //     "themeSet",
-            //     JSON.stringify({
-            //         bg,
-            //         chara,
-            //         name,
-            //         personality,
-            //         themeId
-            //     })
-            // );
 
             // パネルを閉じる
             panel.classList.add("hidden");
