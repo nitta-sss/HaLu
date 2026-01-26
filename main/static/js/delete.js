@@ -33,6 +33,12 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("⑦ updateEmotion なし");
     }
 
+    // 🔹 履歴削除時に動画を normal に戻す
+    if (typeof window.showNormalFace === "function") {
+      window.showNormalFace();
+      console.log("⑦-2 showNormalFace 呼び出し");
+    }
+
     // 連打防止（任意：main.js側で見てるなら効く）
     window.isResetting = true;
     console.log("⑧ isResetting = true");
@@ -53,7 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await res.json().catch(() => ({}));
       console.log("⑫ reset json:", data);
 
-      alert("履歴を削除しました");
     } catch (e) {
       console.error("⑬ fetch error:", e);
       alert("Flaskに繋がらないっぽい（起動してる？）");
