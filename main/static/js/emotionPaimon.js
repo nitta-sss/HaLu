@@ -10,7 +10,7 @@ console.log("emotionPaimon.js loaded");
   // キャラごとの感情動画
   const sceneMap = {
     forest: {
-      normal: "/static/video/Forestpaimon.mp4",
+      normal: "/static/video/ForestPaimonNormal.mp4",
       happy:  "/static/video/a.webm",
       angry:  "/static/video/b.webm",
       sad:    "/static/video/c.webm",
