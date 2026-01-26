@@ -18,7 +18,7 @@ console.log("emotionPaimon.js loaded");
     },
   
     ice: {
-      normal: "/static/video/IceNormal.webm",
+      normal: "/static/video/a.webm",
       happy:  "/static/video/b.webm",
       angry:  "/static/video/c.webm",
       sad:    "/static/video/d.webm",
@@ -26,7 +26,7 @@ console.log("emotionPaimon.js loaded");
     },
   
     flame: {
-      normal: "/static/video/FlameNormal.webm",
+      normal: "/static/video/b.webm",
       happy:  "/static/video/c.webm",
       angry:  "/static/video/d.webm",
       sad:    "/static/video/a.webm",
