@@ -56,6 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // 🌍 グローバルに公開
             window.currentThemeId = themeId;
+            window.showNormalFace?.();
 
             // パネルを閉じる
             panel.classList.add("hidden");

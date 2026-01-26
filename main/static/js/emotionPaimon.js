@@ -10,26 +10,32 @@ console.log("emotionPaimon.js loaded");
   // キャラごとの感情動画
   const sceneMap = {
     forest: {
-      happy: "/static/video/a.webm",
-      angry: "/static/video/b.webm",
-      sad:   "/static/video/c.webm",
-      fun:   "/static/video/d.webm",
+      normal: "/static/video/Forestpaimon.mp4",
+      happy:  "/static/video/a.webm",
+      angry:  "/static/video/b.webm",
+      sad:    "/static/video/c.webm",
+      fun:    "/static/video/d.webm",
     },
-
+  
     ice: {
-      happy: "/static/video/b.webm",
-      angry: "/static/video/c.webm",
-      sad:   "/static/video/d.webm",
-      fun:   "/static/video/a.webm",
+      normal: "/static/video/IceNormal.webm",
+      happy:  "/static/video/b.webm",
+      angry:  "/static/video/c.webm",
+      sad:    "/static/video/d.webm",
+      fun:    "/static/video/a.webm",
     },
-
+  
     flame: {
-      happy: "/static/video/c.webm",
-      angry: "/static/video/d.webm",
-      sad:   "/static/video/a.webm",
-      fun:   "/static/video/b.webm",
+      normal: "/static/video/FlameNormal.webm",
+      happy:  "/static/video/c.webm",
+      angry:  "/static/video/d.webm",
+      sad:    "/static/video/a.webm",
+      fun:    "/static/video/b.webm",
     }
   };
+
+  //中心判定
+  const CENTER_THRESHOLD = 0.2;
 
   // -1..1 に正規化（入力が 0..100 とかでも対応）
   function toSigned(v) {
@@ -57,6 +63,12 @@ console.log("emotionPaimon.js loaded");
     const cy = toSigned(y);
 
     console.log("覚醒：", x, "快楽：", y, "=> 正規化:", cx, cy);
+
+    //中心ならnormalを返す
+    const distance = Math.sqrt(cx * cx + cy * cy);
+    if (distance < CENTER_THRESHOLD) {
+      return "normal";
+    }
 
     if (cx >= 0 && cy >= 0) return "happy"; // 喜
     if (cx >= 0 && cy <= 0) return "angry"; // 怒
@@ -97,6 +109,20 @@ console.log("emotionPaimon.js loaded");
 
     if (!src) {
       console.warn("⚠ 対応動画なし:", theme, emotionType);
+      return;
+    }
+
+    changeVideo(src);
+  };
+
+  // キャラ変更時にノーマル表情を表示
+  window.showNormalFace = function () {
+
+    const theme = window.currentThemeId || "forest";
+    const src = sceneMap[theme]?.normal;
+
+    if (!src) {
+      console.warn("normal動画がありません:", theme);
       return;
     }
 
