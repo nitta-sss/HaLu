@@ -434,13 +434,13 @@ html, body {
     top: 0;
     right: 0;
 
-    width: 35%; /*ここの値を変えるとグラデーションの太さが変わる*/
+    width: 60%; /*ここの値を変えるとグラデーションの太さが変わる*/
     height: 100%;
 
     background: linear-gradient(
         to right,
-        #FF52E7,   /* 左バーの色 */
-        #FF4590    /* 中間色 */
+        #254FC8,   /* 左バーの色 */
+        #F2F5FF    /* 中間色 */
     );
     pointer-events: none;
 }
@@ -452,13 +452,13 @@ html, body {
     top: 0;
     left: 0;
 
-    width: 35%;
+    width: 60%;
     height: 100%;
 
     background: linear-gradient(
         to left,
-        #FF3737,   /* 右バーの色 */
-        #FF4590   /* 中間色の色 */
+        #E53935,   /* 右バーの色 */
+        #F2F5FF   /* 中間色の色 */
     );
     pointer-events: none;
 }
@@ -471,13 +471,13 @@ html, body {
     top: 0;
     right: 0;
 
-    width: 35%;
+    width: 60%;
     height: 100%;
 
     background: linear-gradient(
         to right,
-        #3B42FF,
-        #449AFF
+        #2FB8C6,
+        #FFF4E6
     );
     pointer-events: none;
 }
@@ -489,13 +489,13 @@ html, body {
     top: 0;
     left: 0;
 
-    width: 35%;
+    width: 60%;
     height: 100%;
 
     background: linear-gradient(
         to left,
-        #4DF2FF,
-        #449AFF
+        #FFB84D,
+        #FFF4E6
     );
     pointer-events: none;
 }
