@@ -81,6 +81,10 @@ console.log("emotionPaimon.js loaded");
     // すでにこの動画なら何もしない
     if (video.dataset.current === src) return;
 
+    video.src = src;     
+    video.load();        
+    video.play();        
+
     video.dataset.current = src;
   }
   
