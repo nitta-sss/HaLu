@@ -2,80 +2,79 @@
    RESET
 ========================= */
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 html, body {
-    height: 100%;
-    font-family: "Segoe UI", "Meiryo", sans-serif;
-    background: #f5f5f5;
+  height: 100%;
+  font-family: "Segoe UI", "Meiryo", sans-serif;
+  background: #f5f5f5;
 }
 
 /* =========================
    HEADER
 ========================= */
 .header {
-    height: 80px;
-    padding: 10px 20px;
-    background: #F1F4F7;
-    border-bottom: 1px solid #D6DEE6;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  height: 80px;
+  padding: 10px 20px;
+  background: #F1F4F7;
+  border-bottom: 1px solid #D6DEE6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
 }
 
 .user-box {
-    display: flex;
-    align-items: center;
-    gap: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
 .user-box {
-    width: 600px;
-    height: 40px;
+  width: 600px;
+  height: 40px;
 }
 
 .user-box .tooltip-balloon{
-    left: calc(50% - 40px);
-    transform: translateX(-50%);
-  }
+  left: calc(50% - 40px);
+  transform: translateX(-50%);
+}
 
 .logo {
-    width: 130px;
-    height: 60px;
-
+  width: 130px;
+  height: 60px;
 }
+
 .icon {
-    width: 50px;
-    height: 50px;
-    cursor: pointer;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
 }
 
 .icon:hover {
-    filter: brightness(1.15);
+  filter: brightness(1.15);
 }
 
 .username {
-    font-size: 40px;
-    font-weight: bold;
+  font-size: 40px;
+  font-weight: bold;
 }
 
 /*キャラ説明*/
-
 .character-name {
-    width: 400px;
-    font-size: 23px;
-    font-weight: bold;
-    color: #91da24;
+  width: 400px;
+  font-size: 23px;
+  font-weight: bold;
+  color: #91da24;
 }
 
 .character-personality {
-    width: 500px;
-    font-size: 23px;
-    color: #91da24;
+  width: 500px;
+  font-size: 23px;
+  color: #91da24;
 }
 
 .character-name.forest {color: #91da24;}
@@ -88,454 +87,382 @@ html, body {
 .character-personality.flame {color: #fc4242;}
 
 .headerButton {
-    display: flex;
-    gap: 30px; 
-    align-items: center;
-    justify-content: flex-end;
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  justify-content: flex-end;
 }
+
 .button-32 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    width: 175px;
-    margin: 0 ;
-    padding: .7em 2em;
-    overflow: hidden;
-    border: 1px solid #2589d0;
-    border-radius: 25px;
-    background-color: #f5f5f5;
-    color: #2589d0;
-    font-size: 1em;
-    z-index: 20;
-    cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 175px;
+  margin: 0 ;
+  padding: .7em 2em;
+  overflow: hidden;
+  border: 1px solid #2589d0;
+  border-radius: 25px;
+  background-color: #f5f5f5;
+  color: #2589d0;
+  font-size: 1em;
+  z-index: 20;
+  cursor: pointer;
 }
 
 .button-32:hover {
-    background-color: transparent;
-    color: #f5f5f5;
+  background-color: transparent;
+  color: #f5f5f5;
 }
 
 .button-32::before {
-    position: absolute;
-    z-index: -1;
-    transform: rotate(-30deg);
-    width: 100%;
-    height: 0;
-    border-radius: 25px;
-    background-color: #2589d0;
-    content: '';
-    transition: height .3s ease;
+  position: absolute;
+  z-index: -1;
+  transform: rotate(-30deg);
+  width: 100%;
+  height: 0;
+  border-radius: 25px;
+  background-color: #2589d0;
+  content: '';
+  transition: height .3s ease;
 }
 
 .button-32:hover::before {
-    height: 350%;
+  height: 350%;
 }
 
 /* =========================
    MAIN LAYOUT
 ========================= */
 .container {
-    display: flex;
-    height: calc(100vh - 80px);
+  display: flex;
+  height: calc(100vh - 80px);
 }
 
 /* LEFT */
 .left-area {
-    width: 35%;
-    padding: 10px;
-    background: #FAFBFC;
-    display: flex;
-    flex-direction: column;
+  width: 35%;
+  padding: 10px;
+  background: #FAFBFC;
+  display: flex;
+  flex-direction: column;
 
-    position: relative; /*大堀追記*/
+  position: relative;
 
-    border: 2px solid #D6DEE6;
-    background: linear-gradient(
-        to bottom,
-        #FAFBFC,
-        #F3F6F9
-      );
+  border: 2px solid #D6DEE6;
+  background: linear-gradient(
+    to bottom,
+    #FAFBFC,
+    #F3F6F9
+  );
 }
-
 
 /* CHAT */
 .chat-box {
-    flex: 1;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 
-    padding-bottom: 110px; /*大堀追記*/
+  padding-bottom: 110px;
 }
 
 /* =========================
-   BALLOON（元の見た目）
+   BALLOON
 ========================= */
 .balloon {
-    max-width: 70%;
-    margin-bottom: 40px;
-    padding: 10px 14px;
-    border-radius: 16px;
-    font-size: 14px;
-    line-height: 1.4;
-    background: #f5f5f5;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  max-width: 70%;
+  margin-bottom: 40px;
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.4;
+  background: #f5f5f5;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 
 .balloon.user {
-    align-self: flex-start;
-    border-top-left-radius: 4px;
+  align-self: flex-start;
+  border-top-left-radius: 4px;
 }
 
 .balloon.bot {
-    align-self: flex-end;
-    border-top-right-radius: 4px;
+  align-self: flex-end;
+  border-top-right-radius: 4px;
 }
-
-/* =========================
-   MIC BUTTON（安定版）
-========================= */
-/* 使わない
-.voice-icon {
-    width: 80px;
-    height: 80px;
-    margin: 12px auto;
-    position: relative;
-}
-*/
 
 /* =========================
    INPUT ROW (Mic + Text + Send)
 ========================= */
 .input-row {
-    position: absolute;
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
 
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 /* テキスト入力 */
 .text-input {
-    flex: 1;
-    height: 48px;
-    border-radius: 24px;
-    border: 1px solid #ccc;
-    padding: 0 14px;
-    font-size: 16px;
-    outline: none;
+  flex: 1;
+  height: 48px;
+  border-radius: 24px;
+  border: 1px solid #ccc;
+  padding: 0 14px;
+  font-size: 16px;
+  outline: none;
 }
 
 /* 送信ボタン */
 .send-btn {
-    height: 48px;
-    padding: 0 16px;
-    border-radius: 24px;
-    border: 1px solid #ccc;
-    background: #f5f5f5;
-    color: #333333;
-    cursor: pointer;
+  height: 48px;
+  padding: 0 16px;
+  border-radius: 24px;
+  border: 1px solid #ccc;
+  background: #f5f5f5;
+  color: #333333;
+  cursor: pointer;
 }
 
 .send-btn.active {
-    background-color: #2589d0;
-    color: #f5f5f5;
+  background-color: #2589d0;
+  color: #f5f5f5;
 }
 
 #voiceBtn {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
 
-    background: url("/static/img/voiceMic.png") center / contain no-repeat;
+  background: url("/static/img/voiceMic.png") center / contain no-repeat;
 
-    background-color: #ff4b4b; /* ← 通常時は赤 */
-    box-shadow: 0 4px 10px #333333;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  background-color: #ff4b4b;
+  box-shadow: 0 4px 10px #333333;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 #voiceBtn:hover{
-    transform: translateY(-0.1875em);
+  transform: translateY(-0.1875em);
 }
 
 /* 録音中 */
 #voiceBtn.recording {
-    background-color: #3088e0; /* ← 録音中は青 */
-    animation: recordPulse 0.6s infinite alternate ease-in-out;
+  background-color: #3088e0;
+  animation: recordPulse 0.6s infinite alternate ease-in-out;
 }
 
 @keyframes recordPulse {
-    from {
-        transform: scale(1);
-        box-shadow:
-            0 0 10px rgba(50, 150, 255, 0.7),
-            0 0 20px rgba(50, 150, 255, 0.4);
-    }
-    to {
-        transform: scale(1.15);
-        box-shadow:
-            0 0 20px rgba(0, 120, 255, 1),
-            0 0 40px rgba(0, 120, 255, 0.7);
-    }
+  from {
+    transform: scale(1);
+    box-shadow:
+      0 0 10px rgba(50, 150, 255, 0.7),
+      0 0 20px rgba(50, 150, 255, 0.4);
+  }
+  to {
+    transform: scale(1.15);
+    box-shadow:
+      0 0 20px rgba(0, 120, 255, 1),
+      0 0 40px rgba(0, 120, 255, 0.7);
+  }
 }
 
-/* ===========================
-録音終了エフェクト（赤くホワン）
- =========================== */
- .recording-end {
-    animation: endFlash 1.75s ease-out;
+/* 録音終了エフェクト */
+.recording-end {
+  animation: endFlash 1.75s ease-out;
 }
 
 @keyframes endFlash {
-    0% {
-        box-shadow: 0 0 0 rgba(255,0,0,0);
-        background-color: #3088e0;
-    }
-    50% {
-        box-shadow: 0 0 25px rgba(255, 0, 0, 0.952);
-        background-color: #ff4b4b;
-    }
-    100% {
-        box-shadow: 0 0 0 rgba(255,0,0,0.9);
-        background-color: #ff4b4b;
-    }
+  0% {
+    box-shadow: 0 0 0 rgba(255,0,0,0);
+    background-color: #3088e0;
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(255, 0, 0, 0.952);
+    background-color: #ff4b4b;
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(255,0,0,0.9);
+    background-color: #ff4b4b;
+  }
 }
-
 
 /* =========================
    RIGHT
 ========================= */
 .right-area {
-    width: 65%;
-    position: relative;
-    overflow: hidden;
-    border: 2px solid #D6DEE6;
+  width: 65%;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid #D6DEE6;
 }
 
 .scene-video {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-/* .right-back {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-} */
-
-/* FACE */
-/* .face-area {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
-
-.face-img {
-    max-height: 80%;
-} */
 
 /* =========================
    感情ゲージ（必須）
 ========================= */
-
-/* 感情バーエリア */
 .emotion-area {
-    position: relative;
-    top: 10px;
-    left: 40px;
-    width: 90%;
+  position: relative;
+  top: 10px;
+  left: 40px;
+  width: 90%;
 }
 
-/* ゲージ全体の箱 */
 .bar-item {
-    margin-bottom: 20px;
-    text-align: center; 
+  margin-bottom: 20px;
+  text-align: center;
 }
 
 .watashiNoKokoro{
-    font-size: 35px;
-    margin: 5px;
-    background: #f5f5f5;
-    color: #333333;
-    display: inline-block;
-    padding: 4px 10px;
-    border-bottom: #333333;
-    border-radius: 12px;
+  font-size: 35px;
+  margin: 5px;
+  background: #f5f5f5;
+  color: #333333;
+  display: inline-block;
+  padding: 4px 10px;
+  border-bottom: #333333;
+  border-radius: 12px;
 }
 
-/* ラベル */
 .bar-label {
-    font-size: 35px;
-    margin-bottom: 5px;
-    background: rgba(255,255,255,0.85);
-    color: #333333;
-    display: inline-block;
-    padding: 4px 10px;
-    border-radius: 12px;
+  font-size: 35px;
+  margin-bottom: 5px;
+  background: rgba(255,255,255,0.85);
+  color: #333333;
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
 }
 
-/* ゲージの土台 */
-/*ゲージを横並びにするためにまとめる箱*/
 .bar-row{
-    display: flex;
-    gap: 0;
+  display: flex;
+  gap: 0;
 }
 
 .bar-base{
-    flex: 1;
-    height: 25px;           /* ★ 高さが超重要 */
-    background: #f5f5f5;
-    border: 2px solid #333333;
-    border-radius: 8px;
-    overflow: hidden;
+  flex: 1;
+  height: 25px;
+  background: #f5f5f5;
+  border: 2px solid #333333;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-/* 左バー：右の境界線と内側の角丸をなくす */
+/* 左バー */
 .bar-base.left {
-    border-right: none;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  
-  /* 右バー：左の境界線と内側の角丸をなくす */
-  .bar-base.right {
-    border-left: none;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-
-/* 実際に伸びるバー */
-.bar-fill {
-    width: 100%;
-    height: 100%;
-    transform: scaleX(0);              /* JSがここを書き換える */
-    /* border-radius: 8px; */
-    background: red;
-    transition: transform  2.5s ease;
-    position: relative;
+  border-right: none;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
-/* 左ゲージ：中央側（右端）だけをなじませる */
+/* 右バー */
+.bar-base.right {
+  border-left: none;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.bar-fill {
+  width: 100%;
+  height: 100%;
+  transform: scaleX(0);
+  background: red;
+  transition: transform 2.5s ease;
+  position: relative;
+}
+
 /* 覚醒度 左バー（中央側だけ） */
 .fill1-1::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-
-    width: 60%; /*ここの値を変えるとグラデーションの太さが変わる*/
-    height: 100%;
-
-    background: linear-gradient(
-        to right,
-        #254FC8,   /* 左バーの色 */
-        #F2F5FF    /* 中間色 */
-    );
-    pointer-events: none;
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(to right, #254FC8, #F2F5FF);
+  pointer-events: none;
 }
 
 /* 覚醒度 右バー（中央側だけ） */
 .fill1-2::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-
-    width: 60%;
-    height: 100%;
-
-    background: linear-gradient(
-        to left,
-        #E53935,   /* 右バーの色 */
-        #F2F5FF   /* 中間色の色 */
-    );
-    pointer-events: none;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(to left, #E53935, #F2F5FF);
+  pointer-events: none;
 }
 
-/* 右ゲージ：中央側（左端）だけをなじませる */
 /* 快楽度 左バー */
 .fill2-1::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-
-    width: 60%;
-    height: 100%;
-
-    background: linear-gradient(
-        to right,
-        #2FB8C6,
-        #FFF4E6
-    );
-    pointer-events: none;
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(to right, #2FB8C6, #FFF4E6);
+  pointer-events: none;
 }
 
 /* 快楽度 右バー */
 .fill2-2::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-
-    width: 60%;
-    height: 100%;
-
-    background: linear-gradient(
-        to left,
-        #FFB84D,
-        #FFF4E6
-    );
-    pointer-events: none;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(to left, #FFB84D, #FFF4E6);
+  pointer-events: none;
 }
 
 /* 左のゲージを右から動かす */
 .bar-base.left .bar-fill {
-    transform-origin: right;
-  }
-  
-/* 右のゲージを左から動かす */
-  .bar-base.right .bar-fill {
-    transform-origin: left;
-  }
+  transform-origin: right;
+}
 
-/* 非表示制御 */
-/* .emotion-area.hide {
-    display: none;
-} */
+/* 右のゲージを左から動かす */
+.bar-base.right .bar-fill {
+  transform-origin: left;
+}
 
 .user-gauge{
-    position: absolute;
-    top: 0;
-    right: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
 
-    width: 100%;
-    height: 35%;                 
-    background: rgba(250, 243, 232, 0.8);
-    z-index: 2;
+  width: 100%;
+  height: 35%;
+  background: rgba(250, 243, 232, 0.8);
+  z-index: 2;
 
-    border-right: 1px solid #D6DEE6;
-    border-bottom: 2px solid #D6DEE6;
-
-    /* opacity: 0.5 */
+  border-right: 1px solid #D6DEE6;
+  border-bottom: 2px solid #D6DEE6;
 }
 
 .hide {
-    display: none;
+  display: none;
 }
 
-
+/* =========================
+   ユーザー選択の基本スタイル（既存）
+========================= */
 .user-box { width: min(620px, 92vw); }
 .user-current { margin-bottom: 10px; line-height: 1.6; }
 .user-list { display: grid; gap: 8px; max-height: 240px; overflow: auto; padding: 6px; }
@@ -555,275 +482,256 @@ html, body {
 .user-row { display:flex; gap:10px; flex-wrap:wrap; margin: 8px 0; }
 .user-sep { border: none; border-top: 1px solid rgba(255,255,255,0.15); margin: 12px 0; }
 
-
 /* =========================
-   ボタンにカーソル合わせたときに説明文を表示
+   Tooltip
 ========================= */
-
-.bgChangeBtn {
-    cursor: pointer;
-}
+.bgChangeBtn { cursor: pointer; }
 
 .charaChageBtn {
-    position: relative;
-    display: inline-block;
+  position: relative;
+  display: inline-block;
 }
 
 .charaChageBtn::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: calc(100% + 8px);
-    aspect-ratio: 1 / 1;
-  
-    border-radius: 50%;
-    border: 2px solid #2589d0;
-  
-    opacity: 0;
-    pointer-events: none;
-  
-    transform: translate(-50%, -50%);
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(100% + 8px);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  border: 2px solid #2589d0;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
 }
 
 .charaChageBtn:hover::before {
-    opacity: 1;
-    transition: opacity 0.2s ease; 
-}
-
-@keyframes circle-spin {
-    to {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
+  opacity: 1;
+  transition: opacity 0.2s ease;
 }
 
 .tooltip-wrapper {
-    position: relative;
-    display: inline-block;
-  }
+  position: relative;
+  display: inline-block;
+}
 
 .tooltip-balloon{
-    position: absolute;
-  top: 140%;   
+  position: absolute;
+  top: 140%;
   left: 50%;
   transform: translateX(-50%);
-
   background: #333;
   color: #f5f5f5;
   padding: 8px 12px;
   border-radius: 10px;
   font-size: 13px;
   white-space: nowrap;
-
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.2s;
-
   z-index: 100;
 }
 
 .tooltip-left .tooltip-balloon {
-    top: 100%;
-    right: -150%;
-    transform: translatex(20%);
+  top: 100%;
+  right: -150%;
+  transform: translatex(20%);
 }
 
 .tooltip-wrapper:hover .tooltip-balloon{
-    opacity: 1;
-    visibility: visible;
-  }
+  opacity: 1;
+  visibility: visible;
+}
 
-  /*キャラクター変更*/
-
-  .bg-panel {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    gap: 20px;
-    width: 530px;   /* 横幅 */
-    height: 300px;  /* 高さ */
-    padding: 20px;  /* 内側の余白を広げる */
-    background: #83cbff;
-    border-radius: 10px;
-    z-index: 1000;
+/* =========================
+   キャラクター変更パネル
+========================= */
+.bg-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  gap: 20px;
+  width: 530px;
+  height: 300px;
+  padding: 20px;
+  background: #83cbff;
+  border-radius: 10px;
+  z-index: 1000;
 }
 
 .hidden{
-    display: none;
+  display: none;
 }
 
 .bg-panel::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: #134366;
-    z-index: -1;
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: #134366;
+  z-index: -1;
 }
 
-.bg-card { 
-    cursor: pointer; 
-    text-align: center; 
-    color: #f5f5f5; 
+.bg-card {
+  cursor: pointer;
+  text-align: center;
+  color: #f5f5f5;
 }
 
-.bg-card img { 
-    width: 150px; 
-    height: 150px; 
-    border-radius: 6px; 
-    object-fit: cover; 
-    transition: transform 0.2s;
+.bg-card img {
+  width: 150px;
+  height: 150px;
+  border-radius: 6px;
+  object-fit: cover;
+  transition: transform 0.2s;
 }
 
-.bg-card:hover img { 
-    transform: scale(1.05); 
+.bg-card:hover img {
+  transform: scale(1.05);
 }
 
+/* =========================
+   MODAL（共通）
+========================= */
 .modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.35);
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding-top: 120px;
-    z-index: 9999;
-  }
-  
-  .modal.hidden {
-    display: none;
-  }
-  
- .modal-box {
-  background: rgba(20, 20, 20, 0.95); /* ほぼ不透明 */
-  backdrop-filter: blur(8px);        /* おしゃれ用（任意） */
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 120px;
+  z-index: 9999;
 }
 
-  .modal-title {
-    font-weight: bold;
-    margin-bottom: 8px;
-  }
-  
-  .modal-message {
-    font-size: 14px;
-    margin-bottom: 16px;
-  }
-  
-  .modal-box button {
-    float: right;
-    padding: 6px 18px;
-    border-radius: 20px;
-    border: none;
-    background: #2589d0;
-    color: #f5f5f5;
-    cursor: pointer;
-  }
-  
-/* 2本ゲージ(左) + 顔文字(右) を横並び */
-/* 2本ゲージ(左) + 顔文字(右) */
+.modal.hidden {
+  display: none;
+}
+
+.modal-box {
+  background: rgba(20, 20, 20, 0.95);
+  backdrop-filter: blur(8px);
+}
+
+.modal-title {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.modal-message {
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.modal-box button {
+  float: right;
+  padding: 6px 18px;
+  border-radius: 20px;
+  border: none;
+  background: #2589d0;
+  color: #f5f5f5;
+  cursor: pointer;
+}
+
+/* =========================
+   2本ゲージ + 顔文字 横並び
+========================= */
 .emotion-wrap{
-    display: flex;
-    align-items: center;
-    gap: 150px;
-  }
-  
-  .emotion-bars{
-    flex: 1;
-  }
-  
-  /* ← ここ超重要：150%だと顔が押し出される */
-  /* .bar-base{
-    width: 100%;
-  } */
+  display: flex;
+  align-items: center;
+  gap: 150px;
+}
 
-  /* 右側：境界線つき表情パネル */
-  .emoji-panel{
-    border-left: 2px solid #D6DEE6(0,0,0,0.35);  /* ← 境界線 */
-    padding-left: 24px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 180px;
-  }
-  
-  /* 表情名（顔文字の上） */
-  .emoji-title{
-    font-size: 30px;
-    font-weight: 700;
-    background: rgba(255,255,255,0.85);
-    padding: 6px 12px;
-    border-radius: 12px;
-    margin-bottom: 10px;
-  }
-  
-  /* 顔文字 */
-  .bar-emoji{
-    width: 160px;
-    height: 170px;
-    display: grid;
-    place-items: center;
-    font-size: 150px;
-    line-height: 1;
-    user-select: none;
-    align-content: start;
-    justify-content: center;
-  }
-  
-  /* 表情が変わった時にポン */
-  .pop{ animation: pop 0.25s ease-out; }
-  @keyframes pop{
-    from{ transform: scale(0.85); }
-    to  { transform: scale(1); }
-  }
+.emotion-bars{
+  flex: 1;
+}
 
+/* ✅ ここ壊れてたので修正 */
+.emoji-panel{
+  border-left: 2px solid rgba(0,0,0,0.35);
+  padding-left: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 180px;
+}
 
-  .toast {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    font-size: 30px;
-    transform: translateX(-50%) translateY(-10px);
-    background: #d0ff00;
-    color: #333333;
-    padding: 12px 20px;
-    border-radius: 8px;
-    font-size: 14px;
-    opacity: 0;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    z-index: 9999;
-  }
-  
-  .toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-  
-  #soundbtn {
-    position: relative;
-    z-index: 1000;
-    pointer-events: auto;
-  }
+.emoji-title{
+  font-size: 30px;
+  font-weight: 700;
+  background: rgba(255,255,255,0.85);
+  padding: 6px 12px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
 
-  #secretLabelBtn{
-    position: fixed;
-    right: 2px;
-    bottom: 24px;
-    width: 60px;
-    height: 60px;
-    opacity: 0.01;   /* ほぼ見えない */
-    z-index: 99999;
-    border: none;
-    background: transparent;
-  }
+.bar-emoji{
+  width: 160px;
+  height: 170px;
+  display: grid;
+  place-items: center;
+  font-size: 150px;
+  line-height: 1;
+  user-select: none;
+  align-content: start;
+  justify-content: center;
+}
 
-  /* =========================
-   ユーザー選択モーダル：白い背景カード
-   ※他のモーダルに影響させないため .modal-box.user-box にだけ適用
+.pop{ animation: pop 0.25s ease-out; }
+@keyframes pop{
+  from{ transform: scale(0.85); }
+  to  { transform: scale(1); }
+}
+
+/* toast */
+.toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  font-size: 30px;
+  transform: translateX(-50%) translateY(-10px);
+  background: #d0ff00;
+  color: #333333;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 9999;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+#soundbtn {
+  position: relative;
+  z-index: 1000;
+  pointer-events: auto;
+}
+
+#secretLabelBtn{
+  position: fixed;
+  right: 2px;
+  bottom: 24px;
+  width: 60px;
+  height: 60px;
+  opacity: 0.01;
+  z-index: 99999;
+  border: none;
+  background: transparent;
+}
+
+/* =========================
+   ユーザー選択モーダル（白カード）
+   ※ userModal にだけ効かせる
 ========================= */
 .modal-box.user-box{
-  background: rgba(255,255,255,0.96);   /* 白背景（少し透け） */
-  color: #333333;                      /* 文字は黒寄り */
+  background: rgba(255,255,255,0.96);
+  color: #333333;
   border-radius: 16px;
   padding: 16px 18px 14px;
   box-shadow: 0 18px 60px rgba(0,0,0,0.35);
@@ -831,67 +739,114 @@ html, body {
   backdrop-filter: blur(6px);
 }
 
-/* タイトル */
-.modal-box.user-box .modal-title{
-  color: #111;
-  font-size: 18px;
-  margin-bottom: 10px;
-}
-
-/* 区切り線 */
-.modal-box.user-box .user-sep{
-  border-top: 1px solid rgba(0,0,0,0.10);
-}
-
-/* 現在ユーザー表示の枠 */
-.modal-box.user-box .user-current{
-  background: rgba(245,245,245,0.95);
-  border: 1px solid rgba(0,0,0,0.08);
-  border-radius: 12px;
-  padding: 10px 12px;
-}
-
-/* ユーザー一覧の枠 */
-.modal-box.user-box .user-list{
-  background: rgba(245,245,245,0.85);
-  border: 1px solid rgba(0,0,0,0.08);
-  border-radius: 12px;
-}
-
-/* 各ユーザー行 */
-.modal-box.user-box .user-item{
-  background: rgba(255,255,255,0.95);
-  border: 1px solid rgba(0,0,0,0.10);
-}
-.modal-box.user-box .user-item:hover{
-  background: rgba(255,255,255,1);
-}
-
-/* ステータス文 */
-.modal-box.user-box .tone-status{
-  background: rgba(245,245,245,0.95);
-  border: 1px solid rgba(0,0,0,0.08);
-  border-radius: 12px;
-  padding: 10px 12px;
-  color: #333;
-}
-
-/* 閉じるボタンだけ見た目を維持（button-32が青枠なのでそのままでOK）
-   ただしモーダル内で float:right の影響が気になる時はこれを追加 */
-.modal-box.user-box #userClose{
-  float: none;            /* 既存CSSの float:right を無効化 */
-  margin-left: auto;      /* 右寄せ */
-  display: block;
+/* float:right を無効化（userModalだけ） */
+.modal-box.user-box button{
+  float: none;
 }
 
 /* =========================
-   ユーザー選択：中身をまとめる白背景
+   userModal：2ペインUI（写真っぽい）
 ========================= */
-.modal-message{
+#userModal .modal-message.user-ui{
   background: rgba(255,255,255,0.96);
   border-radius: 18px;
   padding: 18px 20px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+
+  width: min(980px, 94vw);
+  display: flex;
+  gap: 26px;
+  align-items: stretch;
+
+  margin-bottom: 0; /* 余計な隙間を消す */
 }
 
+#userModal .user-panel{
+  flex: 1;
+  background: rgba(255,255,255,0.9);
+  border-radius: 16px;
+  padding: 18px 18px 14px;
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+  min-height: 360px;
+}
 
+#userModal .user-panel.hidden{ display:none; }
+
+#userModal .modal-title.center{
+  text-align: center;
+  font-size: 18px;
+}
+
+#userModal .card{
+  background: rgba(245,245,245,0.95);
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+#userModal .user-list.card{
+  max-height: 210px;
+  overflow: auto;
+  padding: 8px;
+}
+
+#userModal .tone-status.card{
+  margin-top: 10px;
+}
+
+#userModal .form-row{
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 12px;
+  align-items: center;
+  margin: 10px 0 14px;
+}
+
+#userModal .form-label{
+  font-weight: 700;
+  color: #333;
+}
+
+#userModal .tone-input{
+  height: 42px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.15);
+  padding: 0 12px;
+  outline: none;
+  background: #fff;
+}
+
+#userModal .tone-input:focus{
+  border-color: rgba(37,137,208,0.6);
+  box-shadow: 0 0 0 3px rgba(37,137,208,0.15);
+}
+
+#userModal .btn-col{
+  display: grid;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+#userModal .btn-row{
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+#userModal .btn-row > *{
+  flex: 1;
+}
+
+#userModal .user-row{
+  display:flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 8px 0;
+}
+
+/* userModal内の閉じるボタン整形 */
+#userModal #userClose{
+  width: 100%;
+  margin-top: 10px;
+}

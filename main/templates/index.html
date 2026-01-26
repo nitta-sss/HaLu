@@ -2,263 +2,306 @@
 <!DOCTYPE html>
 <html lang="ja">
 
-    <head>
-        <meta charset="UTF-8">
-        <title>Halu UI</title>
-        <link rel="stylesheet" href="{% static 'CSS/style.css' %}">
-    </head>
+<head>
+  <meta charset="UTF-8">
+  <title>Halu UI</title>
+  <link rel="stylesheet" href="{% static 'CSS/style.css' %}">
+</head>
 
-    <body>
+<body>
 
-        <!-- ヘッダー -->
-        <div class="header">
-            <!-- 左上のアイコン -->
-            <div class="user-box">
-                <span class="username">
-                    <img src="{% static 'img/HaLu Logo.png' %}" class="logo">
-                </span>
-            <!-- アイコンの画像 -->
-                <div class="charaChageBtn tooltip-wrapper tooltip-left">
-                    <img src="{% static 'img/ChangeIcon.png' %}" class="icon">   
-                    <div class="tooltip-balloon">
-                        キャラクターを変更
-                    </div>
-                </div>
-                <div class="character-name forest">森のパイモン</div>
-                <div class="character-personality forest">
-                    森の元気な案内役
-                </div>
-            </div>
-        
-            <div class="headerButton">
-                <!-- 履歴削除ボタン -->
-                <div class="tooltip-wrapper">
-                    <button id="deleteHistoryBtn" class="button-32">履歴削除</button>
-                    <div class="tooltip-balloon">
-                        会話履歴を削除します
-                    </div>
-                </div>
-                <!-- 音声切替ボタン -->
-                <div class="tooltip-wrapper">
-                    <button id="soundbtn" class="button-32">BGMを有効化</button>
-                    <audio id="BGMsound" src="{% static 'sound/ほのぼのな雰囲気.mp3' %}" loop></audio>
-                    <div class="tooltip-balloon">
-                        BGMのON/OFFを切り替えます
-                    </div>
-                </div>
-                <!-- ゲージ表示切替ボタン -->
-                <div class="tooltip-wrapper">
-                    <button id="showbtn" class="button-32">ゲージ表示</button>
-                    <div class="tooltip-balloon">
-                        ユーザーの感情ゲージを表示します
-                    </div>
-                </div>
-                
-
-
-                <!-- 背景画像変更
-                <div class="tooltip-wrapper">
-                    <button id="bgChangeBtn" class="button-32">背景変更</button>
-                    <input type="file" id="bgFileInput" accept="image/*" style="display: none;">
-                    <div class="tooltip-balloon">
-                        背景画像を変更します
-                    </div>
-                </div> -->
-                <!--ユーザー名-->
-                <div class="tooltip-wrapper">
-                    <button id="userBtn" class="button-32">ユーザー選択</button>
-                    <div class="tooltip-balloon">ユーザーを選択 / 追加 / トーン取り直し</div>
-                </div>
-
-            </div>
+  <!-- ヘッダー -->
+  <div class="header">
+    <!-- 左上のアイコン -->
+    <div class="user-box">
+      <span class="username">
+        <img src="{% static 'img/HaLu Logo.png' %}" class="logo">
+      </span>
+      <!-- アイコンの画像 -->
+      <div class="charaChageBtn tooltip-wrapper tooltip-left">
+        <img src="{% static 'img/ChangeIcon.png' %}" class="icon">
+        <div class="tooltip-balloon">
+          キャラクターを変更
         </div>
+      </div>
+      <div class="character-name forest">森のパイモン</div>
+      <div class="character-personality forest">
+        森の元気な案内役
+      </div>
+    </div>
+
+    <div class="headerButton">
+      <!-- 履歴削除ボタン -->
+      <div class="tooltip-wrapper">
+        <button id="deleteHistoryBtn" class="button-32">履歴削除</button>
+        <div class="tooltip-balloon">
+          会話履歴を削除します
+        </div>
+      </div>
+
+      <!-- 音声切替ボタン -->
+      <div class="tooltip-wrapper">
+        <button id="soundbtn" class="button-32">BGMを有効化</button>
+        <audio id="BGMsound" src="{% static 'sound/ほのぼのな雰囲気.mp3' %}" loop></audio>
+        <div class="tooltip-balloon">
+          BGMのON/OFFを切り替えます
+        </div>
+      </div>
+
+      <!-- ゲージ表示切替ボタン -->
+      <div class="tooltip-wrapper">
+        <button id="showbtn" class="button-32">ゲージ表示</button>
+        <div class="tooltip-balloon">
+          ユーザーの感情ゲージを表示します
+        </div>
+      </div>
+
+      <!--ユーザー名-->
+      <div class="tooltip-wrapper">
+        <button id="userBtn" class="button-32">ユーザー選択</button>
+        <div class="tooltip-balloon">ユーザーを選択 / 追加 / トーン取り直し</div>
+      </div>
+
+    </div>
+  </div>
 
 
-        <div class="container">
+  <div class="container">
 
-            <!-- ★★★ 左エリア ★★★ -->
-            <div class="left-area">
-                <div class="chat-box">
+    <!-- ★★★ 左エリア ★★★ -->
+    <div class="left-area">
+      <div class="chat-box">
+      </div>
+
+      <!-- 入力バー（マイク + テキスト + 送信） -->
+      <div class="input-row">
+        <button id="voiceBtn"></button>
+
+        <input id="textInput" class="text-input" type="text" placeholder="入力してEnterで送信…" />
+
+        <button id="sendBtn" class="send-btn">送信</button>
+      </div>
+
+    </div>
+
+    <!-- ★★★ 右エリア ★★★ -->
+    <div class="right-area">
+
+      <!-- 右画面背景動画 -->
+      <video id="sceneVideo" class="scene-video" src="{% static 'video/ForestPaimonNormal.mp4' %}" autoplay muted loop
+        playsinline></video>
+
+      <!-- 感情ゲージ -->
+      <div class="user-gauge hide" id="emotionArea">
+        <div class="watashiNoKokoro">あなたの感情</div>
+        <div class="emotion-area fade">
+          <div class="emotion-wrap fade show">
+
+            <!-- 左：2本のゲージ -->
+            <div class="emotion-bars">
+
+              <!-- 覚醒度 -->
+              <div class="bar-item">
+                <div class="bar-label">覚醒度</div>
+                <div class="bar-row">
+                  <div class="bar-base left">
+                    <div class="bar-fill fill1-1" id="LeftawakeBar"></div>
+                  </div>
+                  <div class="bar-base right">
+                    <div class="bar-fill fill1-2" id="RightawakeBar"></div>
+                  </div>
                 </div>
+              </div>
 
-                <!-- 入力バー（マイク + テキスト + 送信） -->
-                <div class="input-row">
-                    <button id="voiceBtn"></button>
-
-                    <input id="textInput" class="text-input" type="text" placeholder="入力してEnterで送信…" />
-
-                    <button id="sendBtn" class="send-btn">送信</button>
+              <!-- 快楽度 -->
+              <div class="bar-item">
+                <div class="bar-label">快楽度</div>
+                <div class="bar-row">
+                  <div class="bar-base left">
+                    <div class="bar-fill fill2-1" id="LeftpleasureBar"></div>
+                  </div>
+                  <div class="bar-base right">
+                    <div class="bar-fill fill2-2" id="RightpleasureBar"></div>
+                  </div>
                 </div>
+              </div>
 
             </div>
 
-            <!-- ★★★ 右エリア ★★★ -->
-            <div class="right-area">
-
-                <!-- 右画面背景動画 -->
-                <video id="sceneVideo" class="scene-video" src="{% static 'video/ForestPaimonNormal.mp4' %}" autoplay muted loop playsinline></video>
-               
-                <!-- 起動ボタン押下時のアニメーション -->
-                <!-- <div class="start-area">
-                    playsinlineを入れないとスマホとかで強制的に全画面表示になる
-                    <video id="startvideo" width="400" muted playsinline preload="auto" style="display:block;"> 
-                        <source src="{% static 'video/startvideo.mp4' %}" type="video/mp4">
-                    </video>
-                </div> -->
-            
-                <!-- 感情ゲージ -->
-                <div class="user-gauge hide" id="emotionArea">
-                    <div class="watashiNoKokoro">あなたの感情</div>
-                    <div class="emotion-area fade">
-                        <div class="emotion-wrap fade show">
-                            <!-- 左：2本のゲージ -->
-                            <div class="emotion-bars">
-
-                                <!-- 覚醒度 -->
-                                <div class="bar-item">
-                                    <div class="bar-label">覚醒度</div>
-                                    <div class="bar-row">
-                                        <div class="bar-base left">
-                                            <div class="bar-fill fill1-1" id="LeftawakeBar"></div>
-                                        </div>
-                                        <div class="bar-base right">
-                                            <div class="bar-fill fill1-2" id="RightawakeBar"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            
-                                <!-- 快楽度 -->
-                                <div class="bar-item">
-                                    <div class="bar-label">快楽度</div>
-                                    <div class="bar-row">
-                                        <div class="bar-base left">
-                                            <div class="bar-fill fill2-1" id="LeftpleasureBar"></div>
-                                        </div>
-                                        <div class="bar-base right">
-                                            <div class="bar-fill fill2-2" id="RightpleasureBar"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>                            
-                    
-                            <!-- 右：表情エリア（境界線 + ラベル + 顔文字） -->
-                            <div class="emoji-panel">
-                                <div class="emoji-title" id="emoji-label">ふつう</div>
-                                <div class="bar-emoji" id="emoji-face">😐</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-  
-  
+            <!-- 右：表情エリア -->
+            <div class="emoji-panel">
+              <div class="emoji-title" id="emoji-label">ふつう</div>
+              <div class="bar-emoji" id="emoji-face">😐</div>
             </div>
+
+          </div>
         </div>
+      </div>
 
-        <div id="bgSelectPanel" class="bg-panel hidden">
-
-            <div id="forest" class="bg-card"
-                data-name="森のパイモン"
-                data-personality="森の元気な案内役">
-                <!-- キャラ変更画面の画像 -->
-                <img src="{% static 'img/ForestPaimon.png' %}"> 
-                <p>森のパイモン</p>
-            </div>
-        
-            <div id="ice" class="bg-card"
-                data-name="氷のパイモン"
-                data-personality="クールな氷の守護神">
-                <img src="{% static 'img/icePaimon.png' %}">
-                <p>氷のパイモン</p>
-            </div>
-
-            <div id="flame" class="bg-card"
-                data-name="炎のパイモン"
-                data-personality="情熱的な炎の化身">
-                <img src="{% static 'img/FlamePaimon.png' %}">
-                <p>炎のパイモン</p>
-            </div>
-        </div>
-
-        <!-- pythonから値を受け取る場所 -->
-        <script>
-            window.emotion = window.emotion ?? { x: 0, y: 0 };
-        </script>
-        
-        {% if awakening is not None and pleasure is not None %}
-        <script>
-            // ✅ 初期値も updateEmotion 経由で反映
-            window.updateEmotion?.({{ awakening }}, {{ pleasure }});
-        </script>
-        {% endif %}
-          
-
-        <!-- BGMを有効化するやつ一旦消してる -->
-        <!-- <audio id="seOn" src="{% static 'sound/seOnOff.mp3' %}"></audio>
-        <audio id="seOff" src="{% static 'sound/seOnOff.mp3' %}"></audio> -->
-
-        <!-- エラーモーダル -->
-
-        <!-- ユーザー選択モーダル（ここに全部詰め込み） -->
-        <div id="userModal" class="modal hidden">
-        
-            
-
-            <div class="modal-message">
-                <div class="modal-title">ユーザー選択</div>
-            <div class="user-current">
-                <div>現在のユーザー：<span id="currentUserLabel">未選択</span></div>
-                <div>トーン平均：<span id="currentUserHz">-</span></div>
-            </div>
-
-            <div class="user-list-title">登録済みユーザー</div>
-            <div id="userList" class="user-list"></div>
-
-            <hr class="user-sep" />
-
-            <div class="user-new-title">新規登録（ユーザー名＋トーン登録）</div>
-            <div class="user-row">
-                <input id="newUserName" class="tone-input" type="text" placeholder="新しいユーザー名" />
-                <button id="newUserStart" class="button-32">登録開始</button>
-                <button id="newUserStop" class="button-32" disabled>登録完了</button>
-            </div>
-
-            <div class="user-retry-title">トーン取り直し（選択中ユーザーを上書き）</div>
-            <div class="user-row">
-                <button id="retryStart" class="button-32" disabled>取り直し開始</button>
-                <button id="retryStop" class="button-32" disabled>取り直し完了</button>
-            </div>
-
-            <div id="userStatus" class="tone-status">ユーザーを選ぶか、新規登録してね</div>
-            <button id="userClose" class="button-32">閉じる</button>
-            </div>
-
-    
-  
-        </div>
+    </div>
+  </div>
 
 
-        <div id="errorModal" class="modal hidden">
-            <div class="modal-box">
-                <div class="modal-title">127.0.0.1:8000 の内容</div>
-                <div id="modalMessage" class="modal-message"></div>
-                <button id="modalOk">OK</button>
-            </div>
-        </div>
-          
-        <script src="{% static 'js/emotionPaimon.js' %}"></script>
-        <script src="{% static 'js/BGM.js' %}"></script>
-        <script src="{% static 'js/delete.js' %}"></script>
-        <script src="{% static 'js/gauge.js' %}"></script>
-        <script src="{% static 'js/themeChange.js' %}"></script>
-        <script src="{% static 'js/voice_toast.js' %}"></script>
-        <script src="{% static 'js/voice_animation.js' %}"></script>
-        <script src="{% static 'js/updateBackimg.js' %}"></script>
-        <script src="{% static 'js/modal.js' %}"></script>
-        <script src="{% static 'js/SendBtnAndText.js' %}"></script>
-        <script src="{% static 'js/user_select.js' %}"></script>
-        <script src="{% static 'js/main.js' %}"></script>
+  <!-- キャラ変更パネル -->
+  <div id="bgSelectPanel" class="bg-panel hidden">
 
-        <button id="secretLabelBtn" aria-label="labeler"></button>
+    <div id="forest" class="bg-card" data-name="森のパイモン" data-personality="森の元気な案内役">
+      <img src="{% static 'img/ForestPaimon.png' %}">
+      <p>森のパイモン</p>
+    </div>
 
-    </body>
+    <div id="ice" class="bg-card" data-name="氷のパイモン" data-personality="クールな氷の守護神">
+      <img src="{% static 'img/icePaimon.png' %}">
+      <p>氷のパイモン</p>
+    </div>
+
+    <div id="flame" class="bg-card" data-name="炎のパイモン" data-personality="情熱的な炎の化身">
+      <img src="{% static 'img/FlamePaimon.png' %}">
+      <p>炎のパイモン</p>
+    </div>
+  </div>
+
+
+  <!-- pythonから値を受け取る場所 -->
+  <script>
+    window.emotion = window.emotion ?? { x: 0, y: 0 };
+  </script>
+
+  {% if awakening is not None and pleasure is not None %}
+  <script>
+    // ✅ 初期値も updateEmotion 経由で反映
+    window.updateEmotion?.({{ awakening }}, {{ pleasure }});
+  </script>
+  {% endif %}
+
+
+  <!-- =========================
+       ユーザー選択モーダル（2ペイン）
+       既存IDを維持して user_select.js と繋がる
+  ========================= -->
+  <div id="userModal" class="modal hidden">
+    <div class="modal-box user-box">
+
+      <div class="modal-message user-ui">
+
+        <!-- ===== 左：ユーザー選択 ===== -->
+        <section id="userSelectPanel" class="user-panel">
+          <div class="modal-title center">ユーザー選択</div>
+
+          <div class="user-current card">
+            <div>現在のユーザー：<span id="currentUserLabel">未選択</span></div>
+            <div>トーン平均：<span id="currentUserHz">-</span></div>
+          </div>
+
+          <div class="user-list-title">登録済みユーザー</div>
+          <div id="userList" class="user-list card"></div>
+
+          <div class="btn-row">
+            <button id="openRegisterPanel" class="button-32">新規登録</button>
+          </div>
+
+          <div class="user-retry-title">トーン取り直し（選択中ユーザーを上書き）</div>
+          <div class="user-row">
+            <button id="retryStart" class="button-32" disabled>取り直し開始</button>
+            <button id="retryStop" class="button-32" disabled>取り直し完了</button>
+          </div>
+
+          <div id="userStatus" class="tone-status card">ユーザーを選ぶか、新規登録してね</div>
+          <button id="userClose" class="button-32">閉じる</button>
+        </section>
+
+        <!-- ===== 右：ユーザー登録 ===== -->
+        <section id="userRegisterPanel" class="user-panel hidden">
+          <div class="modal-title center">ユーザー登録</div>
+
+          <div class="form-row">
+            <div class="form-label">ユーザー名</div>
+            <input id="newUserName" class="tone-input" type="text" placeholder="新しいユーザー名" />
+          </div>
+
+          <div class="btn-col">
+            <button id="newUserStart" class="button-32">トーン録音</button>
+            <button id="newUserStop" class="button-32" disabled>登録</button>
+          </div>
+
+          <div class="btn-row">
+            <button id="backToSelectPanel" class="button-32">戻る</button>
+            <button id="registerClose" class="button-32">閉じる</button>
+          </div>
+
+          <div id="userStatus2" class="tone-status card">ユーザー名を入れて、トーン録音してね</div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- エラーモーダル -->
+  <div id="errorModal" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-title">127.0.0.1:8000 の内容</div>
+      <div id="modalMessage" class="modal-message"></div>
+      <button id="modalOk">OK</button>
+    </div>
+  </div>
+
+
+  <!-- =========================
+       2ペイン切替JS（最小）
+       user_select.js を壊さずに表示だけ切り替える
+  ========================= -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const sel = document.getElementById("userSelectPanel");
+      const reg = document.getElementById("userRegisterPanel");
+
+      const openReg = document.getElementById("openRegisterPanel");
+      const backSel = document.getElementById("backToSelectPanel");
+
+      const close1 = document.getElementById("userClose");
+      const close2 = document.getElementById("registerClose");
+      const modal = document.getElementById("userModal");
+
+      function showSelect() {
+        sel?.classList.remove("hidden");
+        reg?.classList.add("hidden");
+      }
+      function showRegister() {
+        sel?.classList.add("hidden");
+        reg?.classList.remove("hidden");
+      }
+      function closeModal() {
+        modal?.classList.add("hidden");
+        showSelect();
+      }
+
+      openReg?.addEventListener("click", showRegister);
+      backSel?.addEventListener("click", showSelect);
+      close1?.addEventListener("click", closeModal);
+      close2?.addEventListener("click", closeModal);
+
+      // 初期は選択画面
+      showSelect();
+    });
+  </script>
+
+
+  <script src="{% static 'js/emotionPaimon.js' %}"></script>
+  <script src="{% static 'js/BGM.js' %}"></script>
+  <script src="{% static 'js/delete.js' %}"></script>
+  <script src="{% static 'js/gauge.js' %}"></script>
+  <script src="{% static 'js/themeChange.js' %}"></script>
+  <script src="{% static 'js/voice_toast.js' %}"></script>
+  <script src="{% static 'js/voice_animation.js' %}"></script>
+  <script src="{% static 'js/updateBackimg.js' %}"></script>
+  <script src="{% static 'js/modal.js' %}"></script>
+  <script src="{% static 'js/SendBtnAndText.js' %}"></script>
+  <script src="{% static 'js/user_select.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+
+  <button id="secretLabelBtn" aria-label="labeler"></button>
+
+</body>
+
 </html>
