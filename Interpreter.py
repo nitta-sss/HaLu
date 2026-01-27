@@ -7,6 +7,7 @@ import sys
 import threading
 import traceback
 from Ollama_Response import reset_conversation
+from user_find import set_active_user
 
 
 
@@ -162,6 +163,30 @@ def ai_reset():
     print("🧹 会話履歴をリセットしました")
     return jsonify({"status": "ok"})
 
+
+from flask import request, jsonify
+
+@app.route("/ai/tone", methods=["POST", "OPTIONS"])
+def user_find():
+    # プリフライトは即終了（これで2回ログ問題もスッキリ）
+    if request.method == "OPTIONS":
+        return ("", 204)
+
+    print("ユーザー選択flsk")
+
+    data = request.get_json(silent=True) or {}
+    user = (data.get("activeUser") or "").strip()
+    userHz = (data.get("activeUserHz") or "").strip()
+
+    print("flsk受信JSON:", data)
+    print("flskユーザー:", user)
+    print("flskユーザーHz:", userHz)
+
+    if not user:
+        return jsonify({"status": "ng", "reason": "activeUser is empty"}), 400
+
+    set_active_user(user)
+    return jsonify({"status": "ok", "activeUser": user})
 
 
 if __name__ == "__main__":

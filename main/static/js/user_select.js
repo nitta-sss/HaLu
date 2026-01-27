@@ -164,7 +164,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setCurrentUserUI();
     closeModal();
+
+    console.log("ユーザー選択：",activeUser)
+    fetch("http://127.0.0.1:5000/ai/tone", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({activeUser: window.activeUser,
+                            activeUserHz:window.activeUserHz 
+       }),
+    });
+    
   });
 
+  
   setCurrentUserUI(); // ← 初期反映
 });
