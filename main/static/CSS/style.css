@@ -648,9 +648,8 @@ html, body {
   flex: 1;
 }
 
-/* ✅ ここ壊れてたので修正 */
+
 .emoji-panel{
-  border-left: 2px solid rgba(0,0,0,0.35);
   padding-left: 24px;
   display: flex;
   flex-direction: column;
@@ -850,3 +849,18 @@ html, body {
   width: 100%;
   margin-top: 10px;
 }
+
+/* =========================
+   userModal だけ少し下げる（最小変更）
+========================= */
+#userModal.modal{
+  padding-top: 170px;   /* ← 120pxより下げる。好みで 150〜220 */
+}
+
+/* =========================
+   userModal：下の無駄な白余白を消す
+========================= */
+#userModal .modal-message{
+  margin-bottom: 0 !important;  /* 共通 .modal-message(16px) を打ち消す */
+}
+
