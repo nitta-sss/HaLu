@@ -10,6 +10,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const LS_ACTIVE_USER = "halu_active_user";
   const LS_ACTIVE_HZ   = "halu_active_hz";
 
+  let tempUser = null;
+  let tempUserHz = null;
+
+
   // DOM
   const userBtn   = document.getElementById("userBtn");
   const userModal = document.getElementById("userModal");
@@ -92,9 +96,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function openModal() {
     userModal.classList.remove("hidden");
+
+    // 今の確定ユーザーを仮選択に入れる
+    tempUser = window.activeUser;
+    tempUserHz = window.activeUserHz;
+
     setCurrentUserUI();
     refreshUserList();
   }
+
 
   function closeModal() {
     userModal.classList.add("hidden");
@@ -113,12 +123,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
       row.addEventListener("click", () => {
         if (isRecording) return;
-        window.activeUser = u.name;
-        window.activeUserHz = u.baseline_hz;
-        saveActiveToStorage();
-        setCurrentUserUI();
-        setStatus(`選択中：${u.name}`);
+
+        // 仮選択に入れるだけ
+        tempUser = u.name;
+        tempUserHz = u.baseline_hz;
+
+        setStatus(`選択中（未確定）：${u.name}`);
       });
+
 
       userList.appendChild(row);
     });
@@ -143,7 +155,16 @@ document.addEventListener("DOMContentLoaded", () => {
   // events
   // ------------------------------
   userBtn.addEventListener("click", openModal);
-  userClose?.addEventListener("click", closeModal);
+  userClose?.addEventListener("click", () => {
+    if (tempUser) {
+      window.activeUser = tempUser;
+      window.activeUserHz = tempUserHz;
+      saveActiveToStorage();
+    }
+
+    setCurrentUserUI();
+    closeModal();
+  });
 
   setCurrentUserUI(); // ← 初期反映
 });
