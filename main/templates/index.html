@@ -9,9 +9,18 @@
 </head>
 
 <body>
+    <!-- 起動画面 -->
+    <div id="bootScreen" class="screen-layer">
+        <video id="bootVideo" src="{% static 'video/start.mp4' %}" autoplay muted loop playsinline></video>
+    </div>
 
-  <!-- ヘッダー -->
-  <div class="header">
+    <!-- 読み込み画面 -->
+    <div id="loadingScreen" class="screen-layer hidden">
+        <video id="loadingVideo" src="{% static 'video/looding.mp4' %}" muted playsinline></video>
+    </div>
+
+    <!-- ヘッダー -->
+    <div class="header">
     <!-- 左上のアイコン -->
     <div class="user-box">
       <span class="username">
@@ -42,7 +51,7 @@
       <!-- 音声切替ボタン -->
       <div class="tooltip-wrapper">
         <button id="soundbtn" class="button-32">BGMを有効化</button>
-        <audio id="BGMsound" src="{% static 'sound/ほのぼのな雰囲気.mp3' %}" loop></audio>
+        <audio id="BGMsound" src="{% static 'sound/精霊が棲まう森.mp3' %}" loop></audio>
         <div class="tooltip-balloon">
           BGMのON/OFFを切り替えます
         </div>

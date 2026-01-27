@@ -405,3 +405,67 @@ function ensureInitialMessage() {
   chatBox.scrollTop = chatBox.scrollHeight;
   return true;
 }
+
+// 起動画面、読み込み画面
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  const boot = document.getElementById("bootScreen");
+  const bootVideo = document.getElementById("bootVideo");
+
+  const loading = document.getElementById("loadingScreen");
+  const loadingVideo = document.getElementById("loadingVideo");
+
+  if (!boot || !loading || !loadingVideo) return;
+  
+  function enableAllSounds(){
+    document.querySelectorAll("audio, video").forEach(media => {
+      media.muted = false;
+    });
+  }
+
+  // 起動画面クリック
+  boot.addEventListener("click", () => {
+    // 🔊 サイト全体の音を有効化
+    enableAllSounds();
+
+    // BGM有効化
+    if(window.enableBGM) window.enableBGM();
+
+    // 起動画面停止
+    if (bootVideo) bootVideo.pause();
+    bootVideo.currentTime = 0;
+
+    // 起動画面を消す
+    boot.classList.add("hidden");
+
+    // 読み込み画面表示
+    loading.classList.remove("hidden");
+    loadingVideo.currentTime = 0;
+    loadingVideo.play();
+
+  });
+
+  // 読み込み動画終了 → フェードアウト
+  loadingVideo.addEventListener("ended", () => {
+
+    loading.classList.add("fade-out");
+
+    setTimeout(() => {
+      loading.remove();   // DOMから完全削除
+    }, 800);
+
+  });
+
+  // 読み込み画面スキップ
+  loading.addEventListener("click", ()=>{
+
+    loading.classList.add("fade-out");
+
+    setTimeout(()=>{
+      loading.remove();
+    },800);
+
+  });
+});
+
