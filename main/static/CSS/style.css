@@ -201,6 +201,19 @@ html, body {
   height: 350%;
 }
 
+/* 波アニメを無効化 */
+#userModal .button-32::before,
+#userModal .button-33::before{
+  display: none;
+}
+
+/* 代わりのシンプルホバー */
+#userModal .button-32:hover,
+#userModal .button-33:hover{
+  background-color: #2589d0;
+  color: #f5f5f5;
+}
+
 /* =========================
    MAIN LAYOUT
 ========================= */
