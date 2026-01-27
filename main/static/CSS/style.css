@@ -864,3 +864,12 @@ html, body {
   margin-bottom: 0 !important;  /* 共通 .modal-message(16px) を打ち消す */
 }
 
+/* 白カードの下パディングを少し詰める（好みで調整） */
+#userModal .modal-message.user-ui{
+  padding-bottom: 10px;   /* 18→10 くらいに */
+}
+
+#userModal .modal-box.user-box{
+  padding-bottom: 10px;   /* 14→10 くらいに */
+}
+
