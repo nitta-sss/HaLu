@@ -1,13 +1,30 @@
+print("STEP 1: importing flask...")
 from flask import Flask, jsonify, request
+print("STEP 1 OK")
+
+print("STEP 2: importing Voice_Read...")
 from Audio.Voice_Read import start_recording, stop_recording, get_result
+print("STEP 2 OK")
+
+print("STEP 3: importing YOBIDASI...")
 from YOBIDASI import run_ai, speak_ai
+print("STEP 3 OK")
+
+print("STEP 4: importing Ollama_Response...")
+from Ollama_Response import reset_conversation
+print("STEP 4 OK")
+
+print("STEP 5: importing user_find...")
+from user_find import set_active_user
+print("STEP 5 OK")
+
 import subprocess
 import os
 import sys
 import threading
 import traceback
-from Ollama_Response import reset_conversation
-from user_find import set_active_user
+
+
 
 
 
@@ -164,10 +181,11 @@ def ai_reset():
     return jsonify({"status": "ok"})
 
 
-from flask import request, jsonify
+
 
 @app.route("/ai/tone", methods=["POST", "OPTIONS"])
 def user_find():
+
     # プリフライトは即終了（これで2回ログ問題もスッキリ）
     if request.method == "OPTIONS":
         return ("", 204)
@@ -186,7 +204,7 @@ def user_find():
         return jsonify({"status": "ng", "reason": "activeUser is empty"}), 400
 
     set_active_user(user)
-    return jsonify({"status": "ok", "activeUser": user})
+    return jsonify({"status": "ok"})
 
 
 if __name__ == "__main__":

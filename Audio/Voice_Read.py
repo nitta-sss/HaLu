@@ -74,3 +74,8 @@ def stop_recording():
 def get_result():
     print("get_result呼び出し：",final_text)
     return final_text
+
+def get_result_Hz():
+    print("get_result呼び出し：",final_text)
+    y = np.concatenate(audio_buffer, axis=0).reshape(-1).astype(np.float32)
+    return final_text,y

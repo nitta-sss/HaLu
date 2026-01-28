@@ -1,9 +1,27 @@
 # YOBIDASI.py
+print("YOBIDASI STEP 1: importing data.emotion_inference...")
 from data.emotion_inference import suiron_test
+print("YOBIDASI STEP 1 OK")
+
+print("YOBIDASI STEP 2: importing Ollama_Response...")
 from Ollama_Response import llm_generate
-from Audio.Voice_Read import get_result
+print("YOBIDASI STEP 2 OK")
+
+print("YOBIDASI STEP 3: importing Audio.Voice_Read...")
+from Audio.Voice_Read import get_result_Hz
+print("YOBIDASI STEP 3 OK")
+
+print("YOBIDASI STEP 4: importing Audio.forest_paimon...")
 from Audio.forest_paimon import speak
+print("YOBIDASI STEP 4 OK")
+
+print("YOBIDASI STEP 5: importing tone...")
+from Audio.tone import analyze_tone_by_star_user
+print("YOBIDASI STEP 5 OK")
+
 import time
+print("YOBIDASI STEP 6: time imported OK")
+
 
 last_reply = None
 
@@ -18,10 +36,11 @@ def _safe_float(x, default=0.0):
 def run_ai(text=None):
     global last_reply
     print("結果受け取り")
-
+    Hz=0
     # text が無ければ音声認識結果
-    if text is None:
-        text = get_result()
+    #if text is None:
+    text,Hz = get_result_Hz()
+    print("Hz:",Hz)
 
     print("yoasobi:", text)
 
@@ -48,6 +67,15 @@ def run_ai(text=None):
 
     v = _safe_float(emo_user.get("valence", 0.0), 0.0)
     a = _safe_float(emo_user.get("arousal", 0.0), 0.0)
+
+    if Hz is not None:
+        print("感情補正入った")
+        a_Hz = analyze_tone_by_star_user(Hz)
+        print("補正結果：", a_Hz)
+        a += a_Hz
+    else:
+        print("感情補正入れなかった")
+
 
     # -------------------------
     # LLM 返答
