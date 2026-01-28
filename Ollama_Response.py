@@ -1,3 +1,4 @@
+import re
 import subprocess
 import shutil
 from collections import deque
@@ -7,8 +8,53 @@ if OLLAMA_PATH is None:
     raise RuntimeError("Ollamaが見つからないヨ")
 
 MODEL_NAME = "gemma2:2b"
-
 conversation_history = deque()
+
+# =========================
+# ここに「決めた返答」を登録
+# =========================
+
+# 完全一致で返したい返答
+FIXED_EXACT = {
+    "こういう時、どんな顔すればいいのかわからないの": "笑えばいいと思うよ",
+    "リセット": "了解！会話履歴をリセットするね。",
+    "ヘルプ": "使い方：そのまま話しかけてOK。『リセット』で履歴を消せるよ。",
+}
+
+# 含まれてたら返したい返答（部分一致）
+FIXED_CONTAINS = [
+    ("卒検", "卒検のことだね。今どこで詰まってる？（UI？感情推論？音声？）"),
+    ("エラー", "エラー文そのまま貼って！どのファイルの何行目かもあると速い！"),
+]
+
+# 正規表現で返したい返答
+FIXED_REGEX = [
+    (r"^/ping$", "pong"),
+    (r"^/mode\s+(forest|ice|fire)$", "モード変更OK！そのテーマで喋るね。"),
+]
+
+def fixed_reply(user_text: str):
+    """固定返答があれば文字列を返す。なければ None。"""
+    t = (user_text or "").strip()
+    if not t:
+        return None
+
+    # 1) 完全一致
+    if t in FIXED_EXACT:
+        return FIXED_EXACT[t]
+
+    # 2) 部分一致
+    for key, reply in FIXED_CONTAINS:
+        if key in t:
+            return reply
+
+    # 3) 正規表現
+    for pattern, reply in FIXED_REGEX:
+        if re.search(pattern, t):
+            return reply
+
+    return None
+
 
 def build_conversation_prompt(max_turns=6) -> str:
     if not conversation_history:
@@ -23,16 +69,8 @@ def build_conversation_prompt(max_turns=6) -> str:
             lines.append(f"AI: {msg['content']}")
     return "\n".join(lines)
 
+
 def llm_generate(user_text, emotion=None, timeout_sec=30):
-    """
-    emotion: suiron_test(text) の dict を想定
-      {
-        "valence": float,
-        "arousal": float,
-        "category": str,
-        "message": str
-      }
-    """
     global conversation_history
 
     if not user_text or user_text.strip() == "":
@@ -40,12 +78,28 @@ def llm_generate(user_text, emotion=None, timeout_sec=30):
 
     user_text = user_text.strip()
 
-    # 履歴にユーザー発話を追加
+    # =========================
+    # 先に「固定返答」を判定して返す
+    # =========================
+    fr = fixed_reply(user_text)
+    if fr is not None:
+        # 履歴に残したいなら残す（残したくないならこの2行消してOK）
+        conversation_history.append({"role": "user", "content": user_text})
+        conversation_history.append({"role": "assistant", "content": fr})
+
+        # リセットみたいなコマンドもここで処理できる
+        if user_text == "リセット":
+            conversation_history.clear()
+            return "conversation_historyをリセットしました!"
+
+        return fr
+
+    # 履歴にユーザー発話を追加（固定返答じゃない場合）
     conversation_history.append({"role": "user", "content": user_text})
 
     conversation_text = build_conversation_prompt()
 
-    # 感情メタ情報（今回ターン用の補助）
+    # 感情メタ情報
     emotion_block = ""
     if isinstance(emotion, dict):
         v = emotion.get("valence", None)
@@ -53,7 +107,6 @@ def llm_generate(user_text, emotion=None, timeout_sec=30):
         cat = emotion.get("category", None)
         msg = emotion.get("message", None)
 
-        # 値を見やすく（丸め）
         def fmt(x):
             try:
                 return f"{float(x):+.2f}"
@@ -71,10 +124,9 @@ def llm_generate(user_text, emotion=None, timeout_sec=30):
         )
 
     prompt = (
-        "あなたの名前はパイモンです。大事な要件を120字以内で話して。"
+        "あなたの名前はパイモンです。Haluのメンバーによって感情が吹き込まれた寄り添いAIです。前の会話を読み込んで自然な会話をしてください。大事な要件を120字以内で話して。\n"
         "=== 会話履歴 ===\n"
         f"{conversation_text}\n"
-        
         f"{emotion_block}\n"
         "AI:"
     )
@@ -101,6 +153,7 @@ def llm_generate(user_text, emotion=None, timeout_sec=30):
         conversation_history.append({"role": "assistant", "content": reply})
 
     return reply
+
 
 def reset_conversation():
     conversation_history.clear()
