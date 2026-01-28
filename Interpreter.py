@@ -194,11 +194,11 @@ def user_find():
 
     data = request.get_json(silent=True) or {}
     user = (data.get("activeUser") or "").strip()
-    userHz = (data.get("activeUserHz") or "").strip()
+    #userHz = (data.get("activeUserHz") or "").strip()
 
     print("flsk受信JSON:", data)
     print("flskユーザー:", user)
-    print("flskユーザーHz:", userHz)
+    #print("flskユーザーHz:", userHz)
 
     if not user:
         return jsonify({"status": "ng", "reason": "activeUser is empty"}), 400
