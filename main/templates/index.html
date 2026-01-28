@@ -57,13 +57,13 @@
         </div>
       </div>
 
-      <!-- ゲージ表示切替ボタン -->
+      <!-- ゲージ表示切替ボタン
       <div class="tooltip-wrapper">
         <button id="showbtn" class="button-32">ゲージ表示</button>
         <div class="tooltip-balloon">
           ユーザーの感情ゲージを表示します
         </div>
-      </div>
+      </div> -->
 
       <!--ユーザー名-->
       <div class="tooltip-wrapper">
@@ -79,30 +79,8 @@
 
     <!-- ★★★ 左エリア ★★★ -->
     <div class="left-area">
-      <div class="chat-box">
-      </div>
-
-      <!-- 入力バー（マイク + テキスト + 送信） -->
-      <div class="input-row">
-        <button id="voiceBtn"></button>
-
-        <input id="textInput" class="text-input" type="text" placeholder="入力してEnterで送信…" />
-
-        <button id="sendBtn" class="send-btn">送信</button>
-      </div>
-
-    </div>
-
-    <!-- ★★★ 右エリア ★★★ -->
-    <div class="right-area">
-
-      <!-- 右画面背景動画 -->
-      <video id="sceneVideo" class="scene-video" src="{% static 'video/ForestPaimonNormal.mp4' %}" autoplay muted loop
-        playsinline></video>
-
       <!-- 感情ゲージ -->
-      <div class="user-gauge hide" id="emotionArea">
-        <div class="watashiNoKokoro">あなたの感情</div>
+      <div class="user-gauge" id="emotionArea">
         <div class="emotion-area fade">
           <div class="emotion-wrap fade show">
 
@@ -142,11 +120,29 @@
               <div class="emoji-title" id="emoji-label">ふつう</div>
               <div class="bar-emoji" id="emoji-face">😐</div>
             </div>
-
           </div>
         </div>
       </div>
+      <div class="chat-box">
+      </div>
 
+      <!-- 入力バー（マイク + テキスト + 送信） -->
+      <div class="input-row">
+        <button id="voiceBtn"></button>
+
+        <input id="textInput" class="text-input" type="text" placeholder="入力してEnterで送信…" />
+
+        <button id="sendBtn" class="send-btn">送信</button>
+      </div>
+
+    </div>
+
+    <!-- ★★★ 右エリア ★★★ -->
+    <div class="right-area">
+
+      <!-- 右画面背景動画 -->
+      <video id="sceneVideo" class="scene-video" src="{% static 'video/ForestPaimonNormal.mp4' %}" autoplay muted loop
+        playsinline></video>
     </div>
   </div>
 

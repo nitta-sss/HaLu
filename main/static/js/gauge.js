@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const LeftpleasureBar  = document.getElementById("LeftpleasureBar");
   const RightpleasureBar  = document.getElementById("RightpleasureBar");
   const gauge        = document.getElementById("emotionArea");
-  const btn          = document.getElementById("showbtn");
+  // const btn          = document.getElementById("showbtn");
   const faceEl       = document.getElementById("emoji-face");
   const labelEl      = document.getElementById("emoji-label");
 
@@ -142,13 +142,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // 初期化
   // -------------------------
   window.updateGauge();
-  gauge.classList.add("hide");
+  // gauge.classList.add("hide");
 
-  if (btn) {
-    btn.textContent = "ゲージ表示";
-    btn.addEventListener("click", () => {
-      gauge.classList.toggle("hide");
-      btn.textContent = gauge.classList.contains("hide") ? "ゲージ表示" : "ゲージ非表示";
-    });
-  }
+  // if (btn) {
+  //   btn.textContent = "ゲージ表示";
+  //   btn.addEventListener("click", () => {
+  //     gauge.classList.toggle("hide");
+  //     btn.textContent = gauge.classList.contains("hide") ? "ゲージ表示" : "ゲージ非表示";
+  //   });
+  // }
 });
