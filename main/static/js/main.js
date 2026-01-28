@@ -1,7 +1,6 @@
 console.log("✅ main.js 読み込まれたよ");
 
 document.addEventListener("DOMContentLoaded", () => {
-  ensureInitialMessage(); //最初の文呼び出し(おいらは、、)
 
   // delete.js が先に読み込まれててもOK
   window.isResetting = window.isResetting ?? false;
@@ -400,7 +399,12 @@ function ensureInitialMessage() {
 
   const first = document.createElement("div");
   first.className = "balloon bot";
-  first.textContent = "おいらは森のパイモン。気軽に話しかけてね";
+  typeWriter(
+    first,
+    "おいらは森のパイモン。気軽に話しかけてね",
+    60,   // 速度
+    300   // 開始ディレイ
+  );
   chatBox.appendChild(first);
   chatBox.scrollTop = chatBox.scrollHeight;
   return true;
@@ -453,6 +457,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setTimeout(() => {
       loading.remove();   // DOMから完全削除
+      ensureInitialMessage(); //最初の文呼び出し(おいらは、、)
     }, 800);
 
   });
@@ -464,6 +469,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setTimeout(()=>{
       loading.remove();
+      ensureInitialMessage(); //最初の文呼び出し(おいらは、、)
     },800);
 
   });
