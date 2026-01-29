@@ -960,7 +960,7 @@ html, body {
 .character-bubble.show{
   opacity: 1;
   transform: translateX(-50%) scale(1);
-  transition: all 0.3s ease;
+  transition: all 0.5s ease;
 }
 
 /* 非表示 */
