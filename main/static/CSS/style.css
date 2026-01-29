@@ -929,8 +929,8 @@ html, body {
   position: absolute;
   top: 18%;
   left: 50%;
-  transform: translateX(-50%);
-  background: rgba(255,255,255,0.9);
+  transform: translateX(-50%) scale(0.6);
+  background: rgb(255, 255, 255);
   color: #333;
   padding: 14px 18px;
   border-radius: 18px;
@@ -939,8 +939,8 @@ html, body {
   line-height: 1.4;
   z-index: 50;
   pointer-events: none;
-  box-shadow: 0 
-  6px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  opacity: 0;
 }
 
 /* しっぽ */
@@ -957,16 +957,13 @@ html, body {
 }
 
 /* 表示 */
-.character-bubble.show{
-  opacity: 1;
-  transform: translateX(-50%) scale(1);
-  transition: all 0.5s ease;
+#characterBubble.show{
+  animation: bubbleIn 0.5s ease forwards;
 }
 
 /* 非表示 */
-.character-bubble.hide{
-  opacity: 0;
-  transform: translateX(-50%) scale(0.8);
+#characterBubble.hide{
+  animation: bubbleOut 0.5s ease forwards;
 }
 
 @keyframes bubbleIn{
