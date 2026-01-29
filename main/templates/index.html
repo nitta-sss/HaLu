@@ -26,17 +26,6 @@
       <span class="username">
         <img src="{% static 'img/HaLu Logo.png' %}" class="logo">
       </span>
-      <!-- アイコンの画像 -->
-      <div class="charaChageBtn tooltip-wrapper tooltip-left">
-        <img src="{% static 'img/ChangeIcon.png' %}" class="icon">
-        <div class="tooltip-balloon">
-          キャラクターを変更
-        </div>
-      </div>
-      <div class="character-name forest">森のパイモン</div>
-      <div class="character-personality forest">
-        森の元気な案内役
-      </div>
     </div>
 
     <div class="headerButton">
@@ -67,7 +56,7 @@
 
       <!--ユーザー名-->
       <div class="tooltip-wrapper">
-        <button id="userBtn" class="button-33">ユーザー選択</button>
+        <button id="userBtn" class="button-32">ユーザー選択</button>
         <div class="tooltip-balloon">ユーザーを選択 / 追加 / トーン取り直し</div>
       </div>
 
@@ -139,6 +128,21 @@
 
     <!-- ★★★ 右エリア ★★★ -->
     <div class="right-area">
+
+      <!-- キャラ名とキャラ説明 -->
+      <div class="character-title-box">
+        <div class="character-name forest">森のパイモン</div>
+        <div class="character-personality forest">
+          森の元気な案内役
+        </div>
+        <!-- キャラ変更アイコン -->
+        <div class="charaChageBtn tooltip-wrapper tooltip-left">
+          <img src="{% static 'img/ChangeIcon.png' %}" class="icon">
+          <div class="tooltip-balloon">
+            キャラクターを変更
+          </div>
+          </div>
+      </div>
 
       <!-- 右画面背景動画 -->
       <video id="sceneVideo" class="scene-video" src="{% static 'video/ForestPaimonNormal.mp4' %}" autoplay muted loop
