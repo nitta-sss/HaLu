@@ -16,10 +16,16 @@ THRESH_HZ = 25.0  # これ以上差があれば高い/低い判定
 # -----------------------
 # 音声 → 平均ピッチ(Hz)
 # -----------------------
-def get_mean_f0(y, sr=16000):
+def get_mean_f0(y, sr=16000,flag=0):
     print("tone.py: STEP 5 inside get_mean_f0 (before librosa)")
     import librosa
     print("tone.py: STEP 6 librosa imported")
+
+    if flag != 0:
+        print("インストール開始")
+        import numpy as np
+        import os
+        print("np,osインストール完了")
 
     fmin = librosa.note_to_hz("C2")
     fmax = librosa.note_to_hz("C7")

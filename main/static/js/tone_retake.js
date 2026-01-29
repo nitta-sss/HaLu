@@ -1,41 +1,74 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const retakeStartBtn = document.getElementById("retryStart");
-  const retakeFinishBtn = document.getElementById("retryStop");
+  const startBtn = document.getElementById("retryStart");
+  const stopBtn  = document.getElementById("retryStop");
+  const userStatusEl = document.getElementById("userStatus");
 
+  let isRecording = false;
 
-  let selectedUser = "";
+  function getSelectedUserFromStatus() {
+    if (!userStatusEl) return "";
+    const text = (userStatusEl.textContent || "").trim();
+    const m = text.match(/^選択中（未確定）：\s*(.+)\s*$/);
+    if (!m) return "";
+    return m[1].trim(); // *付きでも返す
+  }
 
-  // user_select.js が作った user-row を利用
-  document.getElementById("userList").addEventListener("click", (e) => {
-    const row = e.target.closest(".user-row");
-    if (!row) return;
-    selectedUser = row.dataset.user;
-  });
+  function refreshButtons() {
+    const selectedUser = getSelectedUserFromStatus();
+    const hasUser = !!selectedUser;
 
-  retakeStartBtn.addEventListener("click", () => {
-    if (!selectedUser) {
-      alert("ユーザーを選んでね");
+    // 録音してない時：開始だけON（ユーザー選択できてれば）
+    if (!isRecording) {
+      startBtn.disabled = !hasUser;
+      stopBtn.disabled  = true;
       return;
     }
+
+    // 録音中：完了だけON
+    startBtn.disabled = true;
+    stopBtn.disabled  = false;
+  }
+
+  // user_select.js の表示更新に追従
+  if (userStatusEl) {
+    new MutationObserver(refreshButtons)
+      .observe(userStatusEl, { childList: true, characterData: true, subtree: true });
+  }
+
+  refreshButtons();
+
+  startBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    const selectedUser = getSelectedUserFromStatus();
+    if (!selectedUser) return alert("ユーザーを選んでね");
+
     console.log("取り直し開始:", selectedUser);
-    fetch("http://127.0.0.1:5000/mic/start", { method: "POST" });
+
+    await fetch("http://127.0.0.1:5000/mic/start", { method: "POST" });
+
+    isRecording = true;
+    refreshButtons();
   });
 
-  retakeFinishBtn.addEventListener("click", async () => {
-    if (!selectedUser) {
-      alert("ユーザーを選んでね");
-      return;
-    }
+  stopBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
 
-    fetch("http://127.0.0.1:5000/mic/stop", { method: "POST" });
+    const selectedUser = getSelectedUserFromStatus();
+    if (!selectedUser) return alert("ユーザーを選んでね");
 
-    const res = await fetch("/ai/tone_retake_finish", {
+    text = await fetch("http://127.0.0.1:5000/mic/stop", { method: "POST" });
+    console.log("tone_retake.js",text)
+    const res = await fetch("http://127.0.0.1:5000/ai/tone_retake", {
       method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({user: selectedUser})
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user: selectedUser.replace("*", "").trim() })
     });
 
     const data = await res.json();
     console.log("新Hz:", data.hz);
+
+    isRecording = false;
+    refreshButtons();
   });
 });
