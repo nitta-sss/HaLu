@@ -398,23 +398,28 @@ document.addEventListener("DOMContentLoaded", () => {
   // テキスト送信
   // =========================
   async function sendText() {
-    if (guardReset("sendText")) return;
-
-    if (isBusy) return;
-    isBusy = true;
-
-    const text = (textInput?.value || "").trim();
-    if (!text) {
-      isBusy = false;
-      return;
-    }
-
-    textInput.value = "";
-    //addMessage("user", text);
-
-    isBusy = false;
-    await runAIFlow(text, { speak: true, typeSpeed: 30 });
+      if (guardReset("sendText")) return;
+    
+      if (window.isBusy) return;
+      window.isBusy = true;
+      window.updateSendBtnState?.();
+    
+      const text = textInput.value.trim();
+      if (!text) {
+        window.isBusy = false;
+        window.updateSendBtnState?.();
+        return;
+      }
+    
+      textInput.value = "";
+      window.updateSendBtnState?.();
+    
+      await runAIFlow(text, { speak: true, typeSpeed: 30 });
+    
+      window.isBusy = false;
+      window.updateSendBtnState?.();
   }
+  
 
   sendBtn?.addEventListener("click", sendText);
   textInput?.addEventListener("keydown", (e) => {
