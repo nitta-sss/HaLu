@@ -7,7 +7,7 @@ from Audio.Voice_Read import start_recording, stop_recording, get_result
 print("STEP 2 OK")
 
 print("STEP 3: importing YOBIDASI...")
-from YOBIDASI import run_ai, speak_ai
+from YOBIDASI import run_ai, speak_ai, run_ai_voice
 print("STEP 3 OK")
 
 print("STEP 4: importing Ollama_Response...")
@@ -108,6 +108,39 @@ def ai_run():
         print("❌ ai/run error:", e)
         traceback.print_exc()
         return _safe_json({"error": "AI_RUN_FAILED", "reply": ""}, 500)
+
+
+@app.route("/ai/run_voice", methods=["POST", "OPTIONS"])
+def ai_run_voice():
+    if request.method == "OPTIONS":
+        return ("", 204)
+
+    try:
+        # JSから来る: { "text": "..." }
+        data = request.get_json(silent=True) or {}
+        text = data.get("text", None)
+
+        print("🚀 ai_run called. text:", repr(text))
+
+        # run_ai(text) は dict を返す想定（あなたの既存仕様）
+        result = run_ai_voice(text)
+
+        # 保険：dictじゃない場合でも落ちないようにする
+        if not isinstance(result, dict):
+            result = {"reply": str(result)}
+
+        # 必須キーが無いとJSが困る場合があるので補完（任意）
+        result.setdefault("reply", "")
+        result.setdefault("valence", None)
+        result.setdefault("arousal", None)
+
+        return _safe_json(result)
+
+    except Exception as e:
+        print("❌ ai/run error:", e)
+        traceback.print_exc()
+        return _safe_json({"error": "AI_RUN_FAILED", "reply": ""}, 500)
+
 
 @app.route("/ai/speak", methods=["POST", "OPTIONS"])
 def ai_speak():

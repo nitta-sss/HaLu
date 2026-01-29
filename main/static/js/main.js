@@ -162,6 +162,107 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   
 
+//マイク入力専用
+  async function runAIFlow_voice(userText, { speak = true, typeSpeed = 25 } = {}) {
+    window.lastUserText = userText;
+    if (guardReset("runAIFlow")) return;
+  
+    console.log("runai入った", userText);
+    if (!userText) return;
+  
+    if (isBusy) return;
+    isBusy = true;
+  
+    const timerLabel = "AI_FLOW";
+  
+    try {
+      console.time(timerLabel);
+  
+      // 先にユーザー表示（体感も自然）
+      addMessage("user", userText);
+  
+      // ---------- /ai/run ----------
+      let runRes;
+      try {
+        runRes = await fetch("http://127.0.0.1:5000/ai/run_voice", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: userText }),
+        });
+      } catch (e) {
+        addMessage("bot", "⚠ Flask（Python側）を起動してください");
+        console.error("AI server fetch failed:", e);
+        return;
+      }
+  
+      if (!runRes.ok) {
+        const t = await runRes.text().catch(() => "");
+        addMessage("bot", `⚠ AI処理でエラーが発生しました（/ai/run ${runRes.status}）。Flask側のログを確認してください`);
+        console.error("/ai/run failed:", runRes.status, t);
+        return;
+      }
+  
+      const data = await runRes.json();
+  
+      // resetが途中で入った場合も止める
+      if (guardReset("runAIFlow after /ai/run")) return;
+  
+      // 感情反映
+      applyEmotionFromAI(data);
+  
+      console.log("AI結果:", data);
+  
+      if (data?.error) {
+        addMessage("bot", `⚠ ${data.error}`);
+        return;
+      }
+  
+      // bot吹き出し
+      const botDiv = addMessageElement("bot");
+      if (!botDiv) return;
+
+      //AI感情動かし
+      window.updateFaceByEmotion(data);
+      
+      // ---------- /ai/speak ----------
+      if (speak) {
+        const themeId = window.currentThemeId ?? "forest";
+  
+        try {
+          const speakRes = await fetch("http://127.0.0.1:5000/ai/speak", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ themeId }), // ★Flask側の期待キー
+          });
+  
+          if (!speakRes.ok) {
+            addMessage("bot", "⚠ 読み上げに失敗しました。VOICEVOXを起動しているか確認してね");
+            console.warn("/ai/speak not ok:", speakRes.status);
+          }
+        } catch (e) {
+          addMessage("bot", "⚠ 読み上げサーバーに接続できません。VOICEVOXを起動してください");
+          console.error("speak fetch failed:", e);
+        }
+      }
+  
+      // reset中ならタイプも中止
+      if (guardReset("typeWriter")) return;
+  
+      // タイプ演出
+      const START_DELAY = 1500;
+      const TYPE_SPEED = typeSpeed ?? 120;
+      await typeWriter(botDiv, String(data.reply ?? ""), TYPE_SPEED, START_DELAY);
+  
+    } catch (err) {
+      console.error(err);
+      addMessage("bot", "⚠ エラーが発生しました（コンソール確認して）");
+    } finally {
+      // タイマーは必ず閉じる（Timer already exists 防止）
+      try { console.timeEnd(timerLabel); } catch (_) {}
+      isBusy = false;
+    }
+  }
+
   // =========================
   // マイクエラー文
   // =========================
@@ -274,7 +375,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // ここで忙しさ解除してAIへ
       isBusy = false;
-      await runAIFlow(text, { speak: true, typeSpeed: 25 });
+      await runAIFlow_voice(text, { speak: true, typeSpeed: 25 });
 
     } catch (err) {
       console.error(err);
