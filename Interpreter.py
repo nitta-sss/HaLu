@@ -18,6 +18,8 @@ print("STEP 5: importing user_find...")
 from user_find import set_active_user
 print("STEP 5 OK")
 
+from Audio.tone_retake import reload_Hz
+
 import subprocess
 import os
 import sys
@@ -237,6 +239,27 @@ def user_find():
         return jsonify({"status": "ng", "reason": "activeUser is empty"}), 400
 
     set_active_user(user)
+    return jsonify({"status": "ok"})
+
+
+@app.route("/ai/tone_retake", methods=["POST", "OPTIONS"])
+def Hz_reload():
+
+    # プリフライトは即終了（これで2回ログ問題もスッキリ）
+    if request.method == "OPTIONS":
+        return ("", 204)
+
+    data = request.get_json(silent=True) or {}
+    user = (data.get("user") or "").strip()
+    #userHz = (data.get("activeUserHz") or "").strip()
+
+    print("flsk受信JSON:", data)
+    print("flskユーザー:", user)
+    
+    reload_Hz(user)
+
+    if not user:
+        return jsonify({"status": "ng", "reason": "activeUser is empty"}), 400
     return jsonify({"status": "ok"})
 
 
