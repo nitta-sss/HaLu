@@ -564,7 +564,7 @@ html, body {
 
 .tooltip-left .tooltip-balloon {
   top: 100%;
-  right: -150%;
+  right: -230%;
   transform: translatex(20%);
 }
 
@@ -892,3 +892,30 @@ html, body {
   padding-bottom: 10px;   /* 14→10 くらいに */
 }
 
+.character-title-box{
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
+
+  display: flex;
+  gap: 18px;
+  align-items: center;
+
+  background: rgb(255, 255, 255);
+  padding: 10px 20px;
+  border-radius: 999px;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  backdrop-filter: blur(6px);
+}
+
+.character-title-box .character-name{
+  font-size: 30px;
+  width: auto;
+}
+
+.character-title-box .character-personality{
+  font-size: 25px;
+  width: auto;
+}
