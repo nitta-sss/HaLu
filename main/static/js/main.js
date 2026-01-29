@@ -108,19 +108,19 @@ document.addEventListener("DOMContentLoaded", () => {
       // 感情反映
       applyEmotionFromAI(data);
   
+      
       console.log("AI結果:", data);
-  
-      if (data?.error) {
-        addMessage("bot", `⚠ ${data.error}`);
-        return;
-      }
-  
+
       // bot吹き出し
       const botDiv = addMessageElement("bot");
       if (!botDiv) return;
 
       //AI感情動かし
       window.updateFaceByEmotion(data);
+
+      // ←★ここ
+      console.log("吹き出し呼ぶ直前");
+      window.showCharacterBubble?.(data.reply);
       
       // ---------- /ai/speak ----------
       if (speak) {
@@ -500,12 +500,16 @@ function ensureInitialMessage() {
 
   const first = document.createElement("div");
   first.className = "balloon bot";
-  typeWriter(
-    first,
-    "おいらは森のパイモン。気軽に話しかけてね",
-    60,   // 速度
-    300   // 開始ディレイ
-  );
+  const text = "おいらは森のパイモン。気軽に話しかけてね";
+
+  // チャット欄
+  typeWriter(first, text, 60, 300);
+
+  // ⭐ キャラ上の吹き出し
+  if (window.showCharacterBubble) {
+    window.showCharacterBubble(text, 10000);
+  }
+  
   chatBox.appendChild(first);
   chatBox.scrollTop = chatBox.scrollHeight;
   return true;
@@ -574,5 +578,25 @@ document.addEventListener("DOMContentLoaded", () => {
     },800);
 
   });
-});
 
+  const charBubble = document.getElementById("characterBubble");
+  const charBubbleText = document.getElementById("characterBubbleText");
+
+  window.showCharacterBubble = function(text, time = 10000){
+    if(!charBubble || !charBubbleText){
+      console.warn("❌ characterBubble not found");
+      return;
+    }
+  
+    charBubbleText.textContent = text;
+  
+    charBubble.classList.remove("hide");
+    charBubble.classList.add("show");
+  
+    setTimeout(() => {
+      charBubble.classList.remove("show");
+      charBubble.classList.add("hide");
+    }, time);
+  };
+
+});

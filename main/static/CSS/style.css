@@ -338,6 +338,7 @@ html, body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  z-index: 1; 
 }
 
 /* =========================
@@ -918,4 +919,78 @@ html, body {
 .character-title-box .character-personality{
   font-size: 25px;
   width: auto;
+}
+
+/* =========================
+   キャラ吹き出し
+========================= */
+
+#characterBubble{
+  position: absolute;
+  top: 18%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255,255,255,0.9);
+  color: #333;
+  padding: 14px 18px;
+  border-radius: 18px;
+  max-width: 260px;
+  font-size: 14px;
+  line-height: 1.4;
+  z-index: 50;
+  pointer-events: none;
+  box-shadow: 0 
+  6px 20px rgba(0,0,0,0.15);
+}
+
+/* しっぽ */
+#characterBubble::after{
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 40px;
+  width: 0;
+  height: 0;
+  border-width: 12px 10px 0 10px;
+  border-style: solid;
+  border-color: rgba(255,255,255,0.9) transparent transparent transparent;
+}
+
+/* 表示 */
+.character-bubble.show{
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+  transition: all 0.3s ease;
+}
+
+/* 非表示 */
+.character-bubble.hide{
+  opacity: 0;
+  transform: translateX(-50%) scale(0.8);
+}
+
+@keyframes bubbleIn{
+  0%{
+    opacity: 0;
+    transform: translateX(-50%) scale(0.6);
+  }
+  70%{
+    opacity: 1;
+    transform: translateX(-50%) scale(1.05);
+  }
+  100%{
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+@keyframes bubbleOut{
+  0%{
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+  100%{
+    opacity: 0;
+    transform: translateX(-50%) scale(0.6);
+  }
 }
