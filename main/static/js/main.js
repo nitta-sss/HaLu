@@ -566,10 +566,12 @@ document.addEventListener("DOMContentLoaded", () => {
     loading.classList.add("fade-out");
 
     setTimeout(() => {
-      loading.remove();   // DOMから完全削除
-      ensureInitialMessage(); //最初の文呼び出し(おいらは、、)
+      loading.remove();// DOMから完全削除
+      requestAnimationFrame(() => {
+        ensureInitialMessage();//最初の文呼び出し
+      });
     }, 800);
-
+   
   });
 
   // 読み込み画面スキップ
@@ -578,8 +580,10 @@ document.addEventListener("DOMContentLoaded", () => {
     loading.classList.add("fade-out");
 
     setTimeout(()=>{
-      loading.remove();
-      ensureInitialMessage(); //最初の文呼び出し(おいらは、、)
+      loading.remove();// DOMから完全削除
+      requestAnimationFrame(() => {
+        ensureInitialMessage();//最初の文呼び出し
+      });
     },800);
 
   });
