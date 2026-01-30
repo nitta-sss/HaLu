@@ -593,15 +593,23 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
   
-    charBubbleText.textContent = text;
-  
+    // 表示準備
+    charBubbleText.textContent = "";
     charBubble.classList.remove("hide");
     charBubble.classList.add("show");
   
-    setTimeout(() => {
-      charBubble.classList.remove("show");
-      charBubble.classList.add("hide");
-    }, time);
+    clearTimeout(window.charBubbleTimer);
+  
+    // タイプ表示（Promiseを使う）
+    typeWriter(charBubbleText, String(text ?? ""), 70, 0)
+      .then(() => {
+        // ← 全部表示されてから10秒後に消す
+        window.charBubbleTimer = setTimeout(() => {
+          charBubble.classList.remove("show");
+          charBubble.classList.add("hide");
+        }, time);
+      });
   };
+  
 
 });
