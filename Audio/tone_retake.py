@@ -3,7 +3,6 @@ from Audio.tone import get_mean_f0
 
 def reload_Hz(user):
     USERS_FILE="users.txt"
-    print("クリーン前",user)
     user_clean = user.replace("*", "")
     print("選択ユーザー",user_clean)
     y = get_result_Hz()
