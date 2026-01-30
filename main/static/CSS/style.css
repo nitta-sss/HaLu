@@ -964,7 +964,7 @@ html, body {
 #characterBubble{
   position: absolute;
   top: 18%;
-  left: 50%;
+  left: 70%;
   transform: translateX(-50%) scale(0.6);
   background: rgb(255, 255, 255);
   color: #333;

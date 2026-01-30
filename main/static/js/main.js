@@ -505,7 +505,7 @@ function ensureInitialMessage() {
 
   const first = document.createElement("div");
   first.className = "balloon bot";
-  const text = "おいらは森のパイモン。気軽に話しかけてね";
+  const text = "タバコだけ一緒に行く？の電話";
 
   // チャット欄
   typeWriter(first, text, 60, 300);
@@ -566,12 +566,10 @@ document.addEventListener("DOMContentLoaded", () => {
     loading.classList.add("fade-out");
 
     setTimeout(() => {
-      loading.remove();// DOMから完全削除
-      requestAnimationFrame(() => {
-        ensureInitialMessage();//最初の文呼び出し
-      });
+      loading.remove();   // DOMから完全削除
+      ensureInitialMessage(); //最初の文呼び出し(おいらは、、)
     }, 800);
-   
+
   });
 
   // 読み込み画面スキップ
@@ -580,10 +578,8 @@ document.addEventListener("DOMContentLoaded", () => {
     loading.classList.add("fade-out");
 
     setTimeout(()=>{
-      loading.remove();// DOMから完全削除
-      requestAnimationFrame(() => {
-        ensureInitialMessage();//最初の文呼び出し
-      });
+      loading.remove();
+      ensureInitialMessage(); //最初の文呼び出し(おいらは、、)
     },800);
 
   });
@@ -597,15 +593,23 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
   
-    charBubbleText.textContent = text;
-  
+    // 表示準備
+    charBubbleText.textContent = "";
     charBubble.classList.remove("hide");
     charBubble.classList.add("show");
   
-    setTimeout(() => {
-      charBubble.classList.remove("show");
-      charBubble.classList.add("hide");
-    }, time);
+    clearTimeout(window.charBubbleTimer);
+  
+    // タイプ表示（Promiseを使う）
+    typeWriter(charBubbleText, String(text ?? ""), 70, 0)
+      .then(() => {
+        // ← 全部表示されてから10秒後に消す
+        window.charBubbleTimer = setTimeout(() => {
+          charBubble.classList.remove("show");
+          charBubble.classList.add("hide");
+        }, time);
+      });
   };
+  
 
 });
