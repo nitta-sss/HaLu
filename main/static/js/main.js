@@ -505,7 +505,7 @@ function ensureInitialMessage() {
 
   const first = document.createElement("div");
   first.className = "balloon bot";
-  const text = "タバコだけ一緒に行く？の電話";
+  const text = "おいらは森のパイモン。気軽に話しかけてね";
 
   // チャット欄
   typeWriter(first, text, 60, 300);
@@ -597,23 +597,15 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
   
-    // 表示準備
-    charBubbleText.textContent = "";
+    charBubbleText.textContent = text;
+  
     charBubble.classList.remove("hide");
     charBubble.classList.add("show");
   
-    clearTimeout(window.charBubbleTimer);
-  
-    // タイプ表示（Promiseを使う）
-    typeWriter(charBubbleText, String(text ?? ""), 70, 0)
-      .then(() => {
-        // ← 全部表示されてから10秒後に消す
-        window.charBubbleTimer = setTimeout(() => {
-          charBubble.classList.remove("show");
-          charBubble.classList.add("hide");
-        }, time);
-      });
+    setTimeout(() => {
+      charBubble.classList.remove("show");
+      charBubble.classList.add("hide");
+    }, time);
   };
-  
 
 });
