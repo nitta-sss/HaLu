@@ -11,10 +11,10 @@ console.log("emotionPaimon.js loaded");
   const sceneMap = {
     forest: {
       normal: "/static/video/ForestPaimonNormal.mp4",
-      happy:  "/static/video/a.webm",
-      angry:  "/static/video/b.webm",
-      sad:    "/static/video/c.webm",
-      fun:    "/static/video/d.webm",
+      happy:  "/static/video/ForestPaimonHappy.mp4",
+      angry:  "/static/video/ForestPaimonAngry.mp4",
+      sad:    "/static/video/ForestPaimonSad.mp4",
+      fun:    "/static/video/ForestPaimonNormal.mp4",
     },
   
     ice: {
@@ -70,8 +70,8 @@ console.log("emotionPaimon.js loaded");
       return "normal";
     }
 
-    if (cx >= 0 && cy >= 0) return "happy"; // 喜
-    if (cx >= 0 && cy <= 0) return "angry"; // 怒
+    if (cx >  0 && cy >  0) return "happy"; // 喜
+    if (cx >  0 && cy <  0) return "angry"; // 怒
     if (cx <  0 && cy <  0) return "sad";   // 哀
     return "fun";                           // 楽
   }
