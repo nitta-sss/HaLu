@@ -505,7 +505,7 @@ function ensureInitialMessage() {
 
   const first = document.createElement("div");
   first.className = "balloon bot";
-  const text = "おいらは森のパイモン。気軽に話しかけてね";
+  const text = "タバコだけ一緒に行く？の電話";
 
   // チャット欄
   typeWriter(first, text, 60, 300);
