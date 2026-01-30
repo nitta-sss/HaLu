@@ -232,8 +232,14 @@
             <input id="newUserName" class="tone-input" type="text" placeholder="新しいユーザー名" />
           </div>
 
-          <div class="btn-col">
+          <!-- ★ ここを「録音開始 / 録音完了」の2ボタンにする -->
+          <div class="user-row">
             <button id="newUserStart" class="button-32">トーン録音</button>
+            <button id="newUserRecDone" class="button-32" disabled>トーン録音完了</button>
+          </div>
+
+          <!-- ★ 登録（確定）は別ボタンとして残す -->
+          <div class="btn-row">
             <button id="newUserStop" class="button-32" disabled>登録</button>
           </div>
 
@@ -311,6 +317,7 @@
   <script src="{% static 'js/modal.js' %}"></script>
   <script src="{% static 'js/SendBtnAndText.js' %}"></script>
   <script src="{% static 'js/user_select.js' %}"></script>
+  <script src="{% static 'js/tone_retake.js' %}"></script>
   <script src="{% static 'js/main.js' %}"></script>
 
   <button id="secretLabelBtn" aria-label="labeler"></button>
