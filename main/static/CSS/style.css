@@ -827,6 +827,12 @@ html, body {
   min-height: 360px;
 }
 
+#userModal .modal-box{
+  width: 520px;      /* 好きな値に変更OK */
+  max-width: 90%;
+}
+
+
 #userModal .user-panel.hidden{ display:none; }
 
 #userModal .modal-title.center{
@@ -911,7 +917,8 @@ html, body {
    userModal だけ少し下げる（最小変更）
 ========================= */
 #userModal.modal{
-  padding-top: 170px;   /* ← 120pxより下げる。好みで 150〜220 */
+  align-items: center;
+  padding-top: 0;
 }
 
 /* =========================
