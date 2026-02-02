@@ -964,66 +964,71 @@ html, body {
 #characterBubble{
   position: absolute;
   top: 18%;
-  left: 30%;
-  transform: translateX(-50%) scale(0.6);
-  background: rgb(255, 255, 255);
+  left: 20%;
+  transform: translateX(-30%);
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.bubble-body{
+  position: relative;
+  background: rgb(255,255,255);
   color: #333;
   padding: 14px 18px;
   border-radius: 18px;
   max-width: 400px;
   font-size: 14px;
   line-height: 1.4;
-  z-index: 50;
-  pointer-events: none;
   box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-  opacity: 0;
+  transform-origin: bottom center;
 }
 
 /* しっぽ */
-#characterBubble::after{
-  content: "";
-  position: absolute;
-  bottom: -10px;
-  left: 40px;
-  width: 0;
-  height: 0;
-  border-width: 12px 10px 0 10px;
+.bubble-body::after{
+  content:"";
+  position:absolute;
+  bottom:-10px;
+  left:80%;
+  transform: translateX(-50%);
+  width:0;
+  height:0;
+  border-width:12px 10px 0 10px;
   border-style: solid;
   border-color: rgba(255,255,255,0.9) transparent transparent transparent;
 }
 
+
 /* 表示 */
 #characterBubble.show{
-  animation: bubbleIn 0.5s ease forwards;
+  animation: bubbleIn 0.5s ease-out forwards;
 }
 
 /* 非表示 */
-#characterBubble.hide{
-  animation: bubbleOut 0.5s ease forwards;
+#characterBubble.hide {
+  display: block !important;
+  animation: bubbleOut 0.5s ease-in forwards;
 }
 
-@keyframes bubbleIn{
-  0%{
+@keyframes bubbleIn {
+  from {
     opacity: 0;
-    transform: translateX(-50%) scale(0.6);
+    transform: translateX(40px) scale(0.6);
   }
-  70%{
+  to {
     opacity: 1;
-    transform: translateX(-50%) scale(1.05);
-  }
-  100%{
-    opacity: 1;
-    transform: translateX(-50%) scale(1);
+    transform: translateX(0) scale(1);
   }
 }
 
-@keyframes bubbleOut{
-  0%{
+@keyframes bubbleOut {
+  from {
     opacity: 1;
-    transform: translateX(-50%) scale(1);
+    transform: translateX(0) scale(1);
   }
-  100%{
+  to {
     opacity: 0;
-    transform: translateX(-50%) scale(0.6);
+    transform: translateX(40px) scale(0.6);
   }
 }
+
