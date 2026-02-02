@@ -1,29 +1,50 @@
 # YOBIDASI.py
-print("YOBIDASI STEP 1: importing data.emotion_inference...")
 from data.emotion_inference import suiron_test
-print("YOBIDASI STEP 1 OK")
-
-print("YOBIDASI STEP 2: importing Ollama_Response...")
 from Ollama_Response import llm_generate
-print("YOBIDASI STEP 2 OK")
-
-print("YOBIDASI STEP 3: importing Audio.Voice_Read...")
 from Audio.Voice_Read import get_result_Hz
-print("YOBIDASI STEP 3 OK")
-
-print("YOBIDASI STEP 4: importing Audio.forest_paimon...")
 from Audio.forest_paimon import speak
-print("YOBIDASI STEP 4 OK")
-
-print("YOBIDASI STEP 5: importing tone...")
 from Audio.tone import analyze_tone_by_star_user
-print("YOBIDASI STEP 5 OK")
-
 import time
-print("YOBIDASI STEP 6: time imported OK")
-
+import re
 
 last_reply = None
+
+def _split_japanese(text: str, max_len: int = 60):
+    """
+    句点/改行などで分割しつつ、max_len 目安でチャンク化
+    """
+    text = (text or "").strip()
+    if not text:
+        return []
+
+    parts = re.split(r'(?<=[。！？\n])', text)
+
+    chunks = []
+    buf = ""
+    for p in parts:
+        p = p.strip()
+        if not p:
+            continue
+
+        # 1文が長すぎるときは強制カット（保険）
+        while len(p) > max_len:
+            head, p = p[:max_len], p[max_len:]
+            if buf:
+                chunks.append(buf)
+                buf = ""
+            chunks.append(head)
+
+        if len(buf) + len(p) <= max_len:
+            buf += p
+        else:
+            if buf:
+                chunks.append(buf)
+            buf = p
+
+    if buf:
+        chunks.append(buf)
+
+    return chunks
 
 
 def _safe_float(x, default=0.0):
@@ -173,17 +194,34 @@ def run_ai_voice(text=None):
 
 def speak_ai(type):
     global last_reply
+    text = (last_reply or "").strip()
+
     print("発話開始")
-    print(last_reply)
+    print("全文:", text)
     print("🔊 speak called:", time.time())
 
-    # last_reply が None のとき落ちないように保険
-    speak(last_reply or "", type)
+    # 先頭は短く（発話開始を速く）
+    first_chunks = _split_japanese(text, max_len=55)
+    if not first_chunks:
+        return {"status":"ok"}
+
+    first = first_chunks[0]
+    rest_text = text[len(first):].lstrip()
+
+    rest_chunks = _split_japanese(rest_text, max_len=120)
+
+    chunks = [first] + rest_chunks
+    print(f"🧩 chunks={len(chunks)}")
+
+    for i, ch in enumerate(chunks, 1):
+        print(f"🔈 chunk {i}/{len(chunks)}:", ch)
+        speak(ch, type)
 
     print("🔊 speak finished:", time.time())
     print("発話終了")
+    return {"status":"ok"}
 
-    return {"status": "ok"}
+
 
 
 print("✅ YOBIDASI END (module finished)")

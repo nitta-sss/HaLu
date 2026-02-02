@@ -59,26 +59,26 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================
-  // AIフロー
+  // AIフロー（テキスト）
   // =========================
   async function runAIFlow(userText, { speak = true, typeSpeed = 25 } = {}) {
     window.lastUserText = userText;
     if (guardReset("runAIFlow")) return;
-  
+
     console.log("runai入った", userText);
     if (!userText) return;
-  
+
     if (isBusy) return;
     isBusy = true;
-  
+
     const timerLabel = "AI_FLOW";
-  
+
     try {
       console.time(timerLabel);
-  
-      // 先にユーザー表示（体感も自然）
+
+      // 先にユーザー表示
       addMessage("user", userText);
-  
+
       // ---------- /ai/run ----------
       let runRes;
       try {
@@ -92,96 +92,95 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("AI server fetch failed:", e);
         return;
       }
-  
+
       if (!runRes.ok) {
         const t = await runRes.text().catch(() => "");
         addMessage("bot", `⚠ AI処理でエラーが発生しました（/ai/run ${runRes.status}）。Flask側のログを確認してください`);
         console.error("/ai/run failed:", runRes.status, t);
         return;
       }
-  
+
       const data = await runRes.json();
-  
+
       // resetが途中で入った場合も止める
       if (guardReset("runAIFlow after /ai/run")) return;
-  
+
       // 感情反映
       applyEmotionFromAI(data);
-  
-      
       console.log("AI結果:", data);
 
+      // bot吹き出し（チャット欄）
       // bot吹き出し
       const botDiv = addMessageElement("bot");
       if (!botDiv) return;
 
-      //AI感情動かし
-      window.updateFaceByEmotion(data);
+      // AI感情動かし
+      window.updateFaceByEmotion?.(data);
 
-      // ←★ここ
-      console.log("吹き出し呼ぶ直前");
-      window.showCharacterBubble?.(data.reply);
-      
-      // ---------- /ai/speak ----------
+      // reset中なら中止
+      if (guardReset("typeWriter")) return;
+
+      const START_DELAY = 0;
+      const TYPE_SPEED  = typeSpeed ?? 30;
+
+      // ✅ ①まず音声を叩く（待たない）
       if (speak) {
         const themeId = window.currentThemeId ?? "forest";
-  
-        try {
-          const speakRes = await fetch("http://127.0.0.1:5000/ai/speak", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ themeId }), // ★Flask側の期待キー
-          });
-  
-          if (!speakRes.ok) {
-            addMessage("bot", "⚠ 読み上げに失敗しました。VOICEVOXを起動しているか確認してね");
-            console.warn("/ai/speak not ok:", speakRes.status);
-          }
-        } catch (e) {
-          addMessage("bot", "⚠ 読み上げサーバーに接続できません。VOICEVOXを起動してください");
+        console.log("🟥 SPEAK FETCH", performance.now());
+
+        fetch("http://127.0.0.1:5000/ai/speak", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ themeId }),
+        }).then((res) => {
+          if (!res.ok) console.warn("/ai/speak not ok:", res.status);
+        }).catch((e) => {
           console.error("speak fetch failed:", e);
-        }
+        });
       }
-  
-      // reset中ならタイプも中止
-      if (guardReset("typeWriter")) return;
-  
-      // タイプ演出
-      const START_DELAY = 1500;
-      const TYPE_SPEED = typeSpeed ?? 120;
+
+      // ✅ ②キャラ吹き出しとチャットタイプを同時に開始
+      console.log("🟦 TYPE START", performance.now());
+
+      if (typeof window.showCharacterBubble === "function") {
+        window.showCharacterBubble(String(data.reply ?? ""), 10000, TYPE_SPEED, START_DELAY);
+      }
+
+      // チャット欄のタイプ（これだけは表示完了を待つ）
       await typeWriter(botDiv, String(data.reply ?? ""), TYPE_SPEED, START_DELAY);
-  
+
+
     } catch (err) {
       console.error(err);
       addMessage("bot", "⚠ エラーが発生しました（コンソール確認して）");
     } finally {
-      // タイマーは必ず閉じる（Timer already exists 防止）
       try { console.timeEnd(timerLabel); } catch (_) {}
       isBusy = false;
     }
   }
-  
 
-//マイク入力専用
+  // =========================
+  // AIフロー（マイク入力専用）
+  // =========================
   async function runAIFlow_voice(userText, { speak = true, typeSpeed = 25 } = {}) {
     window.lastUserText = userText;
-    if (guardReset("runAIFlow")) return;
-  
+    if (guardReset("runAIFlow_voice")) return;
+
     console.log("runai入った", userText);
     if (!userText) return;
-  
+
     if (isBusy) return;
     isBusy = true;
-  
+
     const timerLabel = "AI_FLOW";
-  
+
     try {
       console.time(timerLabel);
-  
-      // 先にユーザー表示（体感も自然）
+
+      // 先にユーザー表示
       addMessage("user", userText);
-  
-      // ---------- /ai/run ----------
+
+      // ---------- /ai/run_voice ----------
       let runRes;
       try {
         runRes = await fetch("http://127.0.0.1:5000/ai/run_voice", {
@@ -194,74 +193,79 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("AI server fetch failed:", e);
         return;
       }
-  
+
       if (!runRes.ok) {
         const t = await runRes.text().catch(() => "");
-        addMessage("bot", `⚠ AI処理でエラーが発生しました（/ai/run ${runRes.status}）。Flask側のログを確認してください`);
-        console.error("/ai/run failed:", runRes.status, t);
+        addMessage("bot", `⚠ AI処理でエラーが発生しました（/ai/run_voice ${runRes.status}）。Flask側のログを確認してください`);
+        console.error("/ai/run_voice failed:", runRes.status, t);
         return;
       }
-  
+
       const data = await runRes.json();
-  
+
       // resetが途中で入った場合も止める
-      if (guardReset("runAIFlow after /ai/run")) return;
-  
+      if (guardReset("runAIFlow_voice after /ai/run_voice")) return;
+
       // 感情反映
       applyEmotionFromAI(data);
-  
       console.log("AI結果:", data);
-  
+
       if (data?.error) {
         addMessage("bot", `⚠ ${data.error}`);
         return;
       }
-  
+
       // bot吹き出し
       const botDiv = addMessageElement("bot");
       if (!botDiv) return;
 
-      //AI感情動かし
-      window.updateFaceByEmotion(data);
-      
-      // ---------- /ai/speak ----------
-      if (speak) {
-        const themeId = window.currentThemeId ?? "forest";
-  
-        try {
-          const speakRes = await fetch("http://127.0.0.1:5000/ai/speak", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ themeId }), // ★Flask側の期待キー
-          });
-  
-          if (!speakRes.ok) {
-            addMessage("bot", "⚠ 読み上げに失敗しました。VOICEVOXを起動しているか確認してね");
-            console.warn("/ai/speak not ok:", speakRes.status);
-          }
-        } catch (e) {
-          addMessage("bot", "⚠ 読み上げサーバーに接続できません。VOICEVOXを起動してください");
-          console.error("speak fetch failed:", e);
-        }
-      }
-  
+      // AI感情の顔更新
+      window.updateFaceByEmotion?.(data);
+
       // reset中ならタイプも中止
       if (guardReset("typeWriter")) return;
-  
-      // タイプ演出
-      const START_DELAY = 1500;
-      const TYPE_SPEED = typeSpeed ?? 120;
+
+      // =========================
+      // ★完全同時スタート（キャラ吹き出し・チャット・音声）
+      // =========================
+      const START_DELAY = 0;
+      const TYPE_SPEED  = typeSpeed ?? 30;
+
+      // ✅ ①まず音声を叩く（待たない）
+      if (speak) {
+        const themeId = window.currentThemeId ?? "forest";
+        console.log("🟥 SPEAK FETCH (voice)", performance.now());
+
+        fetch("http://127.0.0.1:5000/ai/speak", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ themeId }),
+        }).then((res) => {
+          if (!res.ok) console.warn("/ai/speak not ok:", res.status);
+        }).catch((e) => {
+          console.error("speak fetch failed:", e);
+        });
+      }
+
+      // ✅ ②キャラ吹き出しとチャットタイプを同時に開始
+      console.log("🟦 TYPE START (voice)", performance.now());
+
+      if (typeof window.showCharacterBubble === "function") {
+        window.showCharacterBubble(String(data.reply ?? ""), 10000, TYPE_SPEED, START_DELAY);
+      }
+
+      // チャット欄のタイプ（これだけは表示完了を待つ）
       await typeWriter(botDiv, String(data.reply ?? ""), TYPE_SPEED, START_DELAY);
-  
-    } catch (err) {
-      console.error(err);
-      addMessage("bot", "⚠ エラーが発生しました（コンソール確認して）");
-    } finally {
-      // タイマーは必ず閉じる（Timer already exists 防止）
-      try { console.timeEnd(timerLabel); } catch (_) {}
-      isBusy = false;
-    }
-  }
+
+
+          } catch (err) {
+            console.error(err);
+            addMessage("bot", "⚠ エラーが発生しました（コンソール確認して）");
+          } finally {
+            try { console.timeEnd(timerLabel); } catch (_) {}
+            isBusy = false;
+          }
+        }
 
   // =========================
   // マイクエラー文
@@ -368,10 +372,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // reset中なら表示＆AI呼び出しもしない
       if (guardReset("after mic stop")) return;
-
-      //addMessage("user", text);
 
       // ここで忙しさ解除してAIへ
       isBusy = false;
@@ -398,28 +399,27 @@ document.addEventListener("DOMContentLoaded", () => {
   // テキスト送信
   // =========================
   async function sendText() {
-      if (guardReset("sendText")) return;
-    
-      if (window.isBusy) return;
-      window.isBusy = true;
-      window.updateSendBtnState?.();
-    
-      const text = textInput.value.trim();
-      if (!text) {
-        window.isBusy = false;
-        window.updateSendBtnState?.();
-        return;
-      }
-    
-      textInput.value = "";
-      window.updateSendBtnState?.();
-    
-      await runAIFlow(text, { speak: true, typeSpeed: 30 });
-    
+    if (guardReset("sendText")) return;
+
+    if (window.isBusy) return;
+    window.isBusy = true;
+    window.updateSendBtnState?.();
+
+    const text = textInput.value.trim();
+    if (!text) {
       window.isBusy = false;
       window.updateSendBtnState?.();
+      return;
+    }
+
+    textInput.value = "";
+    window.updateSendBtnState?.();
+
+    await runAIFlow(text, { speak: true, typeSpeed: 30 });
+
+    window.isBusy = false;
+    window.updateSendBtnState?.();
   }
-  
 
   sendBtn?.addEventListener("click", sendText);
   textInput?.addEventListener("keydown", (e) => {
@@ -433,7 +433,7 @@ document.addEventListener("DOMContentLoaded", () => {
       headers: {"Content-Type":"application/json"},
       body: JSON.stringify({ text })
     });
-  });  
+  });
 
 });
 
@@ -499,7 +499,6 @@ function ensureInitialMessage() {
   const chatBox = document.querySelector(".chat-box");
   if (!chatBox) return false;
 
-  // 既に吹き出しがあるなら何もしない（＝二重防止）
   const hasBalloon = chatBox.querySelector(".balloon");
   if (hasBalloon) return false;
 
@@ -510,18 +509,17 @@ function ensureInitialMessage() {
   // チャット欄
   typeWriter(first, text, 60, 300);
 
-  // ⭐ キャラ上の吹き出し
+  // ⭐ キャラ上の吹き出し（初回も同じ速度にしたいなら msPerChar を揃える）
   if (window.showCharacterBubble) {
-    window.showCharacterBubble(text, 10000);
+    window.showCharacterBubble(text, 10000, 60, 300);
   }
-  
+
   chatBox.appendChild(first);
   chatBox.scrollTop = chatBox.scrollHeight;
   return true;
 }
 
 // 起動画面、読み込み画面
-
 document.addEventListener("DOMContentLoaded", () => {
 
   const boot = document.getElementById("bootScreen");
@@ -531,94 +529,75 @@ document.addEventListener("DOMContentLoaded", () => {
   const loadingVideo = document.getElementById("loadingVideo");
 
   if (!boot || !loading || !loadingVideo) return;
-  
+
   function enableAllSounds(){
     document.querySelectorAll("audio, video").forEach(media => {
       media.muted = false;
     });
   }
 
-  // 起動画面クリック
   boot.addEventListener("click", () => {
-    // 🔊 サイト全体の音を有効化
     enableAllSounds();
-
-    // BGM有効化
     if(window.enableBGM) window.enableBGM();
 
-    // 起動画面停止
     if (bootVideo) bootVideo.pause();
     bootVideo.currentTime = 0;
 
-    // 起動画面を消す
     boot.classList.add("hidden");
 
-    // 読み込み画面表示
     loading.classList.remove("hidden");
     loadingVideo.currentTime = 0;
     loadingVideo.play();
-
   });
 
-  // 読み込み動画終了 → フェードアウト
   loadingVideo.addEventListener("ended", () => {
-
     loading.classList.add("fade-out");
 
     setTimeout(() => {
-      loading.remove();   // DOMから完全削除
-      ensureInitialMessage(); //最初の文呼び出し(おいらは、、)
+      loading.remove();
+      ensureInitialMessage();
     }, 800);
-
   });
 
-  // 読み込み画面スキップ
   loading.addEventListener("click", ()=>{
-
     loading.classList.add("fade-out");
 
     setTimeout(()=>{
       loading.remove();
-      ensureInitialMessage(); //最初の文呼び出し(おいらは、、)
+      ensureInitialMessage();
     },800);
-
   });
 
   const charBubble = document.getElementById("characterBubble");
   const charBubbleText = document.getElementById("characterBubbleText");
 
-  window.showCharacterBubble = function(text, time = 10000){
+  // ★速度・遅延を外から揃えられる完成版
+  window.showCharacterBubble = function(text, time = 10000, msPerChar = 30, startDelay = 0){
     if(!charBubble || !charBubbleText){
       console.warn("❌ characterBubble not found");
       return;
     }
-  
+
     clearTimeout(window.charBubbleTimer);
-  
+
     charBubbleText.textContent = "";
 
     charBubble.classList.remove("hide");
     charBubble.classList.remove("show");
-  
+
     void charBubble.offsetWidth;
-  
+
     // 表示
     charBubble.classList.add("show");
-  
-    // タイプ表示
-    typeWriter(charBubbleText, String(text ?? ""), 70, 0)
+
+    // タイプ表示（チャットと同じ速度・同じ遅延にできる）
+    typeWriter(charBubbleText, String(text ?? ""), msPerChar, startDelay)
       .then(() => {
-  
         window.charBubbleTimer = setTimeout(() => {
-  
           charBubble.classList.remove("show");
-  
           void charBubble.offsetWidth;
-  
           charBubble.classList.add("hide");
-  
         }, time);
-  
       });
   };
 });
