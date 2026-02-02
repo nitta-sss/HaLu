@@ -593,20 +593,32 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
   
-    // 表示準備
-    charBubbleText.textContent = ""; 
-    charBubble.classList.remove("hide"); 
-    charBubble.classList.add("show");
-
     clearTimeout(window.charBubbleTimer);
+  
+    charBubbleText.textContent = "";
 
-    // タイプ表示（Promiseを使う）
-    typeWriter(charBubbleText, String(text ?? ""), 70, 0) .then(() => {
-      // ← 全部表示されてから10秒後に消す
-      window.charBubbleTimer = setTimeout(() => {
-        charBubble.classList.remove("show");
-        charBubble.classList.add("hide");
-      }, time);
-    });
+    charBubble.classList.remove("hide");
+    charBubble.classList.remove("show");
+  
+    void charBubble.offsetWidth;
+  
+    // 表示
+    charBubble.classList.add("show");
+  
+    // タイプ表示
+    typeWriter(charBubbleText, String(text ?? ""), 70, 0)
+      .then(() => {
+  
+        window.charBubbleTimer = setTimeout(() => {
+  
+          charBubble.classList.remove("show");
+  
+          void charBubble.offsetWidth;
+  
+          charBubble.classList.add("hide");
+  
+        }, time);
+  
+      });
   };
 });
