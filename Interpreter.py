@@ -1,5 +1,5 @@
 print("STEP 1: importing flask...")
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request,Response
 print("STEP 1 OK")
 
 print("STEP 2: importing Voice_Read...")
@@ -26,13 +26,39 @@ import os
 import sys
 import threading
 import traceback
-
+import queue
 
 
 
 
 app = Flask(__name__)
 CURRENT_THEME_ID = "forest"
+
+
+log_queue = queue.Queue()
+#print文をjsに送る
+class TeeStdout:
+    def __init__(self, original):
+        self.original = original
+
+    def write(self, msg):
+        # VSCode / ターミナルに表示
+        self.original.write(msg)
+        self.original.flush()
+
+        # UI用に横取り
+        if msg.strip():
+            log_queue.put(msg.strip())
+
+    def flush(self):
+        self.original.flush()
+
+# stdout / stderr 両方ミラー
+sys.stdout = TeeStdout(sys.stdout)
+sys.stderr = TeeStdout(sys.stderr)
+
+
+
 # ===== CORS 強制許可 =====
 @app.after_request
 def add_cors_headers(response):
@@ -281,6 +307,16 @@ def registration():
         return jsonify({"status": "ng", "reason": "activeUser is empty"}), 400
     return jsonify({"status": "ok"})
 
+
+@app.route("/logs")
+def stream_logs():
+    def generate():
+        while True:
+            msg = log_queue.get()
+            yield f"data: {msg}\n\n"
+
+    return Response(generate(), mimetype="text/event-stream")
+    
 
 if __name__ == "__main__":
     print("🚀 Flask 起動中...")
