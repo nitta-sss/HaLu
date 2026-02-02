@@ -8,6 +8,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const regBtn   = document.getElementById("newUserStop");    // 「登録」
   const statusEl = document.getElementById("userStatus2");
 
+  const overlayEl = document.getElementById("processingOverlay");
+
+  function showProcessing() {
+    if (overlayEl) overlayEl.style.display = "flex";
+  }
+
+  function hideProcessing() {
+    if (overlayEl) overlayEl.style.display = "none";
+  }
+
   let isRecording = false;
   let gotHz = null;
 
@@ -84,27 +94,38 @@ document.addEventListener("DOMContentLoaded", () => {
   // ---- 録音完了（停止→Hz取得）----
   if (doneBtn) {
     doneBtn.addEventListener("click", async (e) => {
-      e.preventDefault();
+  e.preventDefault();
 
-      const name = getNewUserName();
-      if (!name) return alert("ユーザー名を入れてね");
+  const name = getNewUserName();
+  if (!name) return alert("ユーザー名を入れてね");
 
-      console.log("新規登録 録音完了:", name);
+  console.log("新規登録 録音完了:", name);
 
-      // 録音停止
-      await fetch("http://127.0.0.1:5000/mic/stop", { method: "POST" });
+  // 録音停止
+  await fetch("http://127.0.0.1:5000/mic/stop", { method: "POST" });
 
-      // ここで「録音結果からHzを算出して返す」APIを叩く
-      // 取り直しに合わせた書き方
-      await fetch("http://127.0.0.1:5000/ai/tone_newuser", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user: name })
-      });
+  // ★ 処理中ウィンドウ表示
+  showProcessing();
+  setStatus("🧠 トーン解析中…");
 
-      isRecording = false;
-      refreshButtons();
+  try {
+    await fetch("http://127.0.0.1:5000/ai/tone_newuser", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user: name })
     });
+
+    setStatus("✅ トーン登録完了");
+  } catch (err) {
+    console.error(err);
+    setStatus("❌ 処理に失敗しました");
+  } finally {
+    // ★ 処理終了 → ウィンドウを消す
+    hideProcessing();
+    isRecording = false;
+    refreshButtons();
+  }
+});
   }
 
     // 次の登録に備えて初期化
