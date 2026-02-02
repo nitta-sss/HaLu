@@ -214,13 +214,13 @@ html, body {
 
 .balloon.user {
   align-self: flex-end;
-  border-bottom-right-radius: 4px;
+  border-bottom-right-radius: 6px;
   background-color: #9EEA6A;
 }
 
 .balloon.bot {
   align-self: flex-start;
-  border-bottom-left-radius: 4px;
+  border-bottom-left-radius: 6px;
   background-color: #abe1fa;
 }
 
