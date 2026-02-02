@@ -1051,7 +1051,7 @@ html, body {
 .modal-backBtn{
   border: none;
   background: none;
-  padding: 0;
+  padding: 17px 15px;
   cursor: pointer;
   display: flex;
   align-items: center;
