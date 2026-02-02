@@ -11,6 +11,7 @@ html, body {
   height: 100%;
   font-family: "Segoe UI", "Meiryo", sans-serif;
   background: #f5f5f5;
+  zoom: 1.0;
 }
 
 /* 起動画面、読み込み画面 */
