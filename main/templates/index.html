@@ -190,24 +190,32 @@
   {% endif %}
 
 
-  <!-- =========================
-       ユーザー選択モーダル（2ペイン）
-       既存IDを維持して user_select.js と繋がる
-  ========================= -->
+
+  <!-- ユーザー選択モーダル -->
+  <!-- 既存IDを維持して user_select.js と繋がる -->
+
   <div id="userModal" class="modal hidden">
     <div class="modal-box user-box">
-
       <div class="modal-message user-ui">
+
 
         <!-- ===== 左：ユーザー選択 ===== -->
         <section id="userSelectPanel" class="user-panel">
-          <div class="modal-title center">ユーザー選択</div>
 
-          <div id="userStatus" class="tone-status card">ユーザーを選ぶか、新規登録してね</div>
+          <div class="modal-title center">
+            ユーザー選択
+          </div>
+
+          <div id="userStatus" class="tone-status card">
+            ユーザーを選ぶか、新規登録してね
+          </div>
 
           <div class="user-current card">
-            <div>現在のユーザー：<span id="currentUserLabel">未選択</span></div>
-            <div>トーン平均：<span id="currentUserHz">-</span></div>
+            <div>
+              現在のユーザー：<span id="currentUserLabel">未選択</span>
+            </div>
+            <!-- できなかったからいらない -->
+            <!-- <div>トーン平均：<span id="currentUserHz">-</span></div>  -->
           </div>
 
           <div class="user-list-title">登録済みユーザー</div>
@@ -217,24 +225,29 @@
             <button id="openRegisterPanel" class="button-32">新規登録</button>
           </div>
 
-          <div class="user-retry-title">トーン取り直し（選択中ユーザーを上書き）</div>
-          <div class="user-row">
-            <button id="retryStart" class="button-32" disabled>取り直し開始</button>
-            <button id="retryStop" class="button-32" disabled>取り直し完了</button>
+          <div class="btn-row">
+            <button id="openRetakePanel" class="button-32">取り直し</button>
+            <!-- <button id="retryStart" class="button-32" disabled>取り直し開始</button>
+            <button id="retryStop" class="button-32" disabled>取り直し完了</button> -->
           </div>
 
-          <button id="userClose" class="button-32">閉じる</button>
+          <div class="btn-row">
+            <button id="userClose" class="button-32">閉じる</button>
+          </div>
+
         </section>
 
+        
         <!-- ===== 右：ユーザー登録 ===== -->
-        <section id="userRegisterPanel" class="user-panel hidden">
+        <section id="userRegisterPanel" class="user-panel hidden"> 
+
           <div class="modal-header">
             <button id="backToSelectPanel" class="modal-backBtn">
               <span class="modal-backBtn-Design"></span>
             </button>
             <div class="modal-title center">ユーザー登録</div>
           </div>
-          
+
           <div id="userStatus2" class="tone-status card">ユーザー名を入れて、トーン録音してね</div>
 
           <div class="form-row">
@@ -243,18 +256,15 @@
           </div>
 
           <!-- ★ ここを「録音開始 / 録音完了」の2ボタンにする -->
-          <div class="user-row">
+          <!-- <div class="user-row">
             <button id="newUserStart" class="button-32">トーン録音</button>
             <button id="newUserRecDone" class="button-32" disabled>トーン録音完了</button>
-          </div>
+          </div> -->
 
-          <!-- ★ 登録（確定）は別ボタンとして残す -->
           <div class="btn-row">
-            <button id="backToSelectPanel" class="button-32">戻る</button>
+            <button id="registerClose" class="button-32">閉じる</button>
           </div>
-
         </section>
-
       </div>
     </div>
   </div>
