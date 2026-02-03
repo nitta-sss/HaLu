@@ -268,7 +268,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
   // =========================
-  // マイクエラー文
+  // マイクエラー文：音声入力
   // =========================
   function getMicErrorMessage(err) {
     if (!err) return "マイクが使用できません";
@@ -386,6 +386,136 @@ document.addEventListener("DOMContentLoaded", () => {
 
       micStream?.getTracks().forEach(t => t.stop());
       micStream = null;
+
+      const jp = getMicErrorMessage(err);
+      showErrorModal(jp);
+
+    } finally {
+      isBusy = false;
+    }
+  });
+
+  // =========================
+  // マイクエラー文：トーン登録
+  // =========================
+  function getMicErrorMessage(err) {
+    if (!err) return "マイクが使用できません";
+    switch (err.name) {
+      case "NotFoundError":    return "マイクが接続されていません";
+      case "NotAllowedError":  return "マイクの使用が許可されていません";
+      case "NotReadableError": return "マイクが他のアプリで使用中です";
+    }
+    if (err.message?.includes("Failed to fetch")) {
+      return "音声サーバーに接続できません（サーバーが起動していない可能性があります）";
+    }
+    switch (err.message) {
+      case "MIC_START_FAILED": return "マイクを開始できませんでした";
+      case "MIC_STOP_FAILED":  return "マイクを停止できませんでした";
+    }
+    return "マイクが使用できません";
+  }
+
+  // =========================
+  // トーン登録
+  // =========================
+  let toneRegister_Stream = null;
+  let toneRegister_uiStarted = false;
+
+  async function checkMicrophone() {
+    if (!navigator.mediaDevices?.getUserMedia) throw new Error("BROWSER_NOT_SUPPORTED");
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    stream.getTracks().forEach(t => t.stop());
+  }
+
+  function watchMicDisconnect(stream) {
+    const track = stream.getAudioTracks()[0];
+    if (!track) return;
+
+    track.onended = async () => {
+      console.warn("🎤 マイクが抜かれました");
+
+      if (!isRecording) return;
+
+      isRecording = false;
+
+      if (uiStarted) {
+        window.voiceUI.stop();
+        uiStarted = false;
+      }
+
+      toneRegister_Stream?.getTracks().forEach(t => t.stop());
+      toneRegister_Stream = null;
+
+      try {
+        await fetch("http://127.0.0.1:5000/mic/stop", { method: "POST" });
+      } catch (e) {
+        console.error("mic/stop failed after disconnect", e);
+      }
+
+      showToast("マイクが取り外されました");
+    };
+  }
+
+  const tonevoiceBtn = document.getElementById("tonevoiceBtn");
+
+  tonevoiceBtn.addEventListener("click", async () => {
+    if (guardReset("tonevoiceBtn click")) return;
+    if (isBusy) return;
+    isBusy = true;
+
+    try {
+      // START
+      if (!isRecording) {
+        await checkMicrophone();
+
+        toneRegister_Stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        watchMicDisconnect(toneRegister_Stream);
+
+        const res = await fetch("http://127.0.0.1:5000/mic/start", { method: "POST" });
+        if (!res.ok) throw new Error("MIC_START_FAILED");
+
+        window.voiceUI.start();
+        uiStarted = true;
+        isRecording = true;
+        return;
+      }
+
+      // STOP
+      isRecording = false;
+
+      if (uiStarted) {
+        window.voiceUI.stop();
+        uiStarted = false;
+      }
+
+      toneRegister_Stream?.getTracks().forEach(t => t.stop());
+      toneRegister_Stream = null;
+
+      const stopRes = await fetch("http://127.0.0.1:5000/mic/stop", { method: "POST" });
+      if (!stopRes.ok) throw new Error("MIC_STOP_FAILED");
+
+      const data = await stopRes.json();
+      const text = (data.text || "").trim();
+
+      if (!text) {
+        addMessage("bot", "⚠ 音声テキストが取得できませんでした");
+        return;
+      }
+
+      if (guardReset("after mic stop")) return;
+
+      // ここで忙しさ解除してAIへ
+      isBusy = false;
+      await runAIFlow_voice(text, { speak: true, typeSpeed: 25 });
+
+    } catch (err) {
+      console.error(err);
+
+      isRecording = false;
+      uiStarted = false;
+
+      toneRegister_Stream?.getTracks().forEach(t => t.stop());
+      toneRegister_Stream = null;
 
       const jp = getMicErrorMessage(err);
       showErrorModal(jp);
