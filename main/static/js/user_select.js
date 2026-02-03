@@ -1,3 +1,4 @@
+console.log("✅ user_select.js loaded");
 // static/js/user_select.js
 // ==============================
 // ユーザー選択・保持 完成版
@@ -32,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const retryStart = document.getElementById("retryStart");
   const retryStop  = document.getElementById("retryStop");
 
-  if (!userBtn || !userModal) return;
+  // if (!userBtn || !userModal) return;
 
   // グローバル状態
   window.activeUser   = null;
@@ -114,27 +115,44 @@ document.addEventListener("DOMContentLoaded", () => {
   // list
   // ------------------------------
   function renderUserList(users) {
+    console.log("activeUser =", window.activeUser);
     userList.innerHTML = "";
 
     users.forEach(u => {
       const row = document.createElement("div");
       row.className = "user-item";
-      row.textContent = `${u.name}  ${u.baseline_hz.toFixed(1)} Hz`;
 
-      row.addEventListener("click", () => {
-        if (isRecording) return;
+      const nameSpan = document.createElement("span");
+      nameSpan.textContent = `${u.name}  ${u.baseline_hz.toFixed(1)} Hz`;
+      row.appendChild(nameSpan);
 
-        // 仮選択に入れるだけ
-        tempUser = u.name;
-        tempUserHz = u.baseline_hz;
+      // ===== 使用中ユーザー =====
+      if (u.name === window.activeUser) {
+        const using = document.createElement("span");
+        using.textContent = "使用中";
+        using.className = "using-label";
+        row.appendChild(using);
+      } else {
+        // ===== 変更ボタン =====
+        const changeBtn = document.createElement("button");
+        changeBtn.textContent = "変更";
+        changeBtn.className = "button-32"; 
+        changeBtn.addEventListener("click", () => {
+          // ボタンクリック時に activeUser を変更
+          window.activeUser = u.name;
+          window.activeUserHz = u.baseline_hz; // Hz も合わせる
 
-        setStatus(`選択中（未確定）：${u.name}`);
-      });
-
+          setCurrentUserUI(); // ← これを追加！ヘッダー表示を更新
+          renderUserList(users); // 再描画して「使用中」と変更ボタンを更新
+        });
+        row.appendChild(changeBtn);
+      }
 
       userList.appendChild(row);
     });
   }
+
+
 
   async function refreshUserList() {
     const res = await fetch("/users.txt");
@@ -163,6 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     setCurrentUserUI();
+    refreshUserList(); 
     closeModal();
 
     console.log("ユーザー選択：",activeUser)
