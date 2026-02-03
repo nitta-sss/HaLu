@@ -265,6 +265,9 @@ html, body {
   color: #f5f5f5;
 }
 
+
+/* 音声入力ボタン */
+/* 会話 */
 #voiceBtn {
   width: 80px;
   height: 80px;
@@ -278,17 +281,16 @@ html, body {
   box-shadow: 0 4px 10px #333333;
   transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
-
 #voiceBtn:hover{
   transform: translateY(-0.1875em);
 }
-
 /* 録音中 */
 #voiceBtn.recording {
   background-color: #3088e0;
   animation: recordPulse 0.6s infinite alternate ease-in-out;
 }
 
+/* トーン登録 */
 #tonevoiceBtn{
   width: 80px;
   height: 80px;
@@ -310,6 +312,30 @@ html, body {
   background-color: #3088e0;
   animation: recordPulse 0.6s infinite alternate ease-in-out;
 }
+
+/* トーン取り直し */
+#toneretake_voiceBtn{
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+
+  background: url("/static/img/dan.png") center / contain no-repeat;
+
+  background-color: #ff4b4b;
+  box-shadow: 0 4px 10px #333333;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+#toneretake_voiceBtn:hover{
+  transform: translateY(-0.1875em);
+}
+/* 録音中 */
+#toneretake_voiceBtn.recording {
+  background-color: #3088e0;
+  animation: recordPulse 0.6s infinite alternate ease-in-out;
+}
+
 
 @keyframes recordPulse {
   from {
