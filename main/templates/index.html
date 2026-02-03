@@ -206,9 +206,9 @@
             ユーザー選択
           </div>
 
-          <!-- <div id="userStatus" class="tone-status card">
+          <div id="userStatus" class="tone-status card">
             ユーザーを選ぶか、新規登録してね
-          </div> -->
+          </div>
 
           <div class="user-current card">
             <div>
@@ -255,9 +255,10 @@
             <input id="newUserName" class="tone-input" type="text" placeholder="新しいユーザー名" />
           </div>
 
-          <div class="btn-row">
+          <!-- ID重複のため一旦コメントアウト -->
+          <!-- <div class="btn-row">
             <button id="voiceBtn"></button>
-          </div>
+          </div> -->
 
           <!-- ★ ここを「録音開始 / 録音完了」の2ボタンにする -->
           <!-- <div class="user-row">
@@ -279,15 +280,18 @@
           </div>
           <div class="modal-title center">トーン変更</div>
 
-          <div id="userStatus2" class="tone-status card">トーンを取り直してね</div>
+          <div id="userStatus3" class="tone-status card">トーンを取り直してね</div>
 
           <div class="form-row">
-            <div class="form-label">ユーザー名</div>
-            <input id="selectUserName" class="tone-input" type="text" placeholder="新しいユーザー名" />
-          </div>
-          <div class="btn-row">
+            <div class="form-label">対象ユーザー</div>
+            <div id="retakeUserLabel" class="tone-status card">
+              未選択
+            </div>
+          </div> 
+          <!-- ID重複のため一旦コメントアウト -->
+          <!-- <div class="btn-row">
             <button id="voiceBtn"></button>
-          </div>
+          </div> -->
           <div class="btn-row">
             <button id="retakeDoneBtn" class="button-32">変更完了</button>
           </div>
@@ -372,6 +376,14 @@
         sel.classList.add("hidden");
         reg.classList.add("hidden");
         ret.classList.remove("hidden");
+
+        const label = document.getElementById("retakeUserLabel");
+
+        if(window.activeUser){
+          label.textContent = window.activeUser;
+        }else{
+          label.textContent = "未選択";
+        }
       }
 
       function showComplete(){
