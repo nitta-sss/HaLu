@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const startBtn = document.getElementById("newUserStart");
   const doneBtn  = document.getElementById("newUserRecDone"); // ★追加ボタン
   const regBtn   = document.getElementById("newUserStop");    // 「登録」
-  const statusEl = document.getElementById("userStatus2");
+  // const statusEl = document.getElementById("userStatus2");
 
   const overlayEl = document.getElementById("processingOverlay");
 
@@ -26,9 +26,9 @@ document.addEventListener("DOMContentLoaded", () => {
     return (nameEl.value || "").trim();
   }
 
-  function setStatus(msg) {
-    if (statusEl) statusEl.textContent = msg;
-  }
+  // function setStatus(msg) {
+  //   if (statusEl) statusEl.textContent = msg;
+  // }
 
   function refreshButtons() {
     const name = getNewUserName();
@@ -63,10 +63,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // status変更に追従（あなたのパターンに合わせて一応付ける）
-  if (statusEl) {
-    new MutationObserver(refreshButtons)
-      .observe(statusEl, { childList: true, characterData: true, subtree: true });
-  }
+  // if (statusEl) {
+  //   new MutationObserver(refreshButtons)
+  //     .observe(statusEl, { childList: true, characterData: true, subtree: true });
+  // }
 
   // 初期状態
   gotHz = null;
