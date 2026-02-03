@@ -174,25 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ------------------------------
   userBtn.addEventListener("click", openModal);
   userClose?.addEventListener("click", () => {
-    if (tempUser) {
-      window.activeUser = tempUser;
-      window.activeUserHz = tempUserHz;
-      saveActiveToStorage();
-    }
-
-    setCurrentUserUI();
-    refreshUserList(); 
-    closeModal();
-
-    console.log("ユーザー選択：",activeUser)
-    fetch("http://127.0.0.1:5000/ai/tone", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({activeUser: window.activeUser,
-                            activeUserHz:window.activeUserHz 
-       }),
-    });
-    
+    closeModal(); // モーダルを閉じるだけ
   });
 
   
