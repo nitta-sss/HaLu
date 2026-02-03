@@ -96,15 +96,16 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function openModal() {
-    userModal.classList.remove("hidden");
+  userModal.classList.remove("hidden");
 
-    // 今の確定ユーザーを仮選択に入れる
-    tempUser = window.activeUser;
-    tempUserHz = window.activeUserHz;
+  // 仮選択は未選択にする
+  tempUser = null;
+  tempUserHz = null;
 
-    setCurrentUserUI();
-    refreshUserList();
-  }
+  setCurrentUserUI();
+  refreshUserList();
+}
+
 
 
   function closeModal() {
@@ -177,6 +178,4 @@ document.addEventListener("DOMContentLoaded", () => {
     closeModal(); // モーダルを閉じるだけ
   });
 
-  
-  setCurrentUserUI(); // ← 初期反映
 });
