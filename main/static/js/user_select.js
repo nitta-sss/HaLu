@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
       row.className = "user-item";
 
       const nameSpan = document.createElement("span");
-      nameSpan.textContent = `${u.name}  ${u.baseline_hz.toFixed(1)} Hz`;
+      nameSpan.textContent = `${u.name} : ${u.baseline_hz.toFixed(1)} Hz`;
       row.appendChild(nameSpan);
 
       // ===== 使用中ユーザー =====
