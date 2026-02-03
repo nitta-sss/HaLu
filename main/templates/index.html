@@ -264,6 +264,9 @@
             <button id="newUserStart" class="button-32">トーン録音</button>
             <button id="newUserRecDone" class="button-32" disabled>トーン録音完了</button>
           </div> -->
+          <div class="btn-row">
+            <button id="registerDoneBtn" class="button-32">登録完了</button>
+          </div>
         </section>
 
         <!-- 取り直し -->
@@ -276,11 +279,32 @@
           </div>
           <div class="modal-title center">トーン変更</div>
 
+          <div id="userStatus2" class="tone-status card">トーンを取り直してね</div>
+
           <div class="form-row">
             <div class="form-label">ユーザー名</div>
             <input id="selectUserName" class="tone-input" type="text" placeholder="新しいユーザー名" />
           </div>
+          <div class="btn-row">
+            <button id="voiceBtn"></button>
+          </div>
+          <div class="btn-row">
+            <button id="retakeDoneBtn" class="button-32">変更完了</button>
+          </div>
+        </section>
 
+        <!-- 完了画面 -->
+        <section id="completePanel" class="user-panel hidden">
+          <div class="modal-header">
+            <button class="backToSelect modal-backBtn">
+              <span class="modal-backBtn-Design"></span>
+            </button>
+          </div>
+          <div class="modal-title center">完了しました！</div>
+
+          <div class="card center">
+            保存されました。
+          </div>
         </section>
 
       </div>
@@ -310,6 +334,7 @@
       const sel = document.getElementById("userSelectPanel");
       const reg = document.getElementById("userRegisterPanel");
       const ret = document.getElementById("retakePanel");
+      const comp = document.getElementById("completePanel");
     
       const openReg    = document.getElementById("openRegisterPanel");
       const openRetake = document.getElementById("openRetakePanel");
@@ -317,7 +342,15 @@
       const backSelBtns = document.querySelectorAll(".backToSelect");
       backSelBtns.forEach(btn=>{
         btn.addEventListener("click", showSelect);
-      }); 
+      });
+
+      //完了へ遷移する
+      const registerDoneBtn = document.getElementById("registerDoneBtn");
+      const retakeDoneBtn   = document.getElementById("retakeDoneBtn");
+
+      registerDoneBtn.addEventListener("click", showComplete);
+      retakeDoneBtn.addEventListener("click", showComplete);
+
 
       const closeBtn = document.getElementById("userClose");
       const modal = document.getElementById("userModal");
@@ -326,8 +359,9 @@
         sel.classList.remove("hidden");
         reg.classList.add("hidden");
         ret.classList.add("hidden");
+        comp.classList.add("hidden");
       }
-    
+          
       function showRegister(){
         sel.classList.add("hidden");
         reg.classList.remove("hidden");
@@ -338,6 +372,13 @@
         sel.classList.add("hidden");
         reg.classList.add("hidden");
         ret.classList.remove("hidden");
+      }
+
+      function showComplete(){
+        sel.classList.add("hidden");
+        reg.classList.add("hidden");
+        ret.classList.add("hidden");
+        comp.classList.remove("hidden");
       }
     
       function closeModal(){
