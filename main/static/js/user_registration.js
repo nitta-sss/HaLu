@@ -3,9 +3,7 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   const nameEl = document.getElementById("newUserName");
-  const startBtn = document.getElementById("newUserStart");
-  const doneBtn  = document.getElementById("newUserRecDone"); // ★追加ボタン
-  const regBtn   = document.getElementById("newUserStop");    // 「登録」
+  const toneBtn   = document.getElementById("tonevoiceBtn");
   // const statusEl = document.getElementById("userStatus2");
 
   const overlayEl = document.getElementById("processingOverlay");
@@ -31,27 +29,22 @@ document.addEventListener("DOMContentLoaded", () => {
   // }
 
   function refreshButtons() {
-    const name = getNewUserName();
-    const hasName = !!name;
-    const hasHz = (gotHz !== null);
+    if (!toneBtn) return;
 
-    // 録音してない時：開始だけON（名前あれば）
+    const hasName = !!getNewUserName();
+
+    // 録音していない状態
     if (!isRecording) {
-      startBtn.disabled = !hasName;
-      if (doneBtn) doneBtn.disabled = true;
-
-      // Hz取れてなければ登録不可
-      regBtn.disabled = !hasHz;
+      toneBtn.disabled = !hasName;
+      toneBtn.textContent = "トーン録音開始";
       return;
     }
 
-    // 録音中：完了だけON
-    startBtn.disabled = true;
-    if (doneBtn) doneBtn.disabled = false;
-
-    // 録音中は登録できない
-    regBtn.disabled = true;
+    // 録音中
+    toneBtn.disabled = false;
+    toneBtn.textContent = "トーン録音停止";
   }
+
 
   // 入力に追従してボタン切り替え
   if (nameEl) {
@@ -62,71 +55,63 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // status変更に追従（あなたのパターンに合わせて一応付ける）
-  // if (statusEl) {
-  //   new MutationObserver(refreshButtons)
-  //     .observe(statusEl, { childList: true, characterData: true, subtree: true });
-  // }
-
   // 初期状態
   gotHz = null;
   isRecording = false;
+  let uiStarted = false;
+  let micStream = null;
   refreshButtons();
-  setStatus("ユーザー名を入れて、トーン録音してね");
 
-  // ---- 録音開始 ----
-  startBtn.addEventListener("click", async (e) => {
-    e.preventDefault();
+  toneBtn.addEventListener("click", async () => {
+  const user = getNewUserName();
+  if (!user) return alert("ユーザー名を入れてね");
 
-    const name = getNewUserName();
-    if (!name) return alert("ユーザー名を入れてね");
-
-    console.log("新規登録 録音開始:", name);
-
-    // 録音開始
+  // START
+  if (!isRecording) {
     await fetch("http://127.0.0.1:5000/mic/start", { method: "POST" });
-
     isRecording = true;
-    setStatus("🎤 トーン録音中…終わったら『トーン録音完了』");
     refreshButtons();
-  });
+    return;
+  }
 
-  // ---- 録音完了（停止→Hz取得）----
-  if (doneBtn) {
-    doneBtn.addEventListener("click", async (e) => {
-  e.preventDefault();
-
-  const name = getNewUserName();
-  if (!name) return alert("ユーザー名を入れてね");
-
-  console.log("新規登録 録音完了:", name);
-
-  // 録音停止
+  // STOP
   await fetch("http://127.0.0.1:5000/mic/stop", { method: "POST" });
 
+  showProcessing();
+  await fetch("http://127.0.0.1:5000/ai/tone_newuser", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user })
+  });
+  hideProcessing();
+
+  isRecording = false;
+  refreshButtons();
+});
+
+  
+
+  console.log("新規トーンストップ")
   // ★ 処理中ウィンドウ表示
   showProcessing();
-  setStatus("🧠 トーン解析中…");
 
   try {
-    await fetch("http://127.0.0.1:5000/ai/tone_newuser", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user: name })
-    });
+      fetch("http://127.0.0.1:5000/ai/tone_newuser", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user: getNewUserName() })
+      });
 
-    setStatus("✅ トーン登録完了");
   } catch (err) {
     console.error(err);
-    setStatus("❌ 処理に失敗しました");
   } finally {
     // ★ 処理終了 → ウィンドウを消す
     hideProcessing();
     isRecording = false;
     refreshButtons();
   }
-});
-  }
+
+  
 
     // 次の登録に備えて初期化
     gotHz = null;

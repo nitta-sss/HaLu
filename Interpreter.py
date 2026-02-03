@@ -1,23 +1,9 @@
-print("STEP 1: importing flask...")
 from flask import Flask, jsonify, request,Response
-print("STEP 1 OK")
-
-print("STEP 2: importing Voice_Read...")
+from flask_cors import CORS
 from Audio.Voice_Read import start_recording, stop_recording, get_result
-print("STEP 2 OK")
-
-print("STEP 3: importing YOBIDASI...")
 from YOBIDASI import run_ai, speak_ai, run_ai_voice
-print("STEP 3 OK")
-
-print("STEP 4: importing Ollama_Response...")
 from Ollama_Response import reset_conversation
-print("STEP 4 OK")
-
-print("STEP 5: importing user_find...")
 from user_find import set_active_user
-print("STEP 5 OK")
-
 from Audio.tone_retake import reload_Hz
 from Audio.user_registration import registration_new
 
@@ -32,6 +18,7 @@ import queue
 
 
 app = Flask(__name__)
+CORS(app)
 CURRENT_THEME_ID = "forest"
 
 
