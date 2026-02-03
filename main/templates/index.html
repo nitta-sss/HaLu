@@ -191,7 +191,7 @@
 
 
 
-  <!-- ユーザー選択モーダル -->
+  <!-- ユーザートーンモーダル -->
   <!-- 既存IDを維持して user_select.js と繋がる -->
 
   <div id="userModal" class="modal hidden">
@@ -199,7 +199,7 @@
       <div class="modal-message user-ui">
 
 
-        <!-- ===== 左：ユーザー選択 ===== -->
+        <!-- ===== ユーザー選択 ===== -->
         <section id="userSelectPanel" class="user-panel">
 
           <div class="modal-title center">
@@ -253,6 +253,10 @@
           <div class="form-row">
             <div class="form-label">ユーザー名</div>
             <input id="newUserName" class="tone-input" type="text" placeholder="新しいユーザー名" />
+          </div>
+
+          <div class="btn-row">
+            <button id="voiceBtn"></button>
           </div>
 
           <!-- ★ ここを「録音開始 / 録音完了」の2ボタンにする -->
