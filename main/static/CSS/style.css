@@ -298,7 +298,7 @@ html, body {
   border: none;
   cursor: pointer;
 
-  background: url("/static/img/dan.png") center / contain no-repeat;
+  /* background: url("/static/img/dan.png") center / contain no-repeat; */
 
   background-color: #ff4b4b;
   box-shadow: 0 4px 10px #333333;
@@ -321,7 +321,7 @@ html, body {
   border: none;
   cursor: pointer;
 
-  background: url("/static/img/dan.png") center / contain no-repeat;
+  /* background: url("/static/img/dan.png") center / contain no-repeat; */
 
   background-color: #ff4b4b;
   box-shadow: 0 4px 10px #333333;
@@ -690,14 +690,24 @@ html, body {
   display: none;
 }
 
-.modal-box {
+.kamaboko{
   width: 420px;
-  /* background:  rgba(255,255,255,0.96);
-  border-radius: 16px; */
+  /* background:  rgba(255,255,255,0.96); */
+  border-radius: 16px; 
   padding: 20px 24px;
   /* box-shadow: 0 18px 60px rgba(0,0,0,0.35);
   border: 1px solid rgba(0,0,0,0.08);
   backdrop-filter: blur(8px); */
+}
+
+.modal-box {
+  width: 420px;
+  background:  rgba(255,255,255,0.96);
+  border-radius: 16px;
+  padding: 20px 24px;
+  box-shadow: 0 18px 60px rgba(0,0,0,0.35);
+  border: 1px solid rgba(0,0,0,0.08);
+  backdrop-filter: blur(8px);
 }
 
 .modal-title {
@@ -891,7 +901,7 @@ html, body {
   min-height: 360px;
 }
 
-#userModal .modal-box{
+#userModal .kamaboko{
   width: 520px;      /* 好きな値に変更OK */
   max-width: 90%;
 }
