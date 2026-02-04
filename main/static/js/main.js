@@ -438,9 +438,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       isRecording = false;
 
-      if (uiStarted) {
+      if (toneRegister_uiStarted) {
         window.voiceUI.stop();
-        uiStarted = false;
+        toneRegister_uiStarted = false;
       }
 
       toneRegister_Stream?.getTracks().forEach(t => t.stop());
@@ -455,9 +455,77 @@ document.addEventListener("DOMContentLoaded", () => {
       showToast("マイクが取り外されました");
     };
   }
+  // const tonevoiceBtn = document.getElementById("tonevoiceBtn");
 
-// =========================
-  // マイクエラー文：トーン登録
+  // tonevoiceBtn.addEventListener("click", async () => {
+  //   if (guardReset("tonevoiceBtn click")) return;
+  //   if (isBusy) return;
+  //   isBusy = true;
+
+  //   try {
+  //     // START
+  //     if (!isRecording) {
+  //       await checkMicrophone();
+
+  //       toneretake_Stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  //       watchMicDisconnect(toneretake_Stream);
+
+  //       const res = await fetch("http://127.0.0.1:5000/mic/start", { method: "POST" });
+  //       if (!res.ok) throw new Error("MIC_START_FAILED");
+
+  //       window.voiceUI.start();
+  //       toneRegister_uiStarted = true;
+  //       isRecording = true;
+  //       return;
+  //     }
+
+  //     // STOP
+  //     isRecording = false;
+
+  //     if (toneRegister_uiStarted) {
+  //       window.voiceUI.stop();
+  //       toneRegister_uiStarted = false;
+  //     }
+
+  //     toneretake_Stream?.getTracks().forEach(t => t.stop());
+  //     toneretake_Stream = null;
+
+  //     const stopRes = await fetch("http://127.0.0.1:5000/mic/stop", { method: "POST" });
+  //     if (!stopRes.ok) throw new Error("MIC_STOP_FAILED");
+
+  //     const data = await stopRes.json();
+  //     const text = (data.text || "").trim();
+
+  //     if (!text) {
+  //       addMessage("bot", "⚠ 音声テキストが取得できませんでした");
+  //       return;
+  //     }
+
+  //     if (guardReset("after mic stop")) return;
+
+  //     // ここで忙しさ解除してAIへ
+  //     isBusy = false;
+  //     await runAIFlow_voice(text, { speak: true, typeSpeed: 25 });
+
+  //   } catch (err) {
+  //     console.error(err);
+
+  //     isRecording = false;
+  //     toneRegister_uiStarted = false;
+
+  //     toneretake_Stream?.getTracks().forEach(t => t.stop());
+  //     toneretake_Stream = null;
+
+  //     const jp = getMicErrorMessage(err);
+  //     showErrorModal(jp);
+
+  //   } finally {
+  //     isBusy = false;
+  //   }
+  // });
+
+  // =========================
+  // マイクエラー文：トーン取り直し
   // =========================
   function getMicErrorMessage(err) {
     if (!err) return "マイクが使用できません";
@@ -517,74 +585,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  const tonevoiceBtn = document.getElementById("tonevoiceBtn");
 
-  tonevoiceBtn.addEventListener("click", async () => {
-    if (guardReset("tonevoiceBtn click")) return;
-    if (isBusy) return;
-    isBusy = true;
-
-    try {
-      // START
-      if (!isRecording) {
-        await checkMicrophone();
-
-        toneretake_Stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        watchMicDisconnect(toneretake_Stream);
-
-        const res = await fetch("http://127.0.0.1:5000/mic/start", { method: "POST" });
-        if (!res.ok) throw new Error("MIC_START_FAILED");
-
-        window.voiceUI.start();
-        uiStarted = true;
-        isRecording = true;
-        return;
-      }
-
-      // STOP
-      isRecording = false;
-
-      if (uiStarted) {
-        window.voiceUI.stop();
-        uiStarted = false;
-      }
-
-      toneretake_Stream?.getTracks().forEach(t => t.stop());
-      toneretake_Stream = null;
-
-      const stopRes = await fetch("http://127.0.0.1:5000/mic/stop", { method: "POST" });
-      if (!stopRes.ok) throw new Error("MIC_STOP_FAILED");
-
-      const data = await stopRes.json();
-      const text = (data.text || "").trim();
-
-      if (!text) {
-        addMessage("bot", "⚠ 音声テキストが取得できませんでした");
-        return;
-      }
-
-      if (guardReset("after mic stop")) return;
-
-      // ここで忙しさ解除してAIへ
-      isBusy = false;
-      await runAIFlow_voice(text, { speak: true, typeSpeed: 25 });
-
-    } catch (err) {
-      console.error(err);
-
-      isRecording = false;
-      uiStarted = false;
-
-      toneretake_Stream?.getTracks().forEach(t => t.stop());
-      toneretake_Stream = null;
-
-      const jp = getMicErrorMessage(err);
-      showErrorModal(jp);
-
-    } finally {
-      isBusy = false;
-    }
-  });
 
 
   
