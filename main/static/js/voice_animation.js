@@ -33,72 +33,72 @@ window.voiceUI = {
     }
   };
 
-  // トーン登録
-  window.voiceUI = {
-    start() {
-      console.log("voiceUI.start 呼ばれた");
+  // // トーン登録
+  // window.voiceUI = {
+  //   start() {
+  //     console.log("voiceUI.start 呼ばれた");
   
-      const btn = document.getElementById("tonevoiceBtn");
-      if (!btn) return;
+  //     const btn = document.getElementById("tonevoiceBtn");
+  //     if (!btn) return;
   
-      btn.classList.remove("recording-end");
-      btn.classList.add("recording");
+  //     btn.classList.remove("recording-end");
+  //     btn.classList.add("recording");
   
-      const se = new Audio("/static/sound/seOnOff.mp3");
-      se.currentTime = 0;
-      se.play().catch(() => {});
-    },
+  //     const se = new Audio("/static/sound/seOnOff.mp3");
+  //     se.currentTime = 0;
+  //     se.play().catch(() => {});
+  //   },
   
-    stop() {
-      console.log("voiceUI.stop 呼ばれた"); 
+  //   stop() {
+  //     console.log("voiceUI.stop 呼ばれた"); 
   
-      const btn = document.getElementById("tonevoiceBtn");
-      if (!btn) return;
+  //     const btn = document.getElementById("tonevoiceBtn");
+  //     if (!btn) return;
   
-      btn.classList.remove("recording");
-      btn.classList.add("recording-end");
+  //     btn.classList.remove("recording");
+  //     btn.classList.add("recording-end");
   
-      const se = new Audio("/static/sound/seOnOff.mp3");
-      se.currentTime = 0;
-      se.play().catch(() => {});
+  //     const se = new Audio("/static/sound/seOnOff.mp3");
+  //     se.currentTime = 0;
+  //     se.play().catch(() => {});
   
-      setTimeout(() => {
-        btn.classList.remove("recording-end");
-      }, 1750);
-    }
-  };
+  //     setTimeout(() => {
+  //       btn.classList.remove("recording-end");
+  //     }, 1750);
+  //   }
+  // };
 
-  // トーン取り直し
-  window.voiceUI = {
-    start() {
-      console.log("voiceUI.start 呼ばれた");
+  // // トーン取り直し
+  // window.voiceUI = {
+  //   start() {
+  //     console.log("voiceUI.start 呼ばれた");
   
-      const btn = document.getElementById("toneretake_voiceBtn");
-      if (!btn) return;
+  //     const btn = document.getElementById("toneretake_voiceBtn");
+  //     if (!btn) return;
   
-      btn.classList.remove("recording-end");
-      btn.classList.add("recording");
+  //     btn.classList.remove("recording-end");
+  //     btn.classList.add("recording");
   
-      const se = new Audio("/static/sound/seOnOff.mp3");
-      se.currentTime = 0;
-      se.play().catch(() => {});
-    },
+  //     const se = new Audio("/static/sound/seOnOff.mp3");
+  //     se.currentTime = 0;
+  //     se.play().catch(() => {});
+  //   },
   
-    stop() {
-      console.log("voiceUI.stop 呼ばれた"); 
+  //   stop() {
+  //     console.log("voiceUI.stop 呼ばれた"); 
   
-      const btn = document.getElementById("toneretake_voiceBtn");
-      if (!btn) return;
+  //     const btn = document.getElementById("toneretake_voiceBtn");
+  //     if (!btn) return;
   
-      btn.classList.remove("recording");
-      btn.classList.add("recording-end");
+  //     btn.classList.remove("recording");
+  //     btn.classList.add("recording-end");
   
-      const se = new Audio("/static/sound/seOnOff.mp3");
-      se.currentTime = 0;
-      se.play().catch(() => {});
+  //     const se = new Audio("/static/sound/seOnOff.mp3");
+  //     se.currentTime = 0;
+  //     se.play().catch(() => {});
   
-      setTimeout(() => {
-        btn.classList.remove("recording-end");
-      }, 1750);
-    }
-  };
+  //     setTimeout(() => {
+  //       btn.classList.remove("recording-end");
+  //     }, 1750);
+  //   }
+  // };
