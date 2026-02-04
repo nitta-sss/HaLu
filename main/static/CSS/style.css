@@ -298,7 +298,7 @@ html, body {
   border: none;
   cursor: pointer;
 
-  background: url("/static/img/dan.png") center / contain no-repeat;
+  /* background: url("/static/img/dan.png") center / contain no-repeat; */
 
   background-color: #ff4b4b;
   box-shadow: 0 4px 10px #333333;
@@ -321,7 +321,7 @@ html, body {
   border: none;
   cursor: pointer;
 
-  background: url("/static/img/dan.png") center / contain no-repeat;
+  /* background: url("/static/img/dan.png") center / contain no-repeat; */
 
   background-color: #ff4b4b;
   box-shadow: 0 4px 10px #333333;
