@@ -39,6 +39,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   startBtn.addEventListener("click", async (e) => {
     e.preventDefault();
+    console.log("tonevoiceBtn listener from tone_retake.js");
+
 
     const selectedUser = getSelectedUserFromStatus();
     if (!selectedUser) return alert("ユーザーを選んでね");
