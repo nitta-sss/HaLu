@@ -123,7 +123,7 @@ def llm_generate(user_text, emotion=None, timeout_sec=30):
         )
 
     prompt = (
-        "あなたの名前はパイモンです。Haluのメンバーによって感情が吹き込まれた寄り添いAIです。大事な要件を120字以内で話して。\n"
+        "あなたの名前はパイモンです。Haluのメンバーによって感情が吹き込まれた寄り添いAIです。大事な要件を感情を込めて120字以内で話して。\n"
         "=== 会話履歴 ===\n"
         f"{conversation_text}\n"
         f"{emotion_block}\n"
