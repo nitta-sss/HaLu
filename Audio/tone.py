@@ -1,13 +1,9 @@
-print("tone.py: STEP 1 start")
-
+import librosa
+print("tone.py: STEP 6 librosa imported")
+print("インストール開始")
 import numpy as np
-print("tone.py: STEP 2 numpy OK")
-
 import os
-print("tone.py: STEP 3 os OK")
-
-print("tone.py: STEP 4 before function defs")
-
+print("np,osインストール完了")
 USER_FILE = "users.txt"
 DELTA_FULL = 80.0
 THRESH_HZ = 25.0  # これ以上差があれば高い/低い判定
@@ -18,14 +14,7 @@ THRESH_HZ = 25.0  # これ以上差があれば高い/低い判定
 # -----------------------
 def get_mean_f0(y, sr=16000,flag=0):
     print("tone.py: STEP 5 inside get_mean_f0 (before librosa)")
-    import librosa
-    print("tone.py: STEP 6 librosa imported")
-
-    if flag != 0:
-        print("インストール開始")
-        import numpy as np
-        import os
-        print("np,osインストール完了")
+    
 
     fmin = librosa.note_to_hz("C2")
     fmax = librosa.note_to_hz("C7")

@@ -153,7 +153,7 @@ def ai_run_voice():
         return _safe_json(result)
 
     except Exception as e:
-        print("❌ ai/run error:", e)
+        print("❌ ai/run_voice error:", e)
         traceback.print_exc()
         return _safe_json({"error": "AI_RUN_FAILED", "reply": ""}, 500)
 
