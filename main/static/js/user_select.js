@@ -64,6 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   loadActiveFromStorage();
+  setCurrentUserUI(); 
 
   // ------------------------------
   // UI
@@ -72,41 +73,42 @@ document.addEventListener("DOMContentLoaded", () => {
     if (userStatus) userStatus.textContent = msg;
   }
 
-  function setCurrentUserUI() {
-    // モーダル内
-    if (currentUserLabel) {
-      currentUserLabel.textContent = window.activeUser ?? "未選択";
-    }
-    if (currentUserHz) {
-      currentUserHz.textContent =
-        Number.isFinite(window.activeUserHz)
-          ? `${window.activeUserHz.toFixed(1)} Hz`
-          : "-";
-    }
+  function setCurrentUserUI(useTemp = false) {
+  // モーダル内の表示
+  const displayUser = useTemp ? tempUser : window.activeUser;
+  const displayHz   = useTemp ? tempUserHz : window.activeUserHz;
 
-    // ヘッダーボタン（★ここが目的）
-    userBtn.textContent = window.activeUser
-      ? `ユーザー：${window.activeUser}`
-      : "ユーザー選択";
-
-    // ボタン制御
-    const hasUser = !!window.activeUser;
-    if (retryStart) retryStart.disabled = !hasUser || isRecording;
-    if (retryStop)  retryStop.disabled  = !hasUser || !isRecording || recordingMode !== "retry";
+  if (currentUserLabel) {
+    currentUserLabel.textContent = displayUser ?? "未選択";
   }
+  if (currentUserHz) {
+    currentUserHz.textContent =
+      Number.isFinite(displayHz)
+        ? `${displayHz.toFixed(1)} Hz`
+        : "-";
+  }
+
+  // ヘッダーボタンは常に確定ユーザー
+  userBtn.textContent = window.activeUser
+    ? `ユーザー：${window.activeUser}`
+    : "ユーザー選択";
+
+  // ボタン制御
+  const hasUser = !!window.activeUser;
+  if (retryStart) retryStart.disabled = !hasUser || isRecording;
+  if (retryStop)  retryStop.disabled  = !hasUser || !isRecording || recordingMode !== "retry";
+  }   
 
   function openModal() {
   userModal.classList.remove("hidden");
 
-  // 仮選択は未選択にする
+  // モーダル開いたら未選択状態にする
   tempUser = null;
   tempUserHz = null;
 
-  setCurrentUserUI();
+  setCurrentUserUI(true); // ← tempUser を使ってラベル更新
   refreshUserList();
-}
-
-
+  }
 
   function closeModal() {
     userModal.classList.add("hidden");
@@ -134,6 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
         using.className = "using-label";
         row.appendChild(using);
       } else {
+
         // ===== 変更ボタン =====
         const changeBtn = document.createElement("button");
         changeBtn.textContent = "変更";
@@ -141,10 +144,19 @@ document.addEventListener("DOMContentLoaded", () => {
         changeBtn.addEventListener("click", () => {
           // ボタンクリック時に activeUser を変更
           window.activeUser = u.name;
-          window.activeUserHz = u.baseline_hz; // Hz も合わせる
-
-          setCurrentUserUI(); // ← これを追加！ヘッダー表示を更新
+          window.activeUserHz = u.baseline_hz; 
+          saveActiveToStorage(); 
+          setCurrentUserUI(); // ヘッダー表示を更新
           renderUserList(users); // 再描画して「使用中」と変更ボタンを更新
+          fetch("http://127.0.0.1:5000/ai/tone", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              activeUser: u.name
+            })
+          });
+          // ←ここでキャラの声速度を更新
+        updateCharacterVoiceSpeed(window.activeUserHz);
         });
         row.appendChild(changeBtn);
       }
@@ -162,7 +174,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const users = text.split(/\r?\n/)
       .filter(Boolean)
       .map(line => {
-        const [name, hz] = line.split(/\s+/);
+        const [rawName, hz] = line.split(/\s+/);
+        const name = rawName.replace("*", ""); // ★ を除去
         return { name, baseline_hz: Number(hz) };
       });
 
