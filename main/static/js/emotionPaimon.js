@@ -70,10 +70,10 @@ console.log("emotionPaimon.js loaded");
       return "normal";
     }
 
-    if (cx >  0 && cy >  0) return "happy"; // 喜
-    if (cx >  0 && cy <  0) return "angry"; // 怒
-    if (cx <  0 && cy <  0) return "sad";   // 哀
-    return "fun";                           // 楽
+    if (cx >  0.0 && cy >  0.0) return "fun"; // 喜
+    if (cx >  0.0 && cy <  0.0) return "angry"; // 怒
+    if (cx <  0.0 && cy <  0.0) return "sad";   // 哀
+    return "happy";                           // 楽
   }
 
 //   動画を安全に切り替える関数
